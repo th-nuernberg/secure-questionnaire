@@ -46,8 +46,8 @@ Encryption:
  * @param {string} ciphertext - text to encrypt 
  * @returns {Object( {Uint8Array} Key - key used to encrypt ciphertext
  *                   {Uint8Array} Ciphertext - ciphertext to encryot
- *                   {Uint8Array} IV - inistalising vector used to encrypt cipher
- * )} object containing key, encrypted ciphertext
+ *                   {Uint8Array} IV - inistalising vector used to encrypt cipher 
+ * )} object containing key, encrypted ciphertext and initialsing vector
  */
  
 async function encryptAES(ciphertext){
