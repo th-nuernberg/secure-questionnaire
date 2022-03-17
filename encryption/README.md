@@ -76,3 +76,11 @@ async function decryptAES(key, ciphertext, iv){
   return decrypted_ciphertext
 }
 ```
+
+## QR-Code
+
+Erstellen:
+```html
+<div id=qrcode style="width: 800;"></div>
+```
+
