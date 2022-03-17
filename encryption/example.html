@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+        <meta charset = "UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title> Send a secret Message</title>
+        <link rel= "stylesheet" type = "text/css" href = "frontendmain.css">
+    </head>
+    <body>
+        <div class = "container">
+            <div class = "box-1">
+                <h1> Encrypt and Decrypt a Message with AES</h1>
+                <button id='AES' type="button"  >Encrypt and Decrypt</button> 
+
+                <input type="text" id="testAES" value='Cipher'>
+                <p id='AESCipher'></p>
+
+            </div>
+        </div>
+        <div class = "container">
+            <div class = "box-1">
+                <h1> Encrypt and Decrypt a Message with RSA</h1>
+                <button id='RSA' type="button"  >Encrypt and Decrypt</button> 
+
+                <input type="text" id="testRSA" value='Cipher'>
+                <div id=qrcode style="width: 800;"></div>
+                <p id='RSACipher'></p>
+
+            </div>
+        </div>
+    </body>
+
+<script src="script.js"></script> 
+
+<script src="qrcode.js"></script>
+
+<script>
+
+
+
+
+
+var qrcode = new QRCode(document.getElementById('qrcode'));  
+
+
+
+
+
+
+
+
+// AES Encryption and Decryption Example
+
+
+AESbutton= document.getElementById('AES')
+
+
+AESbutton.onclick = function () {
+    inputvalue = document.getElementById('testAES').value
+
+    encryptAES(inputvalue).then( EncCipher => {
+    console.log('AES Encryption and Decryption Example: \n \n')
+
+    let key = EncCipher['Key'];
+    let iv = EncCipher['IV'];
+    let enccipher = EncCipher['Cipher'];
+    console.log('Key: '+key);
+    console.log('IV: '+iv);
+    console.log('Cipher: '+enccipher);
+
+
+    return decryptAES(key, enccipher, iv );
+}).then( decCipher => {
+    console.log("Decrypted: "+decCipher)
+})}
+
+// RSA Encryption and Decryption Example
+
+const rsa_pub_key = 
+  `-----BEGIN PUBLIC KEY-----
+  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxMDhX3bxEgrA+9qb67KH
+  BjQTK6xhx3NkaaCWQSdHheNKIejcZi1YQUssEGKelPKWr5/5sX2oy9W7CUx1ir3t
+  jmSwkn5R5nxCbwbvkv+XGQuRYn+xlsiktjnQJEHV2gZcui+HX82++55bV2ac/Qap
+  4mhz/TO+aQ2g5dwXeDrt+oC+qUIjlSTYDAvgDYRKlksJCKElpZLfLzEaVbhljSlo
+  JCXj5EtJq/aHJUzKfJl13X+ykzq01dQmLzqjZ5Fn0RKnym0piJFzENK4KfqEkudd
+  e601IpcoU2zUJmZYeCel/pBpn+/TMTnxd7wt64e8kmbCjTMSTAHBcBj8U/w0Q73H
+  XwIDAQAB
+  -----END PUBLIC KEY-----`;
+
+const rsa_priv_key = `-----BEGIN RSA PRIVATE KEY-----MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDEwOFfdvESCsD7
+2pvrsocGNBMrrGHHc2RpoJZBJ0eF40oh6NxmLVhBSywQYp6U8pavn/mxfajL1bsJ
+THWKve2OZLCSflHmfEJvBu+S/5cZC5Fif7GWyKS2OdAkQdXaBly6L4dfzb77nltX
+Zpz9BqniaHP9M75pDaDl3Bd4Ou36gL6pQiOVJNgMC+ANhEqWSwkIoSWlkt8vMRpV
+uGWNKWgkJePkS0mr9oclTMp8mXXdf7KTOrTV1CYvOqNnkWfREqfKbSmIkXMQ0rgp
++oSS5117rTUilyhTbNQmZlh4J6X+kGmf79MxOfF3vC3rh7ySZsKNMxJMAcFwGPxT
+/DRDvcdfAgMBAAECggEAG/2ism2d6yargMj/cJ8j1W6YIZjzCihw6xQE/Dzl0Hbe
+54cUv9aInTVgDe6xx9fhNxgHskgBuQntg2uktznA74aEljqxVRxtaRUwBRYmfVIn
+ez9WWPCvehsscNQK4+sOyxAS7r67Alnrfboj8F0/0u1wPt/bIV/meXz/u8OKcp4Z
+NXoWjV13PNXUyYBMrYrYT+6v1Ybk0gfBmPIpECxDE59wKVOpEiPDwz+Apm+hRiOZ
+UzOZj4SVeZk2Prbz0tCDxcDk0oQZkKIklomKP5meSvJbZeTzMB8inueS0AdfZ68t
+xOzVP+kEZdkOTZE7isgRrHWULVa0mqcq2QRfJ/Ye9QKBgQDPvYERGrW2LpKGEZBg
+FQqF/rms2dUi3FUyHUwBGXnR2Mj4+phxj/ivo4bZxAbENqKGBOzy0hKZnLWT+Ry3
+2UOC2Mm6aNtGM11pmom5QtjO5gCQRI9eCrxRN2A9DabTvR9b35TWgpbZ12GspHRC
+LNNxv+PfnWtrupE09RFtQIE5vQKBgQDydfsWzdl47LKDwGwsyqi0DnLMMTC7WdvL
+NLytiNxEbtnzhvrlPVDVtUa0fqFIJxgOwZiuo+Jca60Ocex7wA+nP/TUasTSVM9u
+Fx5KUEQ2PQYTzWw9vaLGq5U5LVmrMh43ORxWhDU587O5V6xUvQnLxQYkv+OBc+nJ
+zzZV7vqhSwKBgFhS4gU7rfZ/ZpzJ6vBvAcJmwtrS4uOnejGMczwkcL7fxNLW+OmP
+pNRIWpVL2vShpggFIBk9Z9sX3bvENomUPjfrpBk1a8U1IYo8wkGaQkP1VlgATlRV
+jCubt7c9jqiHyEVvkgCCFVEZWdXlNejM1jmOtHvmmj17XTF+4KHqwwahAoGBAPIS
+iRZDf5UT/Uc9nsM5syXSJxtnIVhsZt2DUb2QnxpT8pcJdQXbKhG0Y1th8nSvU32o
+HGCAj0fm2WlKpOkI4JgDatWJo+i7dD5eJofbi777Pk4XErKx2wqv1NS5SoV6DGDm
+TDy00s+BWTb7KbuQ4W7ozzFxxBtDN2+dyooRh3nxAoGAT3k7mTbxfLp6NxKewEpE
+TIcWNggwCG72s1Ng8p0j+fRUHWwrDD1RtxRnSwdY6VaZQ3c7etjiQzIaVmkaZWug
+BgxLg4SJBg+Ca8sBkNmqKZnnodtdYyyC3DbH/vaQe6kiRgJd59jz5KO4ijgE5POC
+IwJoDTpZj8R+ruW4EDpszfM=-----END RSA PRIVATE KEY-----`;
+
+let ciphertext2 = "Geheime Nachricht";
+
+RSAButton = document.getElementById('RSA')
+
+RSAButton.onclick = function () {
+    inputvalue = document.getElementById('testRSA').value
+
+    encryptRSA(rsa_pub_key, inputvalue).then( EncCipher => {
+        console.log('RSA Encryption and Decryption Example: \n \n')
+
+        console.log('Cipher: '+EncCipher)
+        return decryptRSA(rsa_priv_key, EncCipher);
+    }).then( decCipher => console.log("Decrypted: "+decCipher))
+}
+
+</script>
+</body>
+</html>
+
