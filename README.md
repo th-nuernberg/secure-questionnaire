@@ -25,7 +25,7 @@ Decryption:
  * Imports rsa privat key from string. Returns decrypted ciphertext.
  *
  * @param {Uint8Array} ciphertext - text to decrypt 
- * @param {string} rsa_priv_key - hast to be in spki: SubjectPublicKeyInfo format. 
+ * @param {string} rsa_priv_key - hast to be in pkcs8 format. 
  * @returns {string} decrypted ciphertext
  */
  
