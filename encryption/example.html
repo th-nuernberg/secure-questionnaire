@@ -23,11 +23,24 @@
                 <button id='RSA' type="button"  >Encrypt and Decrypt</button> 
 
                 <input type="text" id="testRSA" value='Cipher'>
+                <p id='RSACipher'></p>
+
+            </div>
+        </div>
+
+        <div class = "container">
+            <div class = "box-1">
+                <h1> Create QR Code</h1>
+                <button id='qr' type="button"  >Qrcode it!</button>  
+
+                <input type="text" id="testqr" value='Cipher'>
                 <div id=qrcode style="width: 800;"></div>
                 <p id='RSACipher'></p>
 
             </div>
         </div>
+        
+        
     </body>
 
 <script src="script.js"></script> 
@@ -36,11 +49,6 @@
 
 <script>
 
-
-
-
-
-var qrcode = new QRCode(document.getElementById('qrcode'));  
 
 
 
@@ -130,6 +138,21 @@ RSAButton.onclick = function () {
         return decryptRSA(rsa_priv_key, EncCipher);
     }).then( decCipher => console.log("Decrypted: "+decCipher))
 }
+
+
+
+// QR-Code Example
+
+
+var qrcode = new QRCode(document.getElementById('qrcode'));  //div element where the qr-code will be generated
+
+qrcodebutton = document.getElementById('qr')
+
+qrcodebutton.onclick = function () {
+    inputvalue = document.getElementById('testqr').value
+    qrcode.makeCode(inputvalue)
+}
+
 
 </script>
 </body>
