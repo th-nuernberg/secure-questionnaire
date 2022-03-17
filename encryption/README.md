@@ -78,8 +78,9 @@ async function decryptAES(key, ciphertext, iv){
 ```
 
 ## QR-Code
+Scripts for QR-Generation in qrcode.js
 
-Erstellen:
+Generation:
 ```html
 <div id=qrcode style="width: 800;"></div>
 ```
