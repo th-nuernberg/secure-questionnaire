@@ -1,33 +1,3 @@
-let pub_key = 
-  `-----BEGIN PUBLIC KEY-----
-  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxMDhX3bxEgrA+9qb67KH
-  BjQTK6xhx3NkaaCWQSdHheNKIejcZi1YQUssEGKelPKWr5/5sX2oy9W7CUx1ir3t
-  jmSwkn5R5nxCbwbvkv+XGQuRYn+xlsiktjnQJEHV2gZcui+HX82++55bV2ac/Qap
-  4mhz/TO+aQ2g5dwXeDrt+oC+qUIjlSTYDAvgDYRKlksJCKElpZLfLzEaVbhljSlo
-  JCXj5EtJq/aHJUzKfJl13X+ykzq01dQmLzqjZ5Fn0RKnym0piJFzENK4KfqEkudd
-  e601IpcoU2zUJmZYeCel/pBpn+/TMTnxd7wt64e8kmbCjTMSTAHBcBj8U/w0Q73H
-  XwIDAQAB
-  -----END PUBLIC KEY-----`;
-
-
-//String Input Json Object
-function stringToJson(string)
-{
-  return newJson =
-  {
-    "title":"example json",
-    "input": 
-    {
-      "Cipher": string
-    }
-  }
-}
-
-//Secure random number generator
-function randomID()
-{
-  return crypto.randomUUID();
-}
 
 //STores the Key and ID into a QR Code
 async function GenerateQRCode(key, id) 
@@ -42,25 +12,7 @@ async function GenerateQRCode(key, id)
 
 
 
-// String to ArrayBuffer Method
 
-
-  function fetchPost(url, body){
-    fetch(url, { 
-      "method": "POST",
-      "headers": {
-          "Content-Type": "application/json"
-      },
-      "body": body
-      })
-      .then(response => {
-      console.log(response);
-      })
-      .catch(err => {
-      console.error(err);
-      });
-  }  
-  
 
 
 
