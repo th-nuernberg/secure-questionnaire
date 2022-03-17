@@ -6,7 +6,7 @@ Encryption:
 
 ```javascript
 /**
- * Imports rsa public key from string and ciphertext. Returns encrypted ciphertext.
+ * Imports rsa public key from string. Returns encrypted ciphertext.
  *
  * @param {string} ciphertext - text to encrypt 
  * @param {string} rsa_pub_key - hast to be in spki: SubjectPublicKeyInfo format. 
@@ -22,11 +22,11 @@ Decryption:
 
 ```javascript
 /**
- * Imports rsa privat key from string and rsa encrypted ciphertext. Returns decrypted ciphertext.
+ * Imports rsa privat key from string. Returns decrypted ciphertext.
  *
  * @param {Uint8Array} ciphertext - text to decrypt 
  * @param {string} rsa_priv_key - hast to be in spki: SubjectPublicKeyInfo format. 
- * @returns {string} encrypted ciphertext
+ * @returns {string} decrypted ciphertext
  */
  
 async function decryptRSA(rsa_priv_key, ciphertext){
