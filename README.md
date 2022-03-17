@@ -13,7 +13,7 @@
  */
  
 async function ecnryptRSA(rsa_pub_key, ciphertext){
-...
-return encrypted_ciphertext
+  ...
+  return encrypted_ciphertext
 }
 ```
