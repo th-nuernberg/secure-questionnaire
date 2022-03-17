@@ -86,6 +86,6 @@ Erstellen:
 ```javascript
 var qrcode = new QRCode(document.getElementById('qrcode')); 
 
-qrcode.makeCode("This text is going to be decoded in QR-Code")
+qrcode.makeCode("This text is going to be decoded as QR-Code")
 ```
 
