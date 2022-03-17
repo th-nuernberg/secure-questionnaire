@@ -3,11 +3,11 @@
 ## RSA
 
 
-    ```javascript
-    const foo = 1;
-    let bar = foo;
+```javascript
+const foo = 1;
+let bar = foo;
 
-    bar = 9;
+bar = 9;
 
-    console.log(foo, bar); // => 1, 9
-    ```
+console.log(foo, bar); // => 1, 9
+```
