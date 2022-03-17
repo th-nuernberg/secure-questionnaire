@@ -67,7 +67,7 @@ Decryption:
  *
  * @param {Uint8Array} key - AES Key to decrypt with
  * @param {Uint8Array} ciphertext - text to decrypt 
- * @param {Uint8Array} iv - inistalising vector
+ * @param {Uint8Array} iv - initalising vector
  * @returns {string} decrypted ciphertext
  */
  
