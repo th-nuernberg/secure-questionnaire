@@ -5,7 +5,7 @@
 
 ```javascript
 /**
- * Repeats some text a given number of times.
+ * Imports rsa public key from string and ciphertext. Returns encrypted ciphertext.
  *
  * @param {string} ciphertext - text to encrypt 
  * @param {string} rsa_pub_key - hast to be in spki: SubjectPublicKeyInfo format. 
