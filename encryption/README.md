@@ -44,7 +44,9 @@ Encryption:
  * Generates a symmetric AES-key. Returns encrypted ciphertext, initialising vector and AES-key in raw format.
  *
  * @param {string} ciphertext - text to encrypt 
- * @returns {Object( {Uint8Array} Key, {Uint8Array} Ciphertext, {Uint8Array} IV
+ * @returns {Object( {Uint8Array} Key,
+ *                   {Uint8Array} Ciphertext,
+ *                   {Uint8Array} IV
  * )} object containing key, encrypted ciphertext
  */
  
