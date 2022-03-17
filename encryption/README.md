@@ -83,4 +83,9 @@ Erstellen:
 ```html
 <div id=qrcode style="width: 800;"></div>
 ```
+```javascript
+var qrcode = new QRCode(document.getElementById('qrcode')); 
+
+qrcode.makeCode("This text is going to be decoded in QR-Code")
+```
 
