@@ -54,8 +54,8 @@ async function GenerateQRCode(key, id)
 
   function importprivateRSAKey(pem) {
     // fetch the part of the PEM string between header and footer
-    const pemHeader = "-----BEGIN RSA PRIVATE KEY-----";
-    const pemFooter = "-----END RSA PRIVATE KEY-----";
+    const pemHeader = "-----BEGIN PRIVATE KEY-----";
+    const pemFooter = "-----END PRIVATE KEY-----";
     const pemContents = pem.substring(pemHeader.length, pem.length - pemFooter.length);
     // base64 decode the string to get the binary data
     const binaryDerString = window.atob(pemContents);
@@ -76,10 +76,10 @@ async function GenerateQRCode(key, id)
 
 
 
-async function encryptRSA(key, message) {
+async function encryptRSA(rsa_pub_key, ciphertext) {
   
-    let encoded = getMessageEncoding(message);
-    return importpublicRsaKey(key).then(  keyobj => {
+    let encoded = getMessageEncoding(ciphertext);
+    return importpublicRsaKey(rsa_pub_key).then(  keyobj => {
     return window.crypto.subtle.encrypt(
       {
         name: "RSA-OAEP"
@@ -92,8 +92,8 @@ async function encryptRSA(key, message) {
 
  
 
-async function decryptRSA(key, ciphertext) {
-    return importprivateRSAKey(key).then( keyobj => {
+async function decryptRSA(rsa_priv_key, ciphertext) {
+    return importprivateRSAKey(rsa_priv_key).then( keyobj => {
     return window.crypto.subtle.decrypt(
       {
         name: "RSA-OAEP"
