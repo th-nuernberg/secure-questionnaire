@@ -1,6 +1,6 @@
 # Encryption
 
-Function for encryption and decryption with AES and RSA in sript.js.
+Functions for encryption and decryption with AES and RSA in sript.js.
 For more detailed information see:
 https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto
 
