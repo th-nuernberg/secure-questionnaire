@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+"""Small script to generate RSA Private and Public Key"""
 import os
 #to Install PyCryptoDome:
 # pip install pycryptodome
