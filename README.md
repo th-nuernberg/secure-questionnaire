@@ -4,10 +4,8 @@
 
 
 ```javascript
-const foo = 1;
-let bar = foo;
-
-bar = 9;
-
-console.log(foo, bar); // => 1, 9
+/**
+ * Repeats some text a given number of times.
+ *
+ * @param {string} text - The text to repeat * @param {number} count - Number of times */
 ```
