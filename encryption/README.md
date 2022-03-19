@@ -101,7 +101,7 @@ Scripts for QR-Reader in html5-qrcode.min.js.
 <p id="qr-reader-results"></p>
 ```
 ```javascript
-  function onScanSuccess(decodedText, decodedResult){
+function onScanSuccess(decodedText, decodedResult){
     let resultContainer = document.getElementById('qr-reader-results');
     resultContainer.textContent = decodedText
 }
