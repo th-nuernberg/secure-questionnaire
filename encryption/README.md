@@ -81,7 +81,7 @@ async function decryptAES(key, ciphertext, iv){
 
 Generation:
 
-Scripts for QR-Code Generation in qrcode.js
+Scripts for QR-Code Generation in qrcode.js.
 
 ```html
 <div id=qrcode style="width: 800;"></div>
@@ -94,7 +94,7 @@ qrcode.makeCode("This text is going to be decoded as QR-Code")
 
 Reader:
 
-Scripts for QR-Reader in html5-qrcode.min.js .
+Scripts for QR-Reader in html5-qrcode.min.js.
 
 ```html
 <div id="qr-reader" style="width:500px"></div>
