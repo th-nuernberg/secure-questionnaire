@@ -45,13 +45,13 @@ Encryption:
 
 ```javascript
 /**
- * Generates a symmetric AES-key. Returns encrypted ciphertext, initialising vector and AES-key in raw format.
+ * Generates a symmetric AES-key. Returns encrypted ciphertext, initialization vector and AES-key in raw format.
  *
  * @param {string} ciphertext - text to encrypt 
  * @returns {Object( {Uint8Array} Key - key used to encrypt ciphertext
  *                   {Uint8Array} Ciphertext - ciphertext to encryot
  *                   {Uint8Array} IV - inistalising vector used to encrypt cipher 
- * )} object containing key, encrypted ciphertext and initialsing vector
+ * )} object containing key, encrypted ciphertext and initialization vector
  */
  
 async function encryptAES(ciphertext){
@@ -63,11 +63,11 @@ Decryption:
 
 ```javascript
 /**
- * Decrypts AES encrypted ciphertext using key and initalising vecotr
+ * Decrypts AES encrypted ciphertext using key and initialization vecotr
  *
  * @param {Uint8Array} key - AES Key to decrypt with
  * @param {Uint8Array} ciphertext - text to decrypt 
- * @param {Uint8Array} iv - initalising vector
+ * @param {Uint8Array} iv - initialization vector
  * @returns {string} decrypted ciphertext
  */
  
