@@ -7,6 +7,7 @@
         <link rel= "stylesheet" type = "text/css" href = "frontendmain.css">
     </head>
     <body>
+        <!-- AES Example -->
         <div class = "container">
             <div class = "box-1">
                 <h1> Encrypt and Decrypt a Message with AES</h1>
@@ -17,6 +18,8 @@
 
             </div>
         </div>
+
+        <!-- RSA Example -->
         <div class = "container">
             <div class = "box-1">
                 <h1> Encrypt and Decrypt a Message with RSA</h1>
@@ -28,6 +31,7 @@
             </div>
         </div>
 
+        <!-- QR-Code Generation Example -->
         <div class = "container">
             <div class = "box-1">
                 <h1> Create QR Code</h1>
@@ -40,6 +44,7 @@
             </div>
         </div>
         
+        <!-- QR-Cpde Scanner Example -->
         <div class = "container">
             <div class = "box-1">
                 <h1> QR-Code Reader</h1>
@@ -167,7 +172,7 @@ qrcodebutton.onclick = function () {
 
 // QR-Code Reader
 
-  //QR Scanner
+
   function onScanSuccess(decodedText, decodedResult){
     let resultContainer = document.getElementById('qr-reader-results');
     resultContainer.textContent = decodedText
