@@ -39,6 +39,7 @@ async function decryptRSA(rsa_priv_key, ciphertext){
 }
 ```
 Use "generateRSAkeys.py" to generate keys.
+See example.html 100-160.
 
 ## AES
 Encryption:
@@ -76,11 +77,14 @@ async function decryptAES(key, ciphertext, iv){
   return decrypted_ciphertext
 }
 ```
+See example.html 75-100.
 
 ## QR-Code
-Scripts for QR-Generation in qrcode.js
 
 Generation:
+
+Scripts for QR-Code Generation in qrcode.js.
+
 ```html
 <div id=qrcode style="width: 800;"></div>
 ```
@@ -89,4 +93,22 @@ var qrcode = new QRCode(document.getElementById('qrcode'));
 
 qrcode.makeCode("This text is going to be decoded as QR-Code")
 ```
+See example.html 160-175.
 
+Reader:
+
+Scripts for QR-Reader in html5-qrcode.min.js.
+
+```html
+<div id="qr-reader" style="width:500px"></div>
+<p id="qr-reader-results"></p>
+```
+```javascript
+function onScanSuccess(decodedText, decodedResult){
+    let resultContainer = document.getElementById('qr-reader-results');
+    resultContainer.textContent = decodedText
+}
+  var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+  html5QrcodeScanner.render(onScanSuccess);
+```
+See example.html 175-185.
