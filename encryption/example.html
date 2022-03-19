@@ -40,16 +40,26 @@
             </div>
         </div>
         
-        
+        <div class = "container">
+            <div class = "box-1">
+                <h1> QR-Code Reader</h1>
+                
+
+                <div id="qr-reader" style="width:500px"></div>
+                <p id="qr-reader-results"></p>
+
+            </div>
+        </div>
+
     </body>
 
 <script src="script.js"></script> 
 
 <script src="qrcode.js"></script>
 
+<script src="html5-qrcode.min.js"></script>
+
 <script>
-
-
 
 
 
@@ -144,6 +154,8 @@ RSAButton.onclick = function () {
 // QR-Code Example
 
 
+// QR-Code Generation
+
 var qrcode = new QRCode(document.getElementById('qrcode'));  //div element where the qr-code will be generated
 
 qrcodebutton = document.getElementById('qr')
@@ -152,6 +164,18 @@ qrcodebutton.onclick = function () {
     inputvalue = document.getElementById('testqr').value
     qrcode.makeCode(inputvalue)
 }
+
+// QR-Code Reader
+
+  //QR Scanner
+  function onScanSuccess(decodedText, decodedResult){
+    let resultContainer = document.getElementById('qr-reader-results');
+    resultContainer.textContent = decodedText
+}
+
+  var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+  html5QrcodeScanner.render(onScanSuccess);
+
 
 
 </script>
