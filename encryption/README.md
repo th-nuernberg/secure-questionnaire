@@ -105,12 +105,6 @@ Scripts for QR-Reader in html5-qrcode.min.js .
     let resultContainer = document.getElementById('qr-reader-results');
     resultContainer.textContent = decodedText
 }
-
   var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
   html5QrcodeScanner.render(onScanSuccess);
-
-
-
-
-qrcode.makeCode("This text is going to be decoded as QR-Code")
 ```
