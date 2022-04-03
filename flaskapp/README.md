@@ -6,7 +6,7 @@
 ```console
 POST http://localhost/POST/<id>
 ```
-Takes JSON and posts it in database
+Takes JSON and posts it in database. Example request:
 
 ```console
 curl --request POST \
