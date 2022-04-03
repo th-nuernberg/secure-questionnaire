@@ -53,3 +53,30 @@ Sample response:
 	"_id": "SomeID"
 }
 ```
+
+### PUT
+
+```console
+PUT http://localhost/PUT/<id>
+```
+Put JSON in database. Updates if id in database posts else.
+
+Sample request:
+
+```console
+curl --request PUT \
+  --url http://localhost/PUT/SomeID \
+  --header 'Content-Type: application/json' \
+  --data '{"Some_JSON":{"SomeKey":"SomeValue"}}'
+```
+
+Sample response:
+
+```console
+{
+	"Some_JSON": {
+		"SomeKey": "SomeValue"
+	},
+	"_id": "SomeID"
+}
+```
