@@ -6,11 +6,13 @@
 ```console
 POST http://localhost/POST/<id>
 ```
-Takes JSON and posts it in database. Example request:
+Takes JSON and posts it in database. 
+
+Sample request:
 
 ```console
 curl --request POST \
-  --url http://localhost/POST/16 \
+  --url http://localhost/POST/SomeID \
   --header 'Content-Type: application/json' \
-  --data '{"henlio":123, "text":"hihiho"}'
+  --data '{"Some_JSON":{"SomeKey":"SomeValue"}}'
 ```
