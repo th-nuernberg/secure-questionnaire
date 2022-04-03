@@ -32,7 +32,7 @@ Sample response:
 ### GET
 
 ```console
-POST http://localhost/POST/<id>
+GET http://localhost/GET/<id>
 ```
 Get JSON from database by id.
 
