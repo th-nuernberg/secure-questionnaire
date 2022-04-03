@@ -27,3 +27,29 @@ Sample response:
 	"_id": "SomeID"
 }
 ```
+
+
+### GET
+
+```console
+POST http://localhost/POST/<id>
+```
+Get JSON from database by id.
+
+Sample request:
+
+```console
+curl --request GET \
+  --url http://localhost/GET/SomeID
+```
+
+Sample response:
+
+```console
+{
+	"Some_JSON": {
+		"SomeKey": "SomeValue"
+	},
+	"_id": "SomeID"
+}
+```
