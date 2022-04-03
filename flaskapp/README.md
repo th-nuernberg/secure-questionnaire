@@ -1,7 +1,8 @@
-ToDo:
-Write RestApi Documentation
 
+## Endpoints
+
+# POST
 
 ```console
-GET /orgs/octokit/repos
+POST http://localhost/POST/<id>
 ```
