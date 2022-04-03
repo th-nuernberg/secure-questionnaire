@@ -16,3 +16,14 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{"Some_JSON":{"SomeKey":"SomeValue"}}'
 ```
+
+Sample response:
+
+```console
+{
+	"Some_JSON": {
+		"SomeKey": "SomeValue"
+	},
+	"_id": "SomeIDs"
+}
+```
