@@ -1,4 +1,4 @@
 .DS_Store
 **/*.pem
 **/__pycache__
-**/mongo_volume
+**/mongo_volume/
