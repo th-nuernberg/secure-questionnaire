@@ -1,24 +1,24 @@
 import { createStore } from 'vuex'
 
 const state = {
-  numbers: [1, 2, 3]
+  images: []
 };
 
 const mutations = {
-  ADD_NUMBER(state, payload) {
-    state.numbers.push(payload);
+  ADD_IMAGE(state, payload) {
+    state.images.push(payload);
   }
 };
 
 const actions = {
-  addNumber(context, number) {
-    context.commit("ADD_NUMBER", number);
+  addImage(context, image) {
+    context.commit("ADD_IMAGE", image);
   }
 };
 
 const getters = {
-  getNumbers(state) {
-    return state.numbers;
+  getImages(state) {
+    return state.images;
   }
 };
 
@@ -28,18 +28,3 @@ export default createStore({
   actions,
   getters
 });
-
-
-
-
-
-/*export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
-})*/

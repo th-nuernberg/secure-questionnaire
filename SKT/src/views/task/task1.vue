@@ -16,7 +16,7 @@
     </div>
 
     <!--time-bar-->
-    <div class="round-time-bar" style="--duration: 10;" id="round-time-bar"> 
+    <div class="round-time-bar" style="--duration: 60;" id="round-time-bar"> 
     <div></div>
     </div>
 
@@ -26,24 +26,24 @@
 
       <div class="row">
         <div class="column">
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[1]" alt=""></p>
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[2]" alt=""></p>
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[3]" alt=""></p>
+          <p class="card"><img :src="selectedImage[0]" alt=""></p>
+          <p class="card"><img :src="selectedImage[1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[2]" alt=""></p>
         </div>
         <div class="column">
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[4]" alt=""></p>
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[5]" alt=""></p>
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[6]" alt=""></p>
+          <p class="card"><img :src="selectedImage[3]" alt=""></p>
+          <p class="card"><img :src="selectedImage[4]" alt=""></p>
+          <p class="card"><img :src="selectedImage[5]" alt=""></p>
         </div>
         <div class="column">
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[7]" alt=""></p>
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[8]" alt=""></p>
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[9]" alt=""></p>
+          <p class="card"><img :src="selectedImage[6]" alt=""></p>
+          <p class="card"><img :src="selectedImage[7]" alt=""></p>
+          <p class="card"><img :src="selectedImage[8]" alt=""></p>
         </div>
         <div class="column">
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[10]" alt=""></p>
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[11]" alt=""></p>
-          <p class="card" v-if="selectedImage"><img :src="selectedImage[12]" alt=""></p>
+          <p class="card"><img :src="selectedImage[9]" alt=""></p>
+          <p class="card"><img :src="selectedImage[10]" alt=""></p>
+          <p class="card"><img :src="selectedImage[11]" alt=""></p>
         </div>
       </div>
     </div>
@@ -94,7 +94,7 @@ The setInterval() method calls a function at specified intervals (in millisecond
 The setInterval() method continues calling the function until clearInterval() is called, or the window is closed.
 1 second = 1000 milliseconds.*/
 function myduration(){
-  var timeleft = 10;
+  var timeleft = 5;
 
   var downloadTimer = setInterval(function(){
     if(timeleft < 1){
@@ -124,19 +124,24 @@ export default {
   data() {
     return{
       images,
-      selectedImage: [null],
+      selectedImage: [],
     };
   },
   methods: {
     randomItem (items) {
       return items[Math.floor(Math.random()*items.length)];
-    }
+    },
+      addImage(img) {
+      this.$store.dispatch("addImage", img);
+    },
+
   },
   created() {
     while(this.selectedImage.length<13){
       var img  =this.randomItem(this.images)
       if(!this.selectedImage.includes(img)){
           this.selectedImage.push(img);
+          this.addImage(img);
       }
     }
   }
