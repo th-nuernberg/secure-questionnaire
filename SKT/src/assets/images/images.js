@@ -17,26 +17,26 @@ import tasche from "../../assets/images/tasche.jpg";
 import trommel from "../../assets/images/trommel.jpg";
 import zaun from "../../assets/images/zaun.jpg";
 
-var images = [
-        ballon,
-        banane,
-        brief,
-        erdbeere,
-        fisch,
-        gans,
-        glocke,
-        hammer,
-        kirsche,
-        knopf,
-        nagel,
-        papagei,
-        pfeife,
-        schaufel,
-        schwein,
-        tasche,
-        trommel,
-        zaun
-      ];
+var images = {
+        'ballon' :ballon,
+        'banane' :banane,
+        'brief' :brief,
+        'erdbeere' :erdbeere,
+        'fisch' :fisch,
+        'gans' : gans,
+        'glocke' :glocke,
+        'hammer' : hammer,
+        'kirsche':kirsche,
+        'knopf' :knopf,
+        'nagel': nagel,
+        'papagei':papagei,
+        'pfeife': pfeife,
+        'schaufel' : schaufel,
+        'schwein': schwein,
+        'tasche' : tasche,
+        'trommel': trommel,
+        'zaun' :zaun,
+};
 
 export default images;
 

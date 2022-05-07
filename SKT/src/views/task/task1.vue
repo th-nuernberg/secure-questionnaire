@@ -26,24 +26,24 @@
 
       <div class="row">
         <div class="column">
-          <p class="card"><img :src="selectedImage[0]" alt=""></p>
-          <p class="card"><img :src="selectedImage[1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[2]" alt=""></p>
+          <p class="card"><img :src="selectedImage[0][1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[1][1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[2][1]" alt=""></p>
         </div>
         <div class="column">
-          <p class="card"><img :src="selectedImage[3]" alt=""></p>
-          <p class="card"><img :src="selectedImage[4]" alt=""></p>
-          <p class="card"><img :src="selectedImage[5]" alt=""></p>
+          <p class="card"><img :src="selectedImage[3][1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[4][1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[5][1]" alt=""></p>
         </div>
         <div class="column">
-          <p class="card"><img :src="selectedImage[6]" alt=""></p>
-          <p class="card"><img :src="selectedImage[7]" alt=""></p>
-          <p class="card"><img :src="selectedImage[8]" alt=""></p>
+          <p class="card"><img :src="selectedImage[6][1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[7][1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[8][1]" alt=""></p>
         </div>
         <div class="column">
-          <p class="card"><img :src="selectedImage[9]" alt=""></p>
-          <p class="card"><img :src="selectedImage[10]" alt=""></p>
-          <p class="card"><img :src="selectedImage[11]" alt=""></p>
+          <p class="card"><img :src="selectedImage[9][1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[10][1]" alt=""></p>
+          <p class="card"><img :src="selectedImage[11][1]" alt=""></p>
         </div>
       </div>
     </div>
@@ -138,7 +138,7 @@ export default {
   },
   created() {
     while(this.selectedImage.length<13){
-      var img  =this.randomItem(this.images)
+      var img  =this.randomItem(Object.entries(this.images))
       if(!this.selectedImage.includes(img)){
           this.selectedImage.push(img);
           this.addImage(img);
