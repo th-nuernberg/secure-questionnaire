@@ -10,28 +10,25 @@
         <div style="float: left;"> 
           <p style="padding-left: 30px">Aufgabe <strong>1</strong> von 10</p>
         </div>
-        <div> 
-          <p style="text-align: right; padding-right: 30px" id="duration"></p>
-        </div>
-    </div>
-
-    <!--time-bar-->
-    <div class="round-time-bar" style="--duration: 60;" id="round-time-bar"> 
-    <div></div>
-    </div>
-
-    <!--this elemts will be hidden after the timeout is reached-->
-    <div id="timeout-hide">
-      <h5 class="txt-center">Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
-      <DisplayImages :listed_images="selectedImage"/>
 
     </div>
+    
+    
 
-    <!--this elemts will be displayed only after the timeout is reached-->
-    <div id="timeout-show">
-      <h5 class="txt-center">Die Zeit ist um</h5>
+    
+    <TimeBar :duration=3 @timeout="this.hide= true" />
+    <div v-if="!this.hide">
+    <h5  class="txt-center">Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
+    <DisplayImages :listed_images="selectedImage"/>
+</div>
+   <div v-if="this.hide"  id="timeout-show">
+     <br>
+    <h5 class="txt-center">Die Zeit ist um</h5>
+   </div>
 
-      <!--placeholder-->
+
+
+
       <div class="placeholder"></div>
 
       <!--weiter button-->
@@ -40,7 +37,7 @@
           <router-link class="routerlink-2" to="/task2">Weiter</router-link>
         </button>
       </div>
-    </div>
+
 
   </body>
 </template>
@@ -50,63 +47,20 @@
 import "bootstrap/dist/css/bootstrap.css";
 import images from "../../assets/images/images.js";
 import DisplayImages from "../../components/DisplayImages.vue";
+import TimeBar from "../../components/TimeBar.vue";
 
 
-myduration();
-
-window.onload = function(){
-    initialSetup();
-    myduration();
-}
-
-/* This function hides selected HTML elements.
-Hiding an element can be done by setting the display property to none. 
-The element will be hidden, and the page will be displayed as if the element is not there
-*/
-function initialSetup(){
-  document.getElementById('timeout-show').style.display = 'none';
-}
-
-/* This function starts a countdown for a given amount of time.
-The output is displayed via a HTML element
-The setInterval() method calls a function at specified intervals (in milliseconds).
-The setInterval() method continues calling the function until clearInterval() is called, or the window is closed.
-1 second = 1000 milliseconds.*/
-function myduration(){
-  var timeleft = 555;
-
-  var downloadTimer = setInterval(function(){
-    if(timeleft < 1){
-      clearInterval(downloadTimer);
-      timeout();
-    }
-
-    //output via HTML element
-    document.getElementById("duration").innerText = timeleft+" Sek.";
-    timeleft --;
-
-  }, 1000);
-}
-
-/* This function starts after the timeout is reached.
-Selected images will be hidden or displayed*/
-function timeout(){
-    document.getElementById("timeout-show").style.display = 'block';
-    document.getElementById("timeout-hide").style.display = 'none';
-}
-
-/* The randomItem() method returns a random item out of the array images.
-The created() method continues calling the function randomItem() until the array selectedImage has reached the length 12.
-The method also ensures that no image is stored twice*/
 export default {
   name: "app",
   components:{
     DisplayImages,
+    TimeBar,
   },
   data() {
     return{
       images,
       selectedImage: [],
+      hide: Boolean,
     };
   },
   methods: {
@@ -126,7 +80,7 @@ export default {
           this.addImage(img);
       }
     }
-    console.log(this.selectedImage.map(x => x[0]))
+    this.hide = false;
   }
 }
 
