@@ -29,7 +29,6 @@ import images from "../assets/images/images.js";
           return {images}
         },
         created(){
-          console.log(this.listed_images)
         }
     }
 </script>

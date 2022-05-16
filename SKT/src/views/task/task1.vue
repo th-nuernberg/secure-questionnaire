@@ -75,7 +75,6 @@ export default {
       this.$store.dispatch("addImage", img);
     },
    emitedWord(text) {
-     console.log(text)
        this.selectedImage = this.selectedImage.map(entry => {
          if(entry['name'].toLowerCase()==text){
            return {...entry, 'recognized':true }
