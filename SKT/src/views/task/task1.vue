@@ -23,14 +23,8 @@
     <!--this elemts will be hidden after the timeout is reached-->
     <div id="timeout-hide">
       <h5 class="txt-center">Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
+      <DisplayImages :listed_images="selectedImage"/>
 
-      <div class="row">
-       <div  class="column" v-for="item in [0,1,2,3]" :key="item">
-        <div v-for="img in selectedImage.slice(item*3,3*item+3)" :key="img">
-          <p class="card"><img :src="img[1]" alt=""></p>
-        </div>
-        </div>
-      </div>
     </div>
 
     <!--this elemts will be displayed only after the timeout is reached-->
@@ -55,7 +49,7 @@
 
 import "bootstrap/dist/css/bootstrap.css";
 import images from "../../assets/images/images.js";
-
+import DisplayImages from "../../components/DisplayImages.vue";
 
 
 myduration();
@@ -106,6 +100,9 @@ The created() method continues calling the function randomItem() until the array
 The method also ensures that no image is stored twice*/
 export default {
   name: "app",
+  components:{
+    DisplayImages,
+  },
   data() {
     return{
       images,
