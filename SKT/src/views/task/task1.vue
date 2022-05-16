@@ -25,25 +25,10 @@
       <h5 class="txt-center">Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
 
       <div class="row">
-        <div class="column">
-          <p class="card"><img :src="selectedImage[0][1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[1][1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[2][1]" alt=""></p>
+       <div  class="column" v-for="item in [0,1,2,3]" :key="item">
+        <div v-for="img in selectedImage.slice(item*3,3*item+3)" :key="img">
+          <p class="card"><img :src="img[1]" alt=""></p>
         </div>
-        <div class="column">
-          <p class="card"><img :src="selectedImage[3][1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[4][1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[5][1]" alt=""></p>
-        </div>
-        <div class="column">
-          <p class="card"><img :src="selectedImage[6][1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[7][1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[8][1]" alt=""></p>
-        </div>
-        <div class="column">
-          <p class="card"><img :src="selectedImage[9][1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[10][1]" alt=""></p>
-          <p class="card"><img :src="selectedImage[11][1]" alt=""></p>
         </div>
       </div>
     </div>
@@ -94,7 +79,7 @@ The setInterval() method calls a function at specified intervals (in millisecond
 The setInterval() method continues calling the function until clearInterval() is called, or the window is closed.
 1 second = 1000 milliseconds.*/
 function myduration(){
-  var timeleft = 5;
+  var timeleft = 555;
 
   var downloadTimer = setInterval(function(){
     if(timeleft < 1){
@@ -138,12 +123,13 @@ export default {
   },
   created() {
     while(this.selectedImage.length<13){
-      var img  =this.randomItem(Object.entries(this.images))
-      if(!this.selectedImage.includes(img)){
+      var img  =this.randomItem(Object.entries(this.images['imgs']))
+      if(!this.selectedImage.map(x => x[0] ).includes(img[0])){
           this.selectedImage.push(img);
           this.addImage(img);
       }
     }
+    console.log(this.selectedImage.map(x => x[0]))
   }
 }
 

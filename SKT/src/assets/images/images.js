@@ -16,8 +16,10 @@ import schwein from "../../assets/images/schwein.jpg";
 import tasche from "../../assets/images/tasche.jpg";
 import trommel from "../../assets/images/trommel.jpg";
 import zaun from "../../assets/images/zaun.jpg";
+import checker from "../../assets/images/checker.png"
 
 var images = {
+        'imgs' : {
         'ballon' :ballon,
         'banane' :banane,
         'brief' :brief,
@@ -35,7 +37,9 @@ var images = {
         'schwein': schwein,
         'tasche' : tasche,
         'trommel': trommel,
-        'zaun' :zaun,
+        'zaun' :zaun},
+        'checker': checker
+
 };
 
 export default images;
