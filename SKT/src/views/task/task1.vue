@@ -14,18 +14,19 @@
     </div>
     
     
-
+    <SpeechRecognition  :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
     
-    <TimeBar :duration=3 @timeout="this.hide= true" />
+    <TimeBar :duration=30 @timeout="this.hide= true" />
     <div v-if="!this.hide">
     <h5  class="txt-center">Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
     <DisplayImages :listed_images="selectedImage"/>
-</div>
+    </div>
    <div v-if="this.hide"  id="timeout-show">
      <br>
     <h5 class="txt-center">Die Zeit ist um</h5>
    </div>
 
+  
 
 
 
@@ -44,10 +45,12 @@
 
 <script>
 
+
 import "bootstrap/dist/css/bootstrap.css";
 import images from "../../assets/images/images.js";
 import DisplayImages from "../../components/DisplayImages.vue";
 import TimeBar from "../../components/TimeBar.vue";
+import SpeechRecognition from "../../components/SpeechRecognition.vue";
 
 
 export default {
@@ -55,6 +58,7 @@ export default {
   components:{
     DisplayImages,
     TimeBar,
+    SpeechRecognition
   },
   data() {
     return{
@@ -70,13 +74,23 @@ export default {
       addImage(img) {
       this.$store.dispatch("addImage", img);
     },
+   emitedWord(text) {
+     console.log(text)
+       this.selectedImage = this.selectedImage.map(entry => {
+         if(entry['name'].toLowerCase()==text){
+           return {...entry, 'recognized':true }
+         }else{
+           return entry
+         }
+       })
+    }
 
   },
   created() {
     while(this.selectedImage.length<13){
       var img  =this.randomItem(Object.entries(this.images['imgs']))
-      if(!this.selectedImage.map(x => x[0] ).includes(img[0])){
-          this.selectedImage.push(img);
+      if(!this.selectedImage.map(x => x['name'] ).includes(img[0])){
+          this.selectedImage.push({'url':img[1],'name':img[0], 'recognized':false});
           this.addImage(img);
       }
     }
