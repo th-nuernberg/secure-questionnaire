@@ -16,10 +16,10 @@
     
     <SpeechRecognition  :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
     
-    <TimeBar :duration=30 @timeout="this.hide= true" />
+    <TimeBar :duration=3000 @timeout="this.hide= true" ref="time" />
     <div v-if="!this.hide">
     <h5  class="txt-center">Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
-    <DisplayImages :listed_images="selectedImage"/>
+    <DisplayImages :listed_images="selectedImage" />
     </div>
    <div v-if="this.hide"  id="timeout-show">
      <br>
@@ -82,15 +82,23 @@ export default {
            return entry
          }
        })
+       if(this.selectedImage.every(entry => entry['recognized']===true)){
+         console.log(this.$refs.time.time)
+
+         this.$store.dispatch("addImage", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.time.time}})
+       }
+
+       
+       console.log(this.$store.getters.getImages['Aufgabe1']);
     }
 
   },
   created() {
-    while(this.selectedImage.length<13){
+    while(this.selectedImage.length<2){
       var img  =this.randomItem(Object.entries(this.images['imgs']))
       if(!this.selectedImage.map(x => x['name'] ).includes(img[0])){
           this.selectedImage.push({'url':img[1],'name':img[0], 'recognized':false});
-          this.addImage(img);
+          
       }
     }
     this.hide = false;

@@ -1,12 +1,15 @@
 import { createStore } from 'vuex'
 
 const state = {
-  images: []
+  task_data: {},
 };
 
 const mutations = {
   ADD_IMAGE(state, payload) {
-    state.images.push(payload);
+    //state.images.push(payload);
+    //state.images = payload;
+
+    state.task_data[payload['task']] = payload['content']
   }
 };
 
@@ -18,7 +21,7 @@ const actions = {
 
 const getters = {
   getImages(state) {
-    return state.images;
+    return state.task_data;
   }
 };
 

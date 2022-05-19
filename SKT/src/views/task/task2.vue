@@ -4,9 +4,9 @@
     <div class="placeholder"></div>
 
     <!--text-->
-    <h3 class="txt-center">{{getImages[1][0]}} </h3>
+    <h3 class="txt-center">{{selectedImage}} </h3>
 
-    <DisplayImages :listed_images="selectedImage"/>
+    <DisplayImages :listed_images="[]"/>
 
 
   </body>
@@ -31,6 +31,7 @@ export default {
   },
   created() {
     this.selectedImage = this.$store.getters.getImages;
+    console.log(this.selectedImage)
   }
 };
 </script>

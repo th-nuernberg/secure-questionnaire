@@ -6,6 +6,8 @@
 
 
  <script>
+import mappings from '../assets/synonyms';
+
 
   export default {
    name: 'speech_to_text',
@@ -15,8 +17,9 @@
         },
    data() {
      return {
-       transcription_: [],
-       lang_: "de-DE"
+      transcription_: [],
+      lang_: "de-DE",
+      mappings,
      };
    },
    emits: ['speeched'],
@@ -45,9 +48,14 @@
         .map(result => result.transcript)
         .join("");
 
-
+      console.log(text);
+    
+    let filtered = this.words.filter(
+      word => text.toLowerCase().includes(word)
       
-    let filtered = this.words.filter(word => text.toLowerCase().includes(word));
+      );
+
+
     if(filtered.length != 0){
         
         this.emitText(filtered[0])
@@ -75,6 +83,20 @@
    created() {
        this.startSpeechToTxt();
 
+      var filtered_mappings = {};
+
+  
+
+      for ( var key in this.mappings){
+        if (this.words.includes(key) ){
+          filtered_mappings[key] = this.mappings[key];
+
+        }
+
+        }
+
+      this.mapping = filtered_mappings;
+      console.log(this.mapping)
    }
   }
   </script>
