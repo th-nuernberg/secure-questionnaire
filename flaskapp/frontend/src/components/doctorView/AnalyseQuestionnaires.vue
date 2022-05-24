@@ -56,7 +56,7 @@
             loadAnswers() {
                 let promises = [];
                 this.analyseObjects.forEach(obj => {
-                    promises.push(this.$store.dispatch("getAnswersURL", obj)
+                    promises.push(this.$store.dispatch("getAnswers", obj)
                         .then((data) => {
                             if (data.queID in this.answers) {
                                 this.answers[data.queID].push(data);
@@ -180,13 +180,10 @@
 
             loadQuestionnaire(queID) {
                 return new Promise((resolve, reject) => {
-                    this.$store.dispatch("getPatientQuestionnaireURL", queID)
-                        .then((url) => {
-                            this.$store.dispatch("getPatientQuestionnaire", url)
-                                .then((res) => {
-                                    this.ques[queID] = res;
-                                    resolve();
-                                })
+                    this.$store.dispatch("getPatientQuestionnaire", queID)
+                        .then((res) => {
+                            this.ques[queID] = res;
+                            resolve();
                         })
                 })
             }

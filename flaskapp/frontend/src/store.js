@@ -142,7 +142,7 @@ export default new Vuex.Store({
             //send Answers to backend
             return new Promise((resolve, reject) => {               
                 console.log(data)
-                axios.put('/api/answers', data)
+                axios.put('/answers', data)
                     .then(() => {
                         resolve();
                     })
@@ -177,17 +177,21 @@ export default new Vuex.Store({
             })
         },
 
-        getAnswersURL({ dispatch, state }, infos) {
+        getAnswers({ commit, state }, infos) {
             return new Promise((resolve, reject) => {
-                axios.get('/api/answers', { params: { queID: infos.id } })
-                    .then((res) => {                        
-                        dispatch("getAnswers", { 'url': res.data.answerUrl, 'key': infos.key })
-                            .then(() => {
+                axios.get('/answers', { params: { queID: infos.id } })
+                    .then((res) => {
+                        let keyArray = Buffer.from(infos.key, 'base64');
+                        let IVArray = Buffer.from(res.data.IV, 'base64');
+                        let answersArray = Buffer.from(res.data.answers, 'base64');
+
+                        decryptAES(keyArray, answersArray, IVArray)
+                            .then((result) => {
+                                let parsed = JSON.parse(result)
+                                commit("setAnswers", parsed.answers);
                                 resolve(state.answers);
                             })
-                            .catch(() => {
-                                reject();
-                            })
+
                     })
                     .catch(() => {
                         reject();
@@ -198,28 +202,5 @@ export default new Vuex.Store({
 
         decrypt() {},
 
-        getAnswers({ commit }, infos) {
-            return new Promise((resolve, reject) => {
-                axios.get(infos.url)
-                    .then((res) => {
-                        let keyArray = Buffer.from(infos.key, 'base64');
-                        let IVArray = Buffer.from(res.data.IV, 'base64');
-                        let answersArray = Buffer.from(res.data.answers, 'base64');
-
-                        decryptAES(keyArray, answersArray, IVArray)
-                            .then((result) => {
-                                let parsed = JSON.parse(result)
-                                commit("setAnswers", parsed.answers);
-                                resolve();
-                            })                        
-
-
-                    })
-                    .catch(() => {
-                        reject();
-                    })
-            })
-
-        },
     },
 })

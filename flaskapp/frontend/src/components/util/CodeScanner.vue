@@ -36,7 +36,7 @@
                     let obj = JSON.parse(result);
                     if (obj.type === 'answersPatient' && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Bearbeiten der Antworten
                         this.alert = 'alert-success'
-                        this.$store.dispatch("getAnswersURL", { 'id': obj.ID, 'key': obj.key })
+                        this.$store.dispatch("getAnswers", { 'id': obj.ID, 'key': obj.key })
                             .then((answers) => {
                                 this.$router.push({ name: 'PatientQuestionnaire', params: { id: answers.queID } })
                             })

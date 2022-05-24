@@ -44,7 +44,7 @@
                     this.$router.push({path: `/patient/questionnaire/${this.codeNew}` });
                 }
                 else if (this.codeEdit !== "") {
-                    this.$store.dispatch("getAnswersURL", this.codeEdit)
+                    this.$store.dispatch("getAnswers", this.codeEdit)
                         .then((queID) => {
                             this.$router.push({ name: 'PatientQuestionnaire', params: { id: queID } })
                         })
