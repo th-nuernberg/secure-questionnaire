@@ -1,0 +1,3 @@
+C:\Users\Luisa M\source\repos\ITP Schlafambulanz\ITP Schlafambulanz\obj\Debug\ITP Schlafambulanz.njsproj.AssemblyReference.cache
+C:\Users\Luisa M\source\repos\ITP Schlafambulanz\ITP Schlafambulanz\obj\Debug\ITP Schlafambulanz.njsproj.CoreCompileInputs.cache
+C:\Users\Luisa M\source\repos\ITP Schlafambulanz\ITP Schlafambulanz\bin\Microsoft.NodejsTools.WebRole.dll

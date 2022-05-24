@@ -8,6 +8,7 @@ WORKDIR /app
 ADD . /app
 
 # Install the dependencies
+RUN apt-get update
 RUN pip install -r requirements.txt
 
 # run the command to start uWSGI
