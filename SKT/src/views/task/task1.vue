@@ -16,16 +16,20 @@
     
     <SpeechRecognition  :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
     
-    <TimeBar :duration=3000 @timeout="this.hide= true" ref="time" />
+    <TimeBar :duration=60 @timeout="this.timeOut" ref="time" v-if="!this.hide" />
     <div v-if="!this.hide">
     <h5  class="txt-center">Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
     <DisplayImages :listed_images="selectedImage" />
     </div>
-   <div v-if="this.hide"  id="timeout-show">
+   <div v-if="this.hide && !this.selectedImage.every(entry => entry['recognized'])"  id="timeout-show" style="padding-right">
      <br>
     <h5 class="txt-center">Die Zeit ist um</h5>
    </div>
 
+    <div v-if="this.hide && this.selectedImage.every(entry => entry['recognized'])"  id="timeout-show" style="padding-right">
+     <br>
+    <h5 class="txt-center">Sie haben alle Bilder vorgelesen!</h5>
+   </div>
   
 
 
@@ -74,27 +78,32 @@ export default {
       addImage(img) {
       this.$store.dispatch("addImage", img);
     },
-   emitedWord(text) {
-       this.selectedImage = this.selectedImage.map(entry => {
-         if(entry['name'].toLowerCase()==text){
-           return {...entry, 'recognized':true }
-         }else{
-           return entry
-         }
-       })
-       if(this.selectedImage.every(entry => entry['recognized']===true)){
-         console.log(this.$refs.time.time)
+    timeOut(){
+      this.hide = true;
+      console.log('TimeOUT!Q!!!!!!')
+      this.finishedTask()
+    },
+    finishedTask(){
+      this.$store.dispatch("addImage", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.time.time}})
 
-         this.$store.dispatch("addImage", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.time.time}})
-       }
+    },
+    emitedWord(boolArray) {
+      let test = boolArray.map( (value, index) => {
+        return {...this.selectedImage[index], 'recognized': value || this.selectedImage[index]['recognized']}
+      })
 
-       
-       console.log(this.$store.getters.getImages['Aufgabe1']);
+      this.selectedImage = test;
+      //console.log(this.selectedImage)
+      this.finishedTask()
+      if(this.selectedImage.every(entry => entry['recognized'])){
+        this.hide = true;
+
+      }
     }
 
   },
   created() {
-    while(this.selectedImage.length<2){
+    while(this.selectedImage.length<4){
       var img  =this.randomItem(Object.entries(this.images['imgs']))
       if(!this.selectedImage.map(x => x['name'] ).includes(img[0])){
           this.selectedImage.push({'url':img[1],'name':img[0], 'recognized':false});
@@ -102,7 +111,9 @@ export default {
       }
     }
     this.hide = false;
+
   }
+  
 }
 
 </script>

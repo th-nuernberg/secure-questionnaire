@@ -25,18 +25,23 @@ export default {
       time: Number,
       Timer: Object,
       styleduration: String,
+      done: Boolean,
     };
   },
   created() {
+    this.done = false;
     this.time = this.duration;
     this.styleduration = "--duration: " + this.duration + ";";
     var vm = this;
     this.Timer = setInterval(function () {
-      if (vm.time < 1) {
+      if (vm.time < 1 && !this.done) {
         //clearInterval(vm.Timer);
         vm.$emit("timeout")
+        this.done = true;
       } else {
+        if(!this.done){
         vm.time = vm.time - 1;
+        }
       }
     }, 1000);
   },

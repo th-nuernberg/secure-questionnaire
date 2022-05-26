@@ -6,7 +6,7 @@
     <!--text-->
     <h3 class="txt-center">{{selectedImage}} </h3>
 
-    <DisplayImages :listed_images="[]"/>
+    <DisplayImages :listed_images="this.selectedImage"/>
 
 
   </body>
@@ -15,6 +15,7 @@
 <script>
 
 import DisplayImages from "../../components/DisplayImages.vue";
+
 export default {
     components:{
     DisplayImages,
@@ -30,7 +31,8 @@ export default {
     }
   },
   created() {
-    this.selectedImage = this.$store.getters.getImages;
+    this.selectedImage = this.$store.getters.getImages['1']['images'];
+    //this.selectedImage = this.selectedImage.map(element => ({...element, 'recognized':false}))
     console.log(this.selectedImage)
   }
 };

@@ -6,7 +6,7 @@
 
 
  <script>
-import mappings from '../assets/synonyms';
+import checkSpeechforSim from "../assets/levenshteindistance.js"
 
 
   export default {
@@ -19,7 +19,7 @@ import mappings from '../assets/synonyms';
      return {
       transcription_: [],
       lang_: "de-DE",
-      mappings,
+      checkSpeechforSim,
      };
    },
    emits: ['speeched'],
@@ -48,18 +48,10 @@ import mappings from '../assets/synonyms';
         .map(result => result.transcript)
         .join("");
 
-      console.log(text);
+      //console.log(text);
+      // console.log(this.checkSpeechforSim(text, this.words));
     
-    let filtered = this.words.filter(
-      word => text.toLowerCase().includes(word)
-      
-      );
-
-
-    if(filtered.length != 0){
-        
-        this.emitText(filtered[0])
-    }
+      this.emitText(this.checkSpeechforSim(text, this.words))
            if(this.record){
       recognition.stop();
 }
@@ -82,21 +74,10 @@ import mappings from '../assets/synonyms';
    },
    created() {
        this.startSpeechToTxt();
-
-      var filtered_mappings = {};
-
+      //console.log(this.words);
   
 
-      for ( var key in this.mappings){
-        if (this.words.includes(key) ){
-          filtered_mappings[key] = this.mappings[key];
 
-        }
-
-        }
-
-      this.mapping = filtered_mappings;
-      console.log(this.mapping)
    }
   }
   </script>
