@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import createPersistedState from "vuex-persistedstate"
 
 const state = {
   task_data: {},
@@ -29,5 +30,6 @@ export default createStore({
   state,
   mutations,
   actions,
-  getters
+  getters,
+  plugins: [createPersistedState()],
 });

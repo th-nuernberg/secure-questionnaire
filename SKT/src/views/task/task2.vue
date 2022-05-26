@@ -15,6 +15,7 @@
 <script>
 
 import DisplayImages from "../../components/DisplayImages.vue";
+import images from "../../assets/images/images.js";
 
 export default {
     components:{
@@ -22,7 +23,8 @@ export default {
   },
   data() {
     return {
-      selectedImage: []
+      selectedImage: [],
+      images
     }
   },
   computed: {
@@ -33,7 +35,14 @@ export default {
   created() {
     this.selectedImage = this.$store.getters.getImages['1']['images'];
     //this.selectedImage = this.selectedImage.map(element => ({...element, 'recognized':false}))
-    console.log(this.selectedImage)
+    
+    while(this.selectedImage.length<4){
+      var img  =this.randomItem(Object.entries(this.images['imgs']))
+      if(!this.selectedImage.map(x => x['name'] ).includes(img[0])){
+          this.selectedImage.push({'url':img[1],'name':img[0], 'recognized':false});
+          
+      }
+    }
   }
 };
 </script>

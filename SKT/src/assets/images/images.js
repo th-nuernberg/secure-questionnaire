@@ -17,6 +17,7 @@ import tasche from "../../assets/images/tasche.jpg";
 import trommel from "../../assets/images/trommel.jpg";
 import zaun from "../../assets/images/zaun.jpg";
 import checker from "../../assets/images/checker.png"
+import white from "../../assets/images/white.png";
 
 var images = {
         'imgs' : {
@@ -38,8 +39,8 @@ var images = {
         'tasche' : tasche,
         'trommel': trommel,
         'zaun' :zaun},
-        'checker': checker
-
+        'checker': checker,
+        'white' : white
 };
 
 export default images;

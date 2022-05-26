@@ -84,7 +84,7 @@ export default {
       this.finishedTask()
     },
     finishedTask(){
-      this.$store.dispatch("addImage", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.time.time}})
+      //this.$store.dispatch("addImage", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.time.time}})
 
     },
     emitedWord(boolArray) {
