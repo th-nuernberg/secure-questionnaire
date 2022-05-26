@@ -14,9 +14,9 @@
     </div>
     
     
-    <SpeechRecognition  :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
+    <SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
     
-    <TimeBar :duration=60 @timeout="this.timeOut" ref="time" v-if="!this.hide" />
+    <TimeBar :duration=60 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide" />
     <div v-if="!this.hide">
     <h5  class="txt-center">Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
     <DisplayImages :listed_images="selectedImage" />
@@ -41,8 +41,8 @@
         <button class="btn-router">
           <router-link class="routerlink-2" to="/task2">Weiter</router-link>
         </button>
-      </div>
 
+      </div>
 
   </body>
 </template>
@@ -84,20 +84,24 @@ export default {
       this.finishedTask()
     },
     finishedTask(){
-      //this.$store.dispatch("addImage", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.time.time}})
-
+      this.$store.dispatch("addImage", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.timeBar.time}})
+      //console.log(this.$refs.timeBar.time)
+      this.hide = true;
+      this.$refs.speechRecogn.stop()
     },
     emitedWord(boolArray) {
       let test = boolArray.map( (value, index) => {
         return {...this.selectedImage[index], 'recognized': value || this.selectedImage[index]['recognized']}
       })
 
+
+    //console.log(this.$refs.timeBar.time)
       this.selectedImage = test;
       //console.log(this.selectedImage)
-      this.finishedTask()
+      
       if(this.selectedImage.every(entry => entry['recognized'])){
         this.hide = true;
-
+       this.finishedTask()
       }
     }
 

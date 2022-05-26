@@ -20,10 +20,18 @@ import checkSpeechforSim from "../assets/levenshteindistance.js"
       transcription_: [],
       lang_: "de-DE",
       checkSpeechforSim,
+      recognObj: Object,
+      stopIt: Boolean,
      };
    },
    emits: ['speeched'],
    methods: {
+    stop(){
+      
+        this.stopIt = true;
+
+    },
+
     emitText(text){
 
         this.$emit('speeched', text);
@@ -52,7 +60,7 @@ import checkSpeechforSim from "../assets/levenshteindistance.js"
       // console.log(this.checkSpeechforSim(text, this.words));
     
       this.emitText(this.checkSpeechforSim(text, this.words))
-           if(this.record){
+           if(this.stopIt){
       recognition.stop();
 }
     //this.emitText(text.toLocaleLowerCase());
@@ -63,17 +71,19 @@ import checkSpeechforSim from "../assets/levenshteindistance.js"
 
 
       recognition.stop();
-       if(!this.record){
+       if(!this.stopIt){
       recognition.start();
 }
 
     });
      recognition.start();
+     this.recognObj = recognition;
    },
 
    },
    created() {
        this.startSpeechToTxt();
+       this.stopIt = false;
       //console.log(this.words);
   
 
