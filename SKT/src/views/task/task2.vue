@@ -127,8 +127,10 @@ emitedWord(boolArray) {
     }
   },
       beforeUnmount() {
-          this.hide = true;
+      if(!this.hide){    
       this.$refs.speechRecogn.stop()
+      }
+      this.hide = true;
   }
   
 }
