@@ -84,12 +84,22 @@ export default {
     this.selectedImage = this.getData()["1"]["images"];
     this.selectedImage = this.selectedImage.map(entry => { return {...entry, 'recognized':false, 'url':images['white'] }})
   },
+<<<<<<< HEAD
    beforeUnmount() {
     if(!this.hide){    
       this.$refs.speechRecogn.stop()
     }
     this.hide = true;
   } 
+=======
+      beforeUnmount() {
+      if(!this.hide){    
+      this.$refs.speechRecogn.stop()
+      }
+      this.hide = true;
+  }
+  
+>>>>>>> 178eb92dff7d05c5e8a057d4af6b2c1e5ded1e34
 }
 
 </script>

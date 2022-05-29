@@ -85,11 +85,20 @@ export default {
     this.hide = false;
   },
   beforeUnmount() {
+<<<<<<< HEAD
     if(!this.hide){    
     this.$refs.speechRecogn.stop()
     }
     this.hide = true;
   } 
+=======
+      if(!this.hide){    
+      this.$refs.speechRecogn.stop()
+      }
+      this.hide = true;
+  }
+  
+>>>>>>> 178eb92dff7d05c5e8a057d4af6b2c1e5ded1e34
 }
 
 </script>
