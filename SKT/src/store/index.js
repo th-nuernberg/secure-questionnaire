@@ -1,35 +1,22 @@
 import { createStore } from 'vuex'
-import createPersistedState from "vuex-persistedstate"
-
-const state = {
-  task_data: {},
-};
-
-const mutations = {
-  ADD_IMAGE(state, payload) {
-    //state.images.push(payload);
-    //state.images = payload;
-
-    state.task_data[payload['task']] = payload['content']
-  }
-};
-
-const actions = {
-  addImage(context, image) {
-    context.commit("ADD_IMAGE", image);
-  }
-};
-
-const getters = {
-  getImages(state) {
-    return state.task_data;
-  }
-};
 
 export default createStore({
-  state,
-  mutations,
-  actions,
-  getters,
-  plugins: [createPersistedState()],
+  state:{
+    task_data: {},
+  },
+  mutations:{
+    ADD_DATA(state, payload) {
+      state.task_data[payload['task']] = payload['content']
+    }
+  },
+  actions:{
+    addData(context, data) {
+      context.commit("ADD_DATA", data);
+    }
+  },
+  getters:{
+    getData(state) {
+      return state.task_data;
+    }
+  }
 });

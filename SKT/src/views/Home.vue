@@ -1,9 +1,6 @@
 <template>
-  <body>
-    <!--placeholder-->
-    <div class="placeholder"></div>
+  <body class="body">
 
-    <!--text-->
     <h3 class="txt-center">Kurztest zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen nach Erzigkeit</h3>
     <p class="txt-center">
       Der Syndrom-Kurztest (SKT) ist ein international anerkannter Test, um die Gedächtnis- und Aufmerksamkeitsleistung zu erfassen. 
@@ -16,23 +13,10 @@
       Er besteht aus neun Untertests, die alle einem Zeitlimit unterliegen. 
       Unter anderem müssen die Probanden Gegenstände benennen und wiedererkennen oder Zahlen lesen und ordnen. 
       Für die Auswertung werden die in den Untertests ermittelten Punktwerte unter Berücksichtigung von Alter und Intelligenzniveau in Normwerte umgerechnet. 
-      Vertrieben wird der SKT von dem Erlanger Unternehmen Geromed GmbH, dessen Mitarbeiter zwar eine große Erfahrung mit dem Test haben, nicht jedoch die wissenschaftlichen Möglichkeiten, die für eine Digitalisierung erforderlich sind.</p>
+      Vertrieben wird der SKT von dem Erlanger Unternehmen Geromed GmbH, dessen Mitarbeiter zwar eine große Erfahrung mit dem Test haben, nicht jedoch die wissenschaftlichen Möglichkeiten, die für eine Digitalisierung erforderlich sind.</p><br>
 
-    <!--placeholder-->
-    <div class="placeholder"></div>
-
-    <!--button-->
-    <div style="text-align: center">
-      <button class="btn-router">
-        <router-link class="routerlink" to="/SKT">Legen Sie gleich los</router-link>
-      </button>
-    </div>
+     <router-link class="btn-router" to="/SKT">Legen Sie gleich los</router-link>
 
   </body>
 </template>
 
-<script>
-import "bootstrap/dist/css/bootstrap.css";
-
-export default {};
-</script>

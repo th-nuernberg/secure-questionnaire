@@ -14,7 +14,7 @@
 
 import "bootstrap/dist/css/bootstrap.css";
 import QrcodeVue from 'qrcode.vue'
-import encryption from "../../assets/script.js"
+import encryption from "../../assets/De-Encryption/script.js"
 
 
 export default {

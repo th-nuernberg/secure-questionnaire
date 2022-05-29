@@ -1,10 +1,19 @@
 <template>
-  <div id="nav">
-    <div class="placeholder"></div>
-        <nav class="navbar">
-            <router-link to="/">Home</router-link>
-            <router-link to="/SKT">SKT</router-link>
-        </nav>
+  <div id="app">
+    <Header></Header>
+    <Footer></Footer>
   </div>
-  <router-view/>
-</template>
+ </template>
+
+ <script>
+import Footer from './components/Footer.vue';
+import Header from './components/Header.vue';
+
+    export default {
+        name: 'app',
+        components: {
+    Footer,
+    Header
+}
+    };
+</script>

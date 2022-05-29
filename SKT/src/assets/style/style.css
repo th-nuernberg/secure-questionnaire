@@ -1,0 +1,111 @@
+/* Adds a grey background color to the top navigation */
+.navbar-default {
+    background-color: #333953;
+    justify-content: left;
+    display: flex;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+    /* Style the links inside the navigation bar */
+    .navbar-default a {
+        color: #FFFFFF;
+        padding: 1rem;
+        font-size: 1.25rem;
+        text-decoration: none;
+    }
+    /* Change the color of links on hover */
+    .navbar-default a:hover {
+        color: #007bff; 
+        text-decoration: none;
+    }
+
+.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #333953;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.body {
+    text-align: justify; 
+    padding: 0rem 2rem;
+}
+
+.button{
+    color: #333953;
+    text-decoration: none;
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1.5rem;  
+}
+    .button:hover{
+        background-color: #007bff;
+        color: #FFFFFF;
+    }
+
+.btn-router{
+    color: #333953;
+    text-decoration: none;
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1.5rem;   
+}
+    .btn-router:hover{
+        background-color: #333953;
+        color: #FFFFFF;
+    }
+
+/* Style the time-bar */
+.round-time-bar {
+    height: 7px;
+    animation: roundtime calc(var(--duration) * 1s) linear forwards;
+    transform-origin: left center;
+    background: linear-gradient(to right, #333953,#007bff);
+  }  
+  @keyframes roundtime {
+    to {
+      /* More performant than `width` */
+      transform: scaleX(0);
+    }
+  }
+
+/* Adds a big container around the tasks */
+.c-row {
+    padding: 10px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 140 * 5px;
+}
+
+.c-column {
+    padding: 1%;
+    text-align: center;
+    border: 0;
+}
+
+.c-card {
+    width: 10rem;
+    height: 10rem;
+    display: flex;
+    flex-direction: column;
+    border: #FFFFFF;
+}
+
+/*Sytle of the popup*/
+.popup {
+    background: #97b7da;
+    border-radius: 3px;
+    box-shadow: 0 2px 12px 0 #333953;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    padding: 60px 60px 60px;
+    color: #333953;
+  }
