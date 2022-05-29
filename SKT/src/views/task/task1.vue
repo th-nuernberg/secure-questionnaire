@@ -116,6 +116,10 @@ export default {
     }
     this.hide = false;
 
+  },
+  beforeUnmount() {
+          this.hide = true;
+      this.$refs.speechRecogn.stop()
   }
   
 }
