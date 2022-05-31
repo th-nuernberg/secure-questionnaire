@@ -1,18 +1,20 @@
 <template>
   <body class="body">
 
-    <div>
-      <h5>Auswertung Kurztest zur Erfassung von Gedächtnis- und Aufmer</h5>
-      {{task_data}}
-    </div>
+  <h3>Auswertung Kurztest zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen</h3>
 
+  <div class="auswertung">
+    <h5>Aufgabe 1 Gegenstände benennen: Ihre Bearbeitungszeit: {{60-task_data["1"]["time"]}} Sekunden; Erkannte Gegenstände: {{task_data["1"]["images"].map(entry => entry['recognized']).reduce((x,y)=>x+y)}}/12 </h5>
+    <h5>Aufgabe 2 Gegenstände unmittelbar reproduzieren: Ihre Bearbeitungszeit: {{60-task_data["2"]["time"]}} Sekunden; Erkannte Gegenstände: {{12-task_data["2"]["missing"].length}}/12</h5>
+  </div>
+      
     <div class="placeholder"></div>
     <div class="txt-center">
         <qrcode-vue class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />
     </div>
     <div class="placeholder"></div>
 
-    <button v-on:click="EncryptMessage('henlo')">
+    <button v-on:click="EncryptMessage(task_data)">
 
         Encrypt It
     </button>
@@ -38,15 +40,20 @@ export default {
         sizeQR: 400,
         data: Object,
         secret: String,
-        rsa_pub_key: String
+        rsa_pub_key: String,
+        task_data: []
     };
   },
   methods: {
+    getData() {
+      return this.$store.getters.getData;
+    },
     generateQRCode(value,id){
           this.showQR = true;
-          this.valueQR = value.toLocaleString()+";"+id;
+          this.valueQR = JSON.stringify(value.toLocaleString())+";"+id
       },
     async EncryptMessage(message){
+      message = JSON.stringify(message);
       let id = crypto.randomUUID();
 
       let values = await encryption['AES']['encrypt'](message)
@@ -93,6 +100,7 @@ export default {
     }
   },
   created() {
+      this.task_data = this.getData()
       this.rsa_pub_key = 
   `-----BEGIN PUBLIC KEY-----
   MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxMDhX3bxEgrA+9qb67KH
