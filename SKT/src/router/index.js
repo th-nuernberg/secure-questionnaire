@@ -30,9 +30,9 @@ export default createRouter({
       component: () => import('../views/task/task2.vue')
     },
     {
-      path: '/task3',
-      name: 'Task3',
-      component: () => import('../views/task/task3.vue')
+      path: '/auswertung',
+      name: 'Auswertung',
+      component: () => import('../views/task/auswertung.vue')
     },
     {
       path: '/lernphase',

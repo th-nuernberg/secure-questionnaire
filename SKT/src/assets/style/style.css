@@ -109,3 +109,10 @@
     padding: 60px 60px 60px;
     color: #333953;
   }
+
+.qrcode{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}

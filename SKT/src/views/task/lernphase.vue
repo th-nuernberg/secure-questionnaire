@@ -7,12 +7,12 @@
       <TimeBar :duration=5 @timeout="timeout" ref="time" /><br>
       <h5>Die Gegenstände werden jetzt noch einmal für 5 Sekunden gezeigt:</h5><br>
       <DisplayImages :listed_images="selectedImage" /><br>
-      <router-link class="btn-router" to="/task3" @click="timeout">Weiter</router-link>     
+      <router-link class="btn-router" to="/auswertung">Weiter</router-link>     
     </div>
     
    <div class="popup" v-if="this.hide"  id="timeout-show">
     <h5>Alle Aufgaben wurden bearbeitet!</h5><br>
-    <router-link class="btn-router" to="/task3">Beenden</router-link>
+    <router-link class="btn-router" to="/auswertung">Beenden</router-link>
    </div>
 
     
