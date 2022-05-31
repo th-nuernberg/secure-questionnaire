@@ -2,11 +2,12 @@ import os
 import json
 from flask import request, Flask, Response
 import pymongo
-
+from flask_cors import CORS
 
 
 
 app = Flask(__name__)
+cors = CORS(app)
 
 def get_db():
 
