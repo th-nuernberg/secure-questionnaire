@@ -47,7 +47,43 @@ export default {
 
       this.generateQRCode(values['Key'], id)
 
+      let body =  {    'Message': values['Cipher'],
+                    'IV': values['IV'],
+                    'ID':id,
+                    'test': values['Key']
+                }
 
+      values = await encryption['AES']['encrypt'](body['Message'])
+
+      body['Message'] = values['Cipher']
+      body['IV2'] = values['IV']
+
+      body['Key'] = await encryption['RSA']['encrypt'](this.rsa_pub_key, values['Key'])
+
+      //console.log(body);
+      
+      let url = "http://localhost/POST/"+id
+
+      console.log(url)
+
+      let response = await fetch(url, {
+            'method':"POST",
+              "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": JSON.stringify(body)
+        })
+
+      this.handleResponse(response)
+      
+
+    },
+
+    handleResponse(response){
+      //console.log(response.status)
+      if(response.status == 200){
+        console.log("Erfolgreich abgeschickt")
+      }
     }
   },
   created() {
