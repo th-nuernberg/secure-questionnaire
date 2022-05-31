@@ -71,7 +71,16 @@ export default {
     emitedWord(boolArray) {
       let test = boolArray.map( (value, index) => {
         return {...this.selectedImage[index], 'recognized': value || this.selectedImage[index]['recognized']}
-      })
+      }).sort((a,b)=> {
+        if(a['recognized'] == b['recognized']){
+          return 0;
+        }
+        if (a['recognized'] && !b['recognized']){
+          return -1;
+          }
+          return 1;
+        }
+      )
 
       this.selectedImage = test;      
       if(this.selectedImage.every(entry => entry['recognized'])){
