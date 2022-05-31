@@ -84,37 +84,45 @@
       ++countResults;
       lastResult = decodedText;
 
-
+      // console.log(decodedText)
       let id = decodedText.split(';')[1]
+
+      // console.log(id)
       let keyarray = decodedText.split(';')[0].split(',').map(x => parseInt(x))
 
+      // console.log(keyarray)
 
 
-
-      get_data("http://localhost:5000/GET", id
+      get_data("http://localhost/GET", id
       ).then(data => {
-
+        
         return importprivateKey(pemEncodedKey).then(rsaKey => {
+          
           return decryptRSAcipher(rsaKey, new Uint8Array(Object.values(data['Key'])))
         }).then(encaeskey => {
+          
           return importAESKey(new Uint8Array(encaeskey))
         })
           .then(aeskeyobj => {
             let iv2 = new Uint8Array(Object.values(data['IV2']))
             let ciphertext2 = new Uint8Array(Object.values(data['Message']))
+            
             return decryptAEScipher(aeskeyobj, ciphertext2, iv2)
           })
           .then(enc => {
             data['Message2'] = enc
+            
             return data
           })
       }).then(data => {
           return importAESKey(new Uint8Array(keyarray)).then(qrkey => {
+            
             let iv = new Uint8Array(Object.values(data['IV']));
             let ciphertext = new Uint8Array(data['Message2'].split(',').map(x => parseInt(x)))
             return decryptAEScipher(qrkey, ciphertext, iv)
           }).then((msg) => {
-            datafeld.textContent = msg
+            // datafeld.textContent = msg
+            console.log(msg);
           })
         })
     }

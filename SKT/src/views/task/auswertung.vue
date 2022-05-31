@@ -44,7 +44,7 @@ export default {
   methods: {
     generateQRCode(value,id){
           this.showQR = true;
-          this.valueQR = JSON.stringify(value.toLocaleString())+";"+id
+          this.valueQR = value.toLocaleString()+";"+id;
       },
     async EncryptMessage(message){
       let id = crypto.randomUUID();
