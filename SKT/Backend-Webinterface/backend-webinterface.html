@@ -16,6 +16,11 @@
           <div id="qr-reader-results"></div>
       </div>
     </div>
+
+    <div class="container">
+      <h5 id="task1"> </h5>
+      <h5 id="task2"> </h5>
+    </div>
   
 </body>
 
@@ -24,7 +29,7 @@
 
 <script>
 
-  datafeld = document.getElementById('data')
+  let datafeld;
 
 
   function get_data(url, id) {
@@ -122,7 +127,20 @@
             return decryptAEScipher(qrkey, ciphertext, iv)
           }).then((msg) => {
             // datafeld.textContent = msg
+            msg =  JSON.parse(msg);
             console.log(msg);
+            task1 = document.getElementById("task1")
+            task1_rec = msg['1']['images'].map(entry => entry['recognized']).reduce((x,y)=>x+y)
+            task1_time = 60-parseInt(msg['1']['time'])
+            task1.textContent = "Aufgabe 1 Gegenstände benennen: Ihre Bearbeitungszeit: "+task1_time+" Sekunden; Erkannte Gegenstände: "+task1_rec+"/12" 
+            //{{task_data["1"]["images"].map(entry => entry['recognized']).reduce((x,y)=>x+y)}}/12"
+            
+            task2 = document.getElementById("task2")
+            task2_rec = 12 - (msg['2']['missing']).length
+            task2_time = 60-parseInt(msg['2']['time'])
+            task2.textContent = "Aufgabe 2 Gegenstände unmittelbar reproduzieren: Ihre Bearbeitungszeit: "+task2_time+ " Sekunden; Erkannte Gegenstände: "+ task2_rec+"/12"
+            
+
           })
         })
     }
