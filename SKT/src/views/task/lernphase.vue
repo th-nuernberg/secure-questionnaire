@@ -4,10 +4,10 @@
     <h3>Lernphase</h3>
 
     <div v-if="!this.hide">
-      <TimeBar :duration=5 @timeout="timeout" ref="time" /><br>
-      <h5>Die Gegenstände werden jetzt noch einmal für 5 Sekunden gezeigt:</h5><br>
-      <DisplayImages :listed_images="selectedImage" /><br>
-      <router-link class="btn-router" to="/auswertung">Weiter</router-link>     
+      <TimeBar :duration=5 @timeout="timeout" ref="time"/>
+      <h5>Die Gegenstände werden jetzt noch einmal für 5 Sekunden gezeigt:</h5>
+      <DisplayImages :listed_images="selectedImage" />
+      <router-link class="btn-router" to="/auswertung">Weiter</router-link><br><br> 
     </div>
     
    <div class="popup" v-if="this.hide"  id="timeout-show">

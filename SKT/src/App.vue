@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <Header></Header>
-    <Footer></Footer>
+    <div id="page-container">
+      <div id="content-wrap">
+        <Footer></Footer>
+      </div>
+    </div>
+
   </div>
  </template>
 

@@ -6,12 +6,12 @@
 
     <SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
     
+    <TimeBar :duration=60 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/>
     <div v-if="!this.hide">
-    <TimeBar :duration=60 @timeout="this.timeOut" ref="timeBar"/>
     <h5>Sagen Sie bitte jetzt, welche Gegenstände Sie gerade gesehen haben.
       An welche können Sie sich noch erinnern?</h5>
     <DisplayImages :listed_images="selectedImage" />
-    <router-link class="btn-router" to="/lernphase" @click="timeOut">Weiter</router-link>
+    <router-link class="btn-router" to="/lernphase" @click="timeOut">Weiter</router-link><br><br>
     </div>
 
     <div class="popup" v-if="this.hide && !this.selectedImage.every(entry => entry['recognized'])">

@@ -1,24 +1,25 @@
 <template>
   <body class="body">
 
-  <h3>Auswertung Kurztest zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen</h3>
+    <h4>Auswertung Kurztest zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen</h4><br>
 
-  <div class="auswertung">
-    <h5>Aufgabe 1 Gegenstände benennen: Ihre Bearbeitungszeit: {{60-task_data["1"]["time"]}} Sekunden; Erkannte Gegenstände: {{task_data["1"]["images"].map(entry => entry['recognized']).reduce((x,y)=>x+y)}}/12 </h5>
-    <h5>Aufgabe 2 Gegenstände unmittelbar reproduzieren: Ihre Bearbeitungszeit: {{60-task_data["2"]["time"]}} Sekunden; Erkannte Gegenstände: {{12-task_data["2"]["missing"].length}}/12</h5>
-  </div>
-      
-    <div class="placeholder"></div>
-    <div class="txt-center">
-        <qrcode-vue class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />
+    <div class="auswertung">
+      <h5>Aufgabe 1 Gegenstände benennen: Ihre Bearbeitungszeit: {{60-task_data["1"]["time"]}} Sekunden; Erkannte Gegenstände: {{task_data["1"]["images"].map(entry => entry['recognized']).reduce((x,y)=>x+y)}}/12 </h5>
+      <h5>Aufgabe 2 Gegenstände unmittelbar reproduzieren: Ihre Bearbeitungszeit: {{60-task_data["2"]["time"]}} Sekunden; Erkannte Gegenstände: {{12-task_data["2"]["missing"].length}}/12</h5>
     </div>
-    <div class="placeholder"></div>
 
-    <button v-on:click="EncryptMessage(task_data)">
+    <div class="Datenübermittlung">
+      <br><h5 class="txt-center">Datenübermittlung</h5>
 
-        Encrypt It
-    </button>
-    <p>{{secret}}</p>
+      <p>Durch einen Klick auf den Button „Transfer starten“ wird ihr Testergebnis übermittelt. Sie erhalten im Anschluss einen QR-Code.<br>
+      <strong>Bitte bewahren Sie den ausgedruckten QR-Code an einem sicheren Ort auf!</strong><br>
+      Wenn Sie den ausgedruckten QR Code entsorgen, achten Sie bitte auf eine sichere Zerstörung, damit niemand anderes diesen verwenden kann.</p><br>
+      
+      <qrcode-vue class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />
+
+      <button class="button" v-on:click="EncryptMessage(task_data)">Transfer starten</button><br><br>
+    </div>
+
   </body>
 </template>
 
