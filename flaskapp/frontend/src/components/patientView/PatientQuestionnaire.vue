@@ -25,7 +25,7 @@
 
                 <b-row>
                     <b-col class="text-center">
-                        <b-button variant="primary" @click="downloadPdf()" class="btnBig">
+                        <b-button variant="primary" @click="downloadPdf()" class="btn-big btn-accent">
                             <b-icon-download></b-icon-download>
                             QR-Code
                         </b-button>
@@ -47,7 +47,7 @@
             </p>
 
 
-            <b-button variant="secondary" @click="$router.push('/patient')">Zur Startseite</b-button>
+            <b-button variant="outline-primary" @click="$router.push('/patient')">Zur Startseite</b-button>
 
 
             <vue-html2pdf :show-layout="false"
@@ -88,7 +88,7 @@
             <Questions-Container v-else class="boxStyling" date="" time=""></Questions-Container>
 
             <div class="text-center">
-                <b-button @click="save()" variant="success" class="btnBig">Speichern</b-button>
+                <b-button @click="save()" variant="success" class="btn-big">Speichern</b-button>
                 <div id="upload-error" style="display: none;">
                     <i class="fas fa-exclamation-circle"></i>
                     <p class="m-1 d-inline">Fehler beim Upload. Bitte versuchen Sie es erneut.</p>
@@ -310,11 +310,6 @@
         .form-control {
             max-width: 400px;
         }
-    }
-
-    .btnBig {
-        width: 200px;
-        height: 50px;
     }
 
     .saved {

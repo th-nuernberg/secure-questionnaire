@@ -39,7 +39,7 @@
         background: none;
         color: black;
         border: none;
-        max-width: 200px;
+        max-width: 250px;
         margin-left: auto;
         margin-right: auto;
     }

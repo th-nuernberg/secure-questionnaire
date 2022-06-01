@@ -1,35 +1,38 @@
 <template>
     <div>
         <b-container>
-            <b-row class="navigationMenu text-center">
-                <b-col>
-                    <b-button @click="back" :disabled="index === 0" variant="outline-primary">
-                        <b-icon-arrow-left font-scale="2"></b-icon-arrow-left>
+            <b-row class="navigationMenu text-center" align-h="center">
+                <b-col cols="2">
+                    <b-button @click="back" :disabled="index === 0" class="btnNavigate" variant="outline-primary">
+                        <b-icon-chevron-left font-scale="2"></b-icon-chevron-left>
                     </b-button>
                 </b-col>
-                <b-col>
-                    <b-button v-b-modal.calendar class="date" variant="primary">
+                <b-col cols="auto">
+                    <b-button v-b-modal.calendar class="date btn-accent">
                         {{currentDate}}
                     </b-button>
 
-                    <b-button-toolbar class="editBtns">
+                    <b-button-toolbar class="editBtnsGroup">
                         <b-button-group>
-                            <b-button v-b-modal.editEntry size="sm">
+                            <b-button v-b-modal.editEntry size="sm" class="dateBtns btn-white" variant="outline">
                                 <b-icon-pencil-fill></b-icon-pencil-fill>
+                                <span class="d-none d-lg-inline"> Datum bearbeiten</span>
                             </b-button>
-                            <b-button variant="danger" v-b-modal.deleteEntry size="sm">
+                            <b-button variant="outline" v-b-modal.deleteEntry size="sm" class="dateBtns btn-white">
                                 <b-icon-trash></b-icon-trash>
+                                <span class="d-none d-lg-inline"> Datum löschen</span>
                             </b-button>
-                            <b-button @click="openAddingModal" size="sm">
+                            <b-button @click="openAddingModal" size="sm" class="dateBtns btn-white" variant="outline">
                                 <b-icon-plus-circle></b-icon-plus-circle>
+                                <span class="d-none d-lg-inline"> Datum hinzufügen</span>
                             </b-button>
                         </b-button-group>
                     </b-button-toolbar>
 
                 </b-col>
-                <b-col>
-                    <b-button @click="forward" :disabled="index === entries.length - 1" variant="outline-primary">
-                        <b-icon-arrow-right font-scale="2"></b-icon-arrow-right>
+                <b-col cols="2">
+                    <b-button @click="forward" :disabled="index === entries.length - 1" class="btnNavigate" variant="outline-primary">
+                        <b-icon-chevron-right font-scale="2"></b-icon-chevron-right>
                     </b-button>
                 </b-col>
             </b-row>
@@ -50,7 +53,7 @@
 
         <b-modal id="calendar" size="md"
                  hide-header hide-footer centered>
-            <b-button @click="cancelModal" class="closeBtn"><b-icon-x-circle></b-icon-x-circle></b-button>
+            <b-button @click="cancelModal" class="closeBtn btn-white" variant="outline"><b-icon-x-circle></b-icon-x-circle></b-button>
 
             <h4>Alle Einträge:</h4>
             <b-button v-for="entry in entries" :key="entry.date" @click="goTo(entry.date)" class="button-calendar">
@@ -293,10 +296,11 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    @import "../../custom.scss";
 
     .navigationMenu {
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid $accent;
         padding: 15px 0;
         margin-bottom: 30px;
     }
@@ -305,22 +309,18 @@
         display: block;
         margin-left: auto;
         margin-right: auto;
-        margin-bottom: 10px;
+        font-size: 150%;
+        width: 100%;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
-    .button-calendar {
-        margin-right: 10px;
-        margin-bottom: 10px;
-        background: none;
-        color: black;
-        border: none;
-    }
 
     .questionsContainer {
         margin: 30px;
     }
 
-    .editBtns {
+    .editBtnsGroup {
         justify-content: center;
     }
 
@@ -328,9 +328,35 @@
         position: absolute;
         top: 5px;
         right: 5px;
-        background: none;
+    }
+
+
+    .editBtns {
+        background-color: none;
         color: black;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+        .editBtns:hover {
+            border: 1px solid black;
+        }
+
+    .btnNavigate {
+        height: 100%;
         border: none;
+    }
+
+    .btn-outline-primary:disabled, .btn-outline-primary.disabled {
+        color: grey;
+    }
+
+    .dateBtns {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border: 1px solid $accent;
+        padding-right: 20px;
+        padding-left: 20px;
     }
 
 </style>

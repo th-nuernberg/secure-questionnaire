@@ -18,6 +18,7 @@
 <script>
     import NavBar from './components/NavBar.vue';
     import Foot from './components/Foot.vue';
+    import "./custom.scss";
 
     export default {
         name: 'app',
@@ -29,13 +30,16 @@
     };
 </script>
 
-<style>
+<style lang="scss">
+
+    @import "custom.scss";
+
     .router-container {
         margin: 0 50px;
     }
 
     #app {
-        background-color: #e1ecf3;
+        background-color: $background;
     }
 
     .boxStyling {
@@ -44,6 +48,56 @@
         padding: 15px;
         margin: 20px 0;
         background-color: white;
+    }
+
+    .btn-big {
+        padding: 10px 20px !important;
+    }
+
+    .btn-primary {
+        background-color: $primary !important;
+        border-color: $primary !important;
+    }
+
+    .btn-primary:hover {
+        background-color: $primary-dark !important;
+    }
+
+    .btn-outline-primary {
+        color: $primary !important;
+        border-color: $primary !important;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: $primary-dark !important;
+        color: white !important;
+    }
+
+    .btn-accent {
+        background-color: $accent !important;
+        color: black !important;
+        border: none !important;
+    }
+
+    .btn-accent:hover {
+        background-color: $accent-dark !important;
+    }
+
+    .dropdown-item.active, .dropdown-item:active {
+        background-color: $primary !important;
+    }
+
+    .btn-white {
+        color: black !important;
+        background-color: none !important;
+    }
+
+    .btn-white:hover {
+        background-color: $background !important;
+    }
+
+    .text-primary {
+        color: $primary !important;
     }
 </style>
 

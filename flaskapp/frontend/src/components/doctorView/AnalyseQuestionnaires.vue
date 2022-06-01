@@ -6,25 +6,25 @@
         </div>
         
         <div v-for="(que, index) in queIDs" class="mt-5">
-            <b-row align-h="between">
-                <b-col>
-                    <h5> {{title(que)}} ({{que}})</h5>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button class="exportBtn" variant="primary" @click="exportCSV(que)" pill v-b-tooltip.hover title="Download CSV">
-                        <b-icon-download></b-icon-download>
-                    </b-button>
-                </b-col>
-            </b-row>
-
             <div class="boxStyling">
+                <b-row align-h="between">
+                    <b-col>
+                        <h5> {{title(que)}} ({{que}})</h5>
+                    </b-col>
+                    <b-col cols="auto">
+                        <b-button class="exportBtn" variant="primary" @click="exportCSV(que)" pill v-b-tooltip.hover title="Download CSV">
+                            <b-icon-download></b-icon-download>
+                        </b-button>
+                    </b-col>
+                </b-row>
+
+
                 <b-table id="table"
                          :items="answersFromOneQue(que)"
                          :fields="fieldsForOneQue(que)"
                          striped responsive>
                 </b-table>
             </div>
-
         </div>
 
     </b-container>

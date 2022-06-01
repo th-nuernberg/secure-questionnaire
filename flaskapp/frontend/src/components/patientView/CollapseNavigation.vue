@@ -20,9 +20,9 @@
 
         <div v-else v-for="(entry,index) in entries.timeEntries" :key="entry.time"
              class="accordion" role="tablist">
-            <b-card no-body class="mb-1">
+            <b-card no-body class="mb-3">
                 <b-card-header header-tag="header" class="p-0" role="tab">
-                    <b-button v-b-toggle="'accordion-'+index" variant="info" class="timeBtn">{{entry.time}}</b-button>
+                    <b-button v-b-toggle="'accordion-'+index" class="timeBtn" variant="primary">{{entry.time}}</b-button>
                     <b-button-group class="editBtnsGroup">
                         <b-button @click="setIndex(index)" v-b-modal.editTimeEntry size="sm" class="editBtns" variant="outlined">
                             <b-icon-pencil-fill></b-icon-pencil-fill>
@@ -46,7 +46,7 @@
 
         <b-row class="text-center mt-3">
             <b-col>
-                <b-button v-if="!noEntries" variant="primary" class="addBtn" v-b-modal.addTimeEntry>
+                <b-button v-if="!noEntries" class="addBtn btn-accent" v-b-modal.addTimeEntry>
                     <b-icon-plus></b-icon-plus>
                 </b-button>
             </b-col>
@@ -215,7 +215,8 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    @import "../../custom.scss";
 
     .timeBtn {
         width: 100%;
@@ -226,24 +227,8 @@
         box-shadow: none;
     }
 
-    .editBtnsGroup {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-    }
-
-    .editBtns:hover {
-        border: 1px solid black;
-    }
-
     .cardBody {
-        background-color: #F7F7F7;
-    }
-
-    .editBtns {
-        background-color: none;
-        color: black;
+        background-color: $background;
     }
 
     .card-header {
@@ -256,6 +241,22 @@
         padding-top: 0;
         padding-bottom: 0;
         font-size: 150%;
+    }
+
+    .editBtnsGroup {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    .editBtns {
+        color: white;
+    }
+
+    .editBtns:hover {
+        color: black;
+        background: $background;
     }
 
 </style>

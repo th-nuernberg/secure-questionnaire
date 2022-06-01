@@ -9,7 +9,7 @@
                       @input="codeValidation = null">
         </b-form-input>
 
-        <b-button class="mt-3" variant="primary" @click="submit()">Bestätigen</b-button>
+        <b-button class="mt-3 btn-big" variant="primary" @click="submit()">Bestätigen</b-button>
     </b-container>
 </template>
 
@@ -44,7 +44,7 @@
     }
 
     .container {
-        background-color: #def3ff;
+        background-color: white;
         padding: 30px;
         max-width: 700px;
         position: relative;
