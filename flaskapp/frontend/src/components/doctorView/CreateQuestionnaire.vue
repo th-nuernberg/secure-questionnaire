@@ -122,11 +122,10 @@
                       pdf-format="a4"
                       pdf-orientation="portrait"
                       pdf-content-width="800px"
-                      @progress="onProgress($event)"
                       @hasStartedGeneration="hasStartedGeneration()"
                       @hasGenerated="hasGenerated($event)"
                       ref="html2Pdf">
-            <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID"></questionnaire-pdf>
+            <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf>
         </vue-html2pdf>
         <b-button @click="downloadPdf()">PDF mit QR-Code</b-button>
         <b-button @click="restart()">Neuer Fragebogen</b-button>
@@ -237,18 +236,43 @@
             },
             save() {
                 document.getElementById("upload-error").style.display = "none";
-                this.questionnaire.queID = uuid.v4();
-                this.$store.dispatch("uploadQuestionnaire", {
-                    "questionnaire": this.questionnaire
-                })
-                    .then(() => {
-                        window.scrollTo(0, 0);
-                        this.saved = true;
+
+                const characters = 'ABCDEFGHKLMNPQRSTXYZabcdefghkmnpqrstxyz23456789';
+
+                function generateString(length) {
+                    let result = '';
+                    const charactersLength = characters.length;
+                    for (let i = 0; i < length; i++) {
+                        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                    }
+
+                    return result;
+                }
+
+                let id = generateString(5);
+
+                this.$store.dispatch("checkID", id)
+                    .then((res) => {
+                        if (res.status == true) {
+                            this.questionnaire.queID = id;
+                            this.$store.dispatch("uploadQuestionnaire", {
+                                "questionnaire": this.questionnaire
+                            })
+                                .then(() => {
+                                    window.scrollTo(0, 0);
+                                    this.saved = true;
+                                })
+                                .catch(() => {
+                                    document.getElementById("upload-error").style.display = "block";
+                                })
+                        } else {
+                            this.save();
+                        }
                     })
                     .catch(() => {
-                        document.getElementById("upload-error").style.display = "block";
                     })
             },
+
             restart() {
                 this.questionnaire = {
                     queID: '',

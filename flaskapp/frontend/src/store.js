@@ -200,6 +200,18 @@ export default new Vuex.Store({
             })
         },
 
+        checkID(_, id) {
+            return new Promise((resolve, reject) => {
+                axios.get('/questionnaire/idcheck', { params: { queID: id } })
+                    .then((res) => {
+                        resolve(res.data);
+                    })
+                    .catch(() => {
+                        reject();
+                    })
+            })
+        },
+
         decrypt() {},
 
     },

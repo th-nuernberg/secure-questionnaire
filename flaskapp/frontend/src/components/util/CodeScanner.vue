@@ -34,7 +34,7 @@
                 }
                 else {
                     let obj = JSON.parse(result);
-                    if (obj.type === 'answersPatient' && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Bearbeiten der Antworten
+                    if (this.$router.path.contains("patient") && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Bearbeiten der Antworten
                         this.alert = 'alert-success'
                         this.$store.dispatch("getAnswers", { 'id': obj.ID, 'key': obj.key })
                             .then((answers) => {
@@ -44,7 +44,7 @@
                                 this.alert = 'alert-warning'
                             })
                     }
-                    if (obj.type === 'answersDoctor' && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Auslesen durch Arzt
+                    if (this.$router.path.contains("doctor") && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Auslesen durch Arzt
                         this.$emit('addAnalyseID', {
                             'id': obj.ID,
                             'key': obj.key

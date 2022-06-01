@@ -1,16 +1,19 @@
 <template>
-    <section class="p-5">
-        <h1>Antworten bearbeiten</h1>
-        <p v-if="repeating">Scannen Sie folgenden QR-Code ein, um Ihre Antworten zu bearbeiten oder weitere Einträge hinzuzufügen.</p>
-        <p v-else>Scannen Sie folgenden QR-Code ein, um Ihre Antworten zu bearbeiten.</p>
-        <qr-code :content=contentPatient></qr-code>
-        <h1>Antworten anzeigen</h1>
-        <p>Geben Sie folgenden QR-Code an Ihren Arzt weiter, damit dieser Ihre Antworten auswerten kann.</p>
-        <qr-code :content=contentDoctor></qr-code>
-
-        <p>Alternativ kann auch folgender Code manuell eingegeben werden:</p>
-        <h1>{{ answersID }}</h1>
-
+    <section class="user-details p-5">
+        <div class="text-center">
+            <h1>Ihr ausgefüllter Fragebogen</h1>
+            <qr-code class="qr" :content=content></qr-code>
+        </div>
+        <h4>1. Fragebogen öffnen</h4>
+        <p>
+            Um den Fragebogen zu bearbeiten, scannen Sie den QR-Code auf www.website.de ein.
+            <br>Sie werden automatisch zu Ihrem ausgefüllten Fragebogen weitergeleitet.
+        </p>
+        <h4>2. Fragebogen auswerten</h4>
+        <p>Bringen Sie diesen QR-Code beim nächsten Termin mit, damit der Arzt Ihre Antworten auswerten kann.</p>
+        <p>Beachten Sie, dass dieser QR-Code nur solange gültig ist, bis Sie die Antworten bearbeiten oder ergänzen und einen neuen Code bekommen.</p>
+        <h4>Wichtiger Hinweis:</h4>
+        <p>Mit diesem QR-Code kann Ihr ausgefüllter Fragebogen entschlüsselt werden und somit sensible Daten eingesehen werden.<br>Geben Sie Ihn nicht an Dritte weiter.</p>
     </section>
 </template>
 
@@ -28,26 +31,16 @@
         },
         data() {
             return {
-                patient: {
-                    type: "answersPatient",
+                qrcontent: {
                     ID: this.answersID,
                     key: this.decodedKey()
                 },
-
-                doctor: {
-                    type: "answersDoctor",
-                    ID: this.answersID,
-                    key: this.decodedKey()
-                }
             }
         }, 
         computed: {
-            contentPatient() {
-                return JSON.stringify(this.patient);
-            },
-            contentDoctor() {
-                return JSON.stringify(this.doctor);
-            },
+            content() {
+                return JSON.stringify(this.qrcontent);
+            }
         },
         methods: {
             decodedKey() {
@@ -58,8 +51,21 @@
 </script>
 
 <style lang="scss" scoped>
-    qr-code {
-        display: inline;
-        margin: auto;
+    .qr {
+        width: 300px;
+        height: 300px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .code {
+        border-radius: 10px;
+        border: 2px solid black;
+    }
+
+    h4 {
+        margin-top: 20px;
     }
 </style>

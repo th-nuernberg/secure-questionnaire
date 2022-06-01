@@ -47,7 +47,6 @@
                           pdf-format="a4"
                           pdf-orientation="portrait"
                           pdf-content-width="800px"
-                          @progress="onProgress($event)"
                           @hasStartedGeneration="hasStartedGeneration()"
                           @hasGenerated="hasGenerated($event)"
                           ref="html2Pdf">
@@ -72,7 +71,7 @@
                             class="boxStyling navigation">
             </tab-navigation>
 
-            <Questions-Container v-else class="boxStyling"></Questions-Container>
+            <Questions-Container v-else class="boxStyling" date="" time=""></Questions-Container>
 
             <div class="text-center">
                 <b-button @click="save()" variant="success" class="btnBig">Speichern</b-button>
@@ -116,6 +115,8 @@
                 return this.$store.getters.getQuestionnaire;
             },
             answers() {
+                console.log("test")
+                console.log(this.$store.getters.getAllAnswers);
                 return this.$store.getters.getAllAnswers;
             },
             tabEntries() {
