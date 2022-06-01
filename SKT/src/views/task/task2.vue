@@ -29,7 +29,7 @@
 
 <script>
 
-import images from "../../assets/images/images.js";
+import images from "../../plugins/images.js";
 import DisplayImages from "../../components/DisplayImages.vue";
 import TimeBar from "../../components/TimeBar.vue";
 import SpeechRecognition from "../../components/SpeechRecognition.vue";

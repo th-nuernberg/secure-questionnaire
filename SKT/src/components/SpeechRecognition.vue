@@ -6,8 +6,7 @@
 
 
  <script>
-import checkSpeechforSim from "../assets/SpeechRecognition/levenshteindistance"
-
+  import checkSpeechforSim from "../plugins/levenshteindistance.js"
 
   export default {
    name: 'speech_to_text',

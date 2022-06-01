@@ -15,7 +15,7 @@
 
 
 <script>
-import images from "../assets/images/images.js";
+import images from "../plugins/images.js";
 
 export default {
     name: 'DisplayImages',
