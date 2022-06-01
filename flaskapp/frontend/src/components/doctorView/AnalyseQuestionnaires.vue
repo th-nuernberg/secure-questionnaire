@@ -8,7 +8,7 @@
         <div v-for="(que, index) in queIDs" class="mt-5">
             <b-row align-h="between">
                 <b-col>
-                    <h5 v-if="queIDs.length > 1">Fragebogen {{index + 1}}</h5>
+                    <h5> {{title(que)}} ({{que}})</h5>
                 </b-col>
                 <b-col cols="auto">
                     <b-button class="exportBtn" variant="primary" @click="exportCSV(que)" pill v-b-tooltip.hover title="Download CSV">
@@ -59,6 +59,9 @@
             },
             fieldsForOneQue() {
                 return queID => this.fields[queID];
+            },
+            title() {
+                return queID => this.ques[queID].title;
             }
         },
         methods: {

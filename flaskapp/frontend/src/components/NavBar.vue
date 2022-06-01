@@ -16,10 +16,10 @@
         name: "NavBar",
         computed: {
             doctorView() {
-                return this.$route.path == "doctorView";
+                return this.$route.path == "/doctorView";
             },
             doctorViewCreate() {
-                return this.$route.path == "doctorView/create";
+                return this.$route.path == "/doctorView/create";
             }
         }
     }
@@ -30,8 +30,7 @@
         margin-right: 20px;
     }
 
-    .brand{
+    .brand {
         margin-left: 20px;
     }
-    
 </style>
