@@ -6,7 +6,17 @@
         </div>
         
         <div v-for="(que, index) in queIDs" class="mt-5">
-            <h5 v-if="queIDs.length > 1">Fragebogen {{index + 1}}</h5>
+            <b-row align-h="between">
+                <b-col>
+                    <h5 v-if="queIDs.length > 1">Fragebogen {{index + 1}}</h5>
+                </b-col>
+                <b-col cols="auto">
+                    <b-button class="exportBtn" variant="primary" @click="exportCSV(que)" pill v-b-tooltip.hover title="Download CSV">
+                        <b-icon-download></b-icon-download>
+                    </b-button>
+                </b-col>
+            </b-row>
+
             <div class="boxStyling">
                 <b-table id="table"
                          :items="answersFromOneQue(que)"
@@ -17,7 +27,6 @@
 
         </div>
 
-        <b-button class="exportBtn" variant="primary">Export</b-button>
     </b-container>
 
 
@@ -35,13 +44,13 @@
                 componentKey: 0,
                 fields: {},
                 ques: {},
-                loading : true
+                loading: true
             };
         },
         created() {
             this.analyseObjects = this.$store.getters.getAnalyseObjects;
-            if (this.analyseObjects.length >= 1) {                
-               this.loadAnswers();
+            if (this.analyseObjects.length >= 1) {
+                this.loadAnswers();
             }
         },
         computed: {
@@ -75,7 +84,6 @@
                         this.setupTable();
                     })
                     .catch(() => {
-                        console.log("Error")
                         //TODO: Fehlermeldung
                     })
             },
@@ -88,9 +96,7 @@
                             this.loading = false;
                             this.componentKey += 1; //to update the view
                         })
-                })
-
-                
+                })                
             },
 
             buildRows(queID) {
@@ -140,18 +146,21 @@
                         .then(() => {
                             this.fields[queID] = [{
                                 key: "patientName",
+                                label: "Patientenname",
                                 sortable: true
                             }];
 
                             if (this.ques[queID].repeatingType.includes("date")) {
                                 this.fields[queID].push({
                                     key: "date",
+                                    label: "Datum",
                                     sortable: true
                                 });
                             }
                             if (this.ques[queID].repeatingType == "dateTime") {
                                 this.fields[queID].push({
                                     key: "time",
+                                    label: "Uhrzeit",
                                     sortable: true
                                 });
                             }
@@ -172,10 +181,6 @@
                             //TODO: Fehlermeldung
                         })
                 })
-
-
-
-
             },
 
             loadQuestionnaire(queID) {
@@ -186,14 +191,48 @@
                             resolve();
                         })
                 })
-            }
+            },
+
+            exportCSV(queID) {
+                let data = this.answersFromOneQue(queID);
+                let str = '';
+                let fields = this.fieldsForOneQue(queID);
+
+                for (let i = 0; i < fields.length; i++) {
+                    if (fields[i].label) {
+                        str += fields[i].label.replace(";", ",") + ';';
+                    }
+                    else {
+                        str += fields[i].key.replace(";", ",") + ';';
+                    }
+                }
+                str += '\n';
+
+                for (let i = 0; i < data.length; i++) {
+                    let line = '';
+                    for (let j = 0; j < fields.length; j++) {
+                        if (data[i][fields[j].label]) {
+                            str += data[i][fields[j].label].replace(";", ",");
+                        }
+                        else if (data[i][fields[j].key]) {
+                            str += data[i][fields[j].key].replace(";", ",");
+                        }
+                        str += ' ;'
+                    }
+
+                    line.slice(0, line.Length - 1);
+                    str += line + '\r\n';
+                }
+
+                var a = document.createElement('a');
+                a.setAttribute("href", "data:text/csv;charset=utf-8," + escape(str));
+                a.setAttribute('download', queID);
+
+                a.click();
+            },
         }
     }
 </script>
 
 <style scoped>
-    .exportBtn {
-        margin-top: 50px;
-    }
-
 </style>

@@ -48,8 +48,10 @@
 
         </b-container>
 
-        <b-modal id="calendar" size="sm"
-                 hide-header hide-footer>
+        <b-modal id="calendar" size="md"
+                 hide-header hide-footer centered>
+            <b-button @click="cancelModal" class="closeBtn"><b-icon-x-circle></b-icon-x-circle></b-button>
+
             <h4>Alle Einträge:</h4>
             <b-button v-for="entry in entries" :key="entry.date" @click="goTo(entry.date)" class="button-calendar">
                 {{entry.date}}
@@ -58,21 +60,35 @@
 
         <b-modal id="addEntry" size="md"
                  hide-header hide-footer centered>
+            <h4>Datum hinzufügen:</h4>
             <b-input type="date" v-model="date"></b-input>
             <p id="dateError" style="display:none; color:red;">Bitte geben Sie ein Datum an.</p>
             <p id="dateExistsError" style="display:none; color:red;">Datum existiert bereits.</p>
-            <b-button @click="cancelModal">Abbrechen</b-button>
-            <b-button @click="addDateEntry">Eintrag hinzufügen</b-button>
+            <b-row align-h="between" class="mt-3">
+                <b-col cols="auto">
+                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
+                </b-col>
+                <b-col cols="auto">
+                    <b-button @click="addDateEntry" variant="primary">Eintrag hinzufügen</b-button>
+                </b-col>
+            </b-row>
+
         </b-modal>
 
         <b-modal id="firstEntry" size="md"
                  hide-header hide-footer centered no-close-on-esc no-close-on-backdrop>
-            <h4>Fügen Sie einen Eintrag hinzu, um mit dem Fragebogen zu starten:</h4>
+            <h4>Fügen Sie ein Datum hinzu, um mit dem Fragebogen zu starten:</h4>
             <b-input type="date" v-model="date"></b-input>
             <p id="dateError" style="display:none; color:red;">Bitte geben Sie ein Datum an.</p>
             <p id="dateExistsError" style="display:none; color:red;">Datum existiert bereits.</p>
-            <b-button @click="$router.push('/patient')">Zurück zur Startseite</b-button>
-            <b-button @click="setDate">Eintrag hinzufügen</b-button>
+            <b-row align-h="between" class="mt-3">
+                <b-col cols="auto">
+                    <b-button @click="$router.push('/patient')" variant="outline">Zurück zur Startseite</b-button>
+                </b-col>
+                <b-col cols="auto">
+                    <b-button @click="setDate" variant="primary" :disabled="date == ''">Eintrag hinzufügen</b-button>
+                </b-col>
+            </b-row>
         </b-modal>
 
         <b-modal id="editEntry" size="md"
@@ -81,16 +97,28 @@
             <b-input type="date" v-model="date"></b-input>
             <p id="dateError" style="display:none; color:red;">Bitte geben Sie ein Datum an.</p>
             <p id="dateExistsError" style="display:none; color:red;">Datum existiert bereits.</p>
-            <b-button @click="cancelModal">Abbrechen</b-button>
-            <b-button @click="setDate">Aktualisieren</b-button>
+            <b-row align-h="between" class="mt-3">
+                <b-col cols="auto">
+                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
+                </b-col>
+                <b-col cols="auto">
+                    <b-button @click="setDate" variant="primary">Aktualisieren</b-button>
+                </b-col>
+            </b-row>
         </b-modal>
 
         <b-modal id="deleteEntry" size="md"
                  hide-header hide-footer centered>
             <h4>Wollen Sie diesen Eintrag wirklich löschen?</h4>
             <p>Alle Einträge zu diesem Datum werden dadurch gelöscht.</p>
-            <b-button @click="cancelModal">Abbrechen</b-button>
-            <b-button @click="deleteEntry" variant="danger">Löschen</b-button>
+            <b-row align-h="between" class="mt-3">
+                <b-col cols="auto">
+                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
+                </b-col>
+                <b-col cols="auto">
+                    <b-button @click="deleteEntry" variant="danger">Löschen</b-button>
+                </b-col>
+            </b-row>
         </b-modal>
     </div>
 </template>
@@ -214,6 +242,7 @@
                 this.$bvModal.hide("editEntry");
                 this.$bvModal.hide("addEntry");
                 this.$bvModal.hide("deleteEntry");
+                this.$bvModal.hide("calendar");
             },
             german(date) {
                 let year = date.slice(0, 4);
@@ -294,4 +323,14 @@
     .editBtns {
         justify-content: center;
     }
+
+    .closeBtn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: none;
+        color: black;
+        border: none;
+    }
+
 </style>

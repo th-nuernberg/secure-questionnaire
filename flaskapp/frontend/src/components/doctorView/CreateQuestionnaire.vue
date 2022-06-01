@@ -301,7 +301,7 @@
     }
 
     .background-color {
-        background: #def3ff;
+        background: #11111111;
     }
 
     .skala {

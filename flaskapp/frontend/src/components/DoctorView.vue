@@ -1,7 +1,7 @@
 <template>
     <b-container class="container mt-5">
         <b-row>
-            <b-col cols="5">
+            <b-col cols="12" md="5">
                 <div class="wrapper">
                     <code-scanner @addAnalyseID="addAnalyseID"></code-scanner>
                     <div class="info">
@@ -40,7 +40,8 @@
                     </div>
                 </div>
                 <div v-else>
-                    Scannen Sie einen QR-Code, um mit der Auswertung zu starten.
+                    Scannen Sie einen QR-Code, um mit der Auswertung zu starten. <br />
+                    Sie können beliebig viele QR-Codes auf einmal auswerten.
                 </div>
 
             </b-col>

@@ -13,26 +13,40 @@
     </b-container>
 
     <b-container v-else-if="pageState === 'saved'">
-        <div class="saved">            
+        <div class="saved">
             <b-button variant="outline" @click="pageState='ready'" class="mb-4">
                 <b-icon-arrow-left></b-icon-arrow-left>
                 Zurück zum Fragebogen
             </b-button>
-            <h3 class="text-center mb-5">Erfolgreich gespeichert!</h3>
-            <b-row class="mb-5">
-                <b-col cols="8">
-                    <h4>Die nächsten Schritte:</h4>
-                    <p></p>
-                    <p>Speichern Sie den QR-Code, um die Antworten zu einem späteren Zeitpunkt zu bearbeiten oder Ihrem Arzt zeigen zu können.</p>
-                </b-col>
-                <b-col>
-                    <b-button variant="primary" @click="downloadPdf()" class="btnBig">
-                        <b-icon-download></b-icon-download>
-                        QR-Code
-                    </b-button>
-                </b-col>
-            </b-row>
-            
+
+            <div class="boxStyling mb-5">
+                <h3 class="text-center mb-3">Erfolgreich gespeichert!</h3>
+                <p class="text-center mb-3">Laden Sie Ihren QR-Code herunter, um Ihre Antworten später noch einmal zu bearbeiten oder dem Arzt zeigen zu können.</p>
+
+                <b-row>
+                    <b-col class="text-center">
+                        <b-button variant="primary" @click="downloadPdf()" class="btnBig">
+                            <b-icon-download></b-icon-download>
+                            QR-Code
+                        </b-button>
+                    </b-col>
+                </b-row>
+
+            </div>
+
+            <h4>Infos:</h4>
+            <h6>Was passiert mit meinen Daten?</h6>
+            <p>
+                Die Antworten werden ausschließlich verschlüsselt auf unserem Server gespeichert.
+                <br>Der Schlüssel dazu wird in dem QR-Code gespeichert, damit nur Sie Zugriff auf Ihre Daten haben.
+            </p>
+            <h6>Warum bekomme Ich nach jedem Speichern einen neuen QR-Code?</h6>
+            <p>
+                Beim Speichern wird jedes Mal ein neuer, zufälliger Schlüssel generiert. Dies hat zur Folge, dass Ihre Antworten neu verschlüsselt werden und somit ein neuer QR-Code generiert wird.
+                <br>Somit können wir gewährleisten, dass Ihre Daten zu jedem Zeitpunkt geschützt sind.
+            </p>
+
+
             <b-button variant="secondary" @click="$router.push('/patient')">Zur Startseite</b-button>
 
 
@@ -60,7 +74,7 @@
             <h1 class="mt-5">{{ questionnaire.title }}</h1>
 
             <b-row class="name mb-4 mt-4">
-                <b-col >
+                <b-col>
                     <b-input class="boxStyling" v-model="patientName" @input="setName" placeholder="Bitte geben Sie Ihren Namen ein."></b-input>
                 </b-col>
             </b-row>
@@ -115,8 +129,6 @@
                 return this.$store.getters.getQuestionnaire;
             },
             answers() {
-                console.log("test")
-                console.log(this.$store.getters.getAllAnswers);
                 return this.$store.getters.getAllAnswers;
             },
             tabEntries() {

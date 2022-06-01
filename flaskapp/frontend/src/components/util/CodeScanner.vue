@@ -1,13 +1,9 @@
 <template>
     <div class="col">
-        <div class="card">
+        <div class="scanner">
             <qrcode-stream @decode="onDecode" @init="onInit" class="camera" />
-            <div class="card-body">
-                <p class="card-text">Scannen Sie hier Ihren CR-Code</p>
-                <hr>
-                <div class="alert" :class="alert" role="alert">
-                    {{ status }}
-                </div>
+            <div class="statusMsg" :class="alert" role="alert">
+                {{ status }}
             </div>
         </div>
     </div>
@@ -34,7 +30,7 @@
                 }
                 else {
                     let obj = JSON.parse(result);
-                    if (this.$router.path.contains("patient") && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Bearbeiten der Antworten
+                    if (this.$route.path.includes("patient") && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Bearbeiten der Antworten
                         this.alert = 'alert-success'
                         this.$store.dispatch("getAnswers", { 'id': obj.ID, 'key': obj.key })
                             .then((answers) => {
@@ -44,7 +40,7 @@
                                 this.alert = 'alert-warning'
                             })
                     }
-                    if (this.$router.path.contains("doctor") && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Auslesen durch Arzt
+                    if (this.$route.path.includes("doctor") && obj.ID !== undefined && obj.key !== undefined) { //QR-Code zum Auslesen durch Arzt
                         this.$emit('addAnalyseID', {
                             'id': obj.ID,
                             'key': obj.key
@@ -83,4 +79,22 @@
 </script>
 
 <style scoped>
+    .statusMsg {
+        position: absolute;
+        bottom: 5px;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 150px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        padding: 10px;
+        border-radius: 20px;
+    }
+
+    .scanner {
+        position: relative;
+    }
+
+
 </style>

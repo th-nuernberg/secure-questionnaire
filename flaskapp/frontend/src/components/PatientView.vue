@@ -1,9 +1,10 @@
 <template>
     <b-container class="container">
-        <code-scanner class="mt-5"></code-scanner>
+        <h3 class="mt-5">QR-Code scannen:</h3>
+        <code-scanner></code-scanner>
         <b-button class="small-button mt-3" @click="manually()">Code manuell eingeben</b-button>
 
-        <code-manually v-show="showManually"></code-manually>
+        <code-manually v-show="showManually" @manually="manually"></code-manually>
 
     </b-container>
 </template>

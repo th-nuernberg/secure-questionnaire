@@ -140,8 +140,7 @@ export default new Vuex.Store({
 
         uploadAnswers(_, data) {
             //send Answers to backend
-            return new Promise((resolve, reject) => {               
-                console.log(data)
+            return new Promise((resolve, reject) => {
                 axios.put('/answers', data)
                     .then(() => {
                         resolve();
@@ -159,7 +158,6 @@ export default new Vuex.Store({
                         resolve(res.data);
                     })
                     .catch(() => {
-                        console.log("2")
                         reject();
                     })
             })
