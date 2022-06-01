@@ -29,15 +29,17 @@ export default {
     };
   },
   created() {
+    console.log("start Timebar");
     this.done = false;
     this.time = this.duration;
     this.styleduration = "--duration: " + this.duration + ";";
     var vm = this;
     this.Timer = setInterval(function () {
+      console.log(vm.done);
       if (vm.time < 1 && !this.done) {
         //clearInterval(vm.Timer);
         vm.$emit("timeout")
-        this.done = true;
+        vm.done = true;
       } else {
         if(!this.done){
         vm.time = vm.time - 1;
