@@ -109,7 +109,7 @@
         </b-container>
     </div>
     <div v-else>
-        <h1>Fragebogen erfolgreich gespeichert</h1>
+        <h1 class="mt-5">Fragebogen erfolgreich gespeichert</h1>
 
         <vue-html2pdf :show-layout="false"
                       :float-layout="true"
@@ -127,8 +127,8 @@
                       ref="html2Pdf">
             <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf>
         </vue-html2pdf>
-        <b-button @click="downloadPdf()">PDF mit QR-Code</b-button>
-        <b-button @click="restart()">Neuer Fragebogen</b-button>
+        <b-button @click="downloadPdf()" class="mt-3 btn-big btnPDF" variant="primary">PDF mit QR-Code</b-button>
+        <b-button @click="restart()" class="mt-3" variant="outline-primary">Neuer Fragebogen</b-button>
     </div>
 
 
@@ -318,5 +318,9 @@
     #upload-error {
         color: red;
         margin-top: 5px;
+    }
+
+    .btnPDF {
+        margin-right: 30px;
     }
 </style>
