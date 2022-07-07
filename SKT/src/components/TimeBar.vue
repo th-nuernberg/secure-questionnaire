@@ -29,7 +29,7 @@ export default {
     };
   },
   created() {
-    console.log("start Timebar");
+    //console.log("start Timebar");
     this.done = false;
     this.time = this.duration;
     this.styleduration = "--duration: " + this.duration + ";";

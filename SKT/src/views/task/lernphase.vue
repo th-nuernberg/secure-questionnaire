@@ -11,7 +11,7 @@
     </div>
     
    <div class="popup" v-if="this.hide"  id="timeout-show">
-    <h5>Alle Aufgaben wurden bearbeitet!</h5><br>
+    <h5>Hier geht es weiter zur nächsten Aufgabe</h5><br>
     <router-link class="btn-router" to="/task3">Beenden</router-link>
    </div>
 

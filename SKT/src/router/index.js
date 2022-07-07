@@ -35,6 +35,11 @@ export default createRouter({
       component: () => import('../views/task/task3.vue')
     },
     {
+      path: '/task4',
+      name: 'Task4',
+      component: () => import('../views/task/task4.vue')
+    },
+    {
       path: '/task8',
       name: 'Task8',
       component: () => import('../views/task/task8.vue')

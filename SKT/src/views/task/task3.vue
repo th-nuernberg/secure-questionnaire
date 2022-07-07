@@ -11,17 +11,17 @@
     <h5> Sie sehen hier ein Spielbrett mit bunten Spielsteinen, auf denen Zahlen stehen.<br>
       Als erstes lesen Sie bitte die Zahlen laut vor, so schnell Sie können. Sie brauchen sich die Zahlen nicht zu merken.</h5>
     <DisplayNumber :listed_numbers="selectedNumber"/><br>
-    <router-link class="btn-router" to="/auswertung" @click="timeOut">Weiter</router-link><br><br>
+    <router-link class="btn-router" to="/task4" @click="timeOut">Weiter</router-link><br><br>
     </div>  
 
     <div class="popup" v-if="this.hide && !this.selectedNumber.every(entry => entry['recognized'])">
       <h4>Die Zeit ist um!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
-      <router-link class="btn-router" to="/auswertung">Weiter geht's</router-link>
+      <router-link class="btn-router" to="/task4">Weiter geht's</router-link>
     </div>
 
     <div class="popup" v-if="this.hide && this.selectedNumber.every(entry => entry['recognized'])">
       <h4>Sie haben alle Zahlen vorgelesen!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
-      <router-link class="btn-router" to="/auswertung">Weiter geht's</router-link>
+      <router-link class="btn-router" to="/task4">Weiter geht's</router-link>
     </div>
     
   </body>
@@ -43,11 +43,6 @@ export default {
     return{
       selectedNumber: [],
       hide: Boolean,
-      alignments: [
-        'start',
-        'center',
-        'end',
-      ],
     };
   },
   methods: {
@@ -71,8 +66,7 @@ export default {
     },
     finishedTask(){
       this.hide = true;
-      this.$store.dispatch("addData", {'task':3, 'content':{'inumbers':this.selectedNumber ,'time':this.$refs.timeBar.time}})
-      this.$refs.speechRecogn.stop()
+      this.$store.dispatch("addData", {'task':3, 'content':{'numbers':this.selectedNumber ,'time':this.$refs.timeBar.time}})
     },
   },
   created() {
@@ -84,12 +78,6 @@ export default {
       }
     }
   },
-  beforeUnmount() {
-    if(!this.hide){    
-    this.$refs.speechRecogn.stop()
-    }
-    this.hide = true;
-  } 
 }
 
 </script>

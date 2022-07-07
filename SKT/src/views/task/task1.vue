@@ -69,7 +69,6 @@ export default {
       })
 
       this.selectedImage = test;
-      //console.log(this.selectedImage)
       
       if(this.selectedImage.every(entry => entry['recognized'])){
        this.finishedTask()
