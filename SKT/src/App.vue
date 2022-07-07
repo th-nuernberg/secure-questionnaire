@@ -1,12 +1,8 @@
 <template>
   <div id="app">
     <Header></Header>
-    <div id="page-container">
-      <div id="content-wrap">
-        <Footer></Footer>
-      </div>
-    </div>
-
+    <router-view/>      
+    <Footer></Footer> 
   </div>
  </template>
 

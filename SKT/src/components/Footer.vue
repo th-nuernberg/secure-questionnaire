@@ -1,5 +1,11 @@
 <template>
-  <div id="footer" class="footer">
+  <footer class="footer">
     2022 | IT Projekt Schlaf/Gedächtnis 
-  </div>
+  </footer>
 </template>
+
+<script>
+export default {
+  name: 'Footer',
+};
+</script>

@@ -32,7 +32,7 @@
 
 .body {
     text-align: justify; 
-    padding: 0rem 2rem;
+    padding: 0rem 2rem;       
 }
 
 .button{
@@ -98,18 +98,16 @@
 
 /*Sytle of the popup*/
 .popup {
+    padding: 60px 60px 60px;
+    margin: 25% auto;
+    width: 50%;
+    position: relative;
     background: #97b7da;
     border-radius: 3px;
     box-shadow: 0 2px 12px 0 #333953;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
     text-align: center;
-    padding: 60px 60px 60px;
     color: #333953;
   }
-
 
 .qrcode{
     display: block;
@@ -117,3 +115,36 @@
     margin-right: auto;
     width: 50%;
 }
+
+.simplecircle {
+    height: 150px;
+    width: 150px;
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px;
+    line-height: 135px;
+    text-align: center;
+    font-size: 70px;  
+}
+
+.circle {
+    height: 150px;
+    width: 150px;
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px;
+    line-height: 135px;
+    text-align: center;
+    font-size: 70px;  
+    box-shadow: 10px 20px 15px silver;
+}
+
+.row{
+    text-align:center; 
+    display:block;
+}
+

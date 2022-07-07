@@ -35,7 +35,6 @@ export default {
     this.styleduration = "--duration: " + this.duration + ";";
     var vm = this;
     this.Timer = setInterval(function () {
-      console.log(vm.done);
       if (vm.time < 1 && !this.done) {
         //clearInterval(vm.Timer);
         vm.$emit("timeout")

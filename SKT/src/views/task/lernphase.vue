@@ -7,12 +7,12 @@
       <TimeBar :duration=5 @timeout="timeout" ref="time"/>
       <h5>Die Gegenstände werden jetzt noch einmal für 5 Sekunden gezeigt:</h5>
       <DisplayImages :listed_images="selectedImage" />
-      <router-link class="btn-router" to="/auswertung">Weiter</router-link><br><br> 
+      <router-link class="btn-router" to="/task3">Weiter</router-link><br><br> 
     </div>
     
    <div class="popup" v-if="this.hide"  id="timeout-show">
     <h5>Alle Aufgaben wurden bearbeitet!</h5><br>
-    <router-link class="btn-router" to="/auswertung">Beenden</router-link>
+    <router-link class="btn-router" to="/task3">Beenden</router-link>
    </div>
 
     
@@ -46,8 +46,6 @@ export default {
     this.task_data = this.$store.getters.getData;
     this.selectedImage = this.task_data["1"]["images"];
     this.selectedImage = this.selectedImage.map(entry => {return {...entry, 'recognized':false }})    
-    console.log("Store nach Task 2: ");
-    console.log(this.task_data);
   }
 };
 </script>
