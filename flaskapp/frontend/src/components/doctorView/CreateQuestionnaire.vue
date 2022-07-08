@@ -1,6 +1,6 @@
 <template>
     <div v-if="!saved">
-        <b-container>
+        <b-container class="mt-5">
             <h1>Fragebogen erstellen</h1>
             <b-form> 
                 <b-form-group class="mb-2">
@@ -108,8 +108,19 @@
 
         </b-container>
     </div>
-    <div v-else>
-        <h1 class="mt-5">Fragebogen erfolgreich gespeichert</h1>
+    <div v-else class="saved">
+        <div class="boxStyling mb-5">
+            <h3 class="text-center mb-3">Erfolgreich gespeichert!</h3>
+            <b-row>
+                <b-col class="text-center">
+                    <b-button @click="downloadPdf()" class="mt-3 btn-big btnPDF" variant="primary">
+                        <b-icon-download></b-icon-download>
+                        Infoblatt
+                    </b-button>
+                    <b-button @click="restart()" class="mt-3 btn-big" variant="outline-primary">Neuer Fragebogen</b-button>
+                </b-col>
+            </b-row>
+        </div>
 
         <vue-html2pdf :show-layout="false"
                       :float-layout="true"
@@ -127,8 +138,35 @@
                       ref="html2Pdf">
             <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf>
         </vue-html2pdf>
-        <b-button @click="downloadPdf()" class="mt-3 btn-big btnPDF" variant="primary">PDF mit QR-Code</b-button>
-        <b-button @click="restart()" class="mt-3" variant="outline-primary">Neuer Fragebogen</b-button>
+
+        <div class="boxStyling">
+            <section class="user-details p-5">
+                <div class="text-center">
+                    <h1>Infoblatt zum Fragebogen</h1>
+                    <h1>{{questionnaire.title}}</h1>
+                    <qr-code :content=qrlink class="qr"></qr-code>
+                </div>
+                <h4>1. Fragebogen öffnen</h4>
+                <p>
+                    Um den Fragebogen zu öffnen, scannen Sie den obigen QR-Code mit einem QR-Code-Scanner Ihrer Wahl.
+                    Sie können dazu zum Beispiel Ihr Smartphone benutzen.
+                </p>
+                <p>Alternativ können Sie den QR-Code auch direkt auf www.website.de einscannen.</p>
+                <p>Falls Sie keine Kamera zur Verfügung haben, können Sie auch folgenden Code unter www.website.de eingeben:</p>
+                <div class="text-center">
+                    <p class="font-weight-bold p-2 d-inline code">{{ questionnaire.queID }}</p>
+                </div>
+                <h4>2. Fragebogen ausfüllen</h4>
+                <p>
+                    Füllen Sie den Fragebogen nach Anweisungen des Arztes aus und speichern Sie ihn anschließend.
+                    <br>Nach dem Speichern erhalten Sie eine weitere Datei mit einem neuen QR-Code, der genutzt werden kann, um Ihre verschlüsselten Antworten zu entschlüsseln.
+                    <br>Mit diesem können Sie Ihre Antworten im Nachhinein bearbeiten und ergänzen.
+                    <br> Beachten Sie, dass bei einer Änderung Ihrer Antworten aus Sicherheitsgründen immer ein neuer QR-Code erstellt wird und somit der alte QR-Code an Gültigkeit verliert.
+                </p>
+                <h4>3. Fragebogen auswerten</h4>
+                <p>Bringen Sie den aktuellen QR-Code beim nächsten Termin mit, damit der Arzt Ihre Antworten auswerten kann.</p>
+            </section>
+        </div>
     </div>
 
 
@@ -136,11 +174,11 @@
 </template>
 
 <script>
-    import { uuid } from 'vue-uuid';
     import CreateQuestionControl from './CreateQuestionControl.vue';
     import InfoTooltip from './../util/InfoTooltip.vue';
     import VueHtml2pdf from 'vue-html2pdf';
     import QuestionnairePdf from './../pdf/QuestionnairePdf.vue';
+    import QrCode from "@/components/QrCode"
 
     export default {
         components: {
@@ -148,6 +186,7 @@
             InfoTooltip,
             VueHtml2pdf,
             QuestionnairePdf,
+            QrCode,
         },
         data() {
             return {
@@ -255,6 +294,7 @@
                     .then((res) => {
                         if (res.status == true) {
                             this.questionnaire.queID = id;
+                            this.qrlink = this.qrlink + this.questionnaire.queID;
                             this.$store.dispatch("uploadQuestionnaire", {
                                 "questionnaire": this.questionnaire
                             })
@@ -282,7 +322,6 @@
                 this.saved = false;
             },
             async downloadPdf() {
-                this.qrlink = this.qrlink + this.questionnaire.queID;
                 this.$refs.html2Pdf.generatePdf();
             },
         },
@@ -322,5 +361,31 @@
 
     .btnPDF {
         margin-right: 30px;
+    }
+
+    .qr {
+        display: inline-block;
+        width: 300px;
+        height: 300px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .code {
+        border-radius: 10px;
+        border: 2px solid black;
+    }
+
+    h4 {
+        margin-top: 20px;
+    }
+
+    .saved {
+        max-width: 1000px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 40px;
     }
 </style>

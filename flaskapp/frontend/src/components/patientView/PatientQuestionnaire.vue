@@ -25,13 +25,31 @@
 
                 <b-row>
                     <b-col class="text-center">
-                        <b-button variant="primary" @click="downloadPdf()" class="btn-big btn-accent">
+                        <b-button variant="primary" @click="downloadPdf()" class="mt-3 btn-big">
                             <b-icon-download></b-icon-download>
                             QR-Code
                         </b-button>
                     </b-col>
                 </b-row>
+            </div>
 
+            <div class="boxStyling">
+                <section class="user-details p-5">
+                    <div class="text-center">
+                        <h1>Ihr ausgefüllter Fragebogen</h1>
+                        <qr-code class="qr" :content=content></qr-code>
+                    </div>
+                    <h4>1. Fragebogen öffnen</h4>
+                    <p>
+                        Um den Fragebogen zu bearbeiten, scannen Sie den QR-Code auf www.website.de ein.
+                        <br>Sie werden automatisch zu Ihrem ausgefüllten Fragebogen weitergeleitet.
+                    </p>
+                    <h4>2. Fragebogen auswerten</h4>
+                    <p>Bringen Sie diesen QR-Code beim nächsten Termin mit, damit der Arzt Ihre Antworten auswerten kann.</p>
+                    <p>Beachten Sie, dass dieser QR-Code nur solange gültig ist, bis Sie die Antworten bearbeiten oder ergänzen und einen neuen Code bekommen.</p>
+                    <h4>Wichtiger Hinweis:</h4>
+                    <p>Mit diesem QR-Code kann Ihr ausgefüllter Fragebogen entschlüsselt werden und somit sensible Daten eingesehen werden.<br>Geben Sie Ihn nicht an Dritte weiter.</p>
+                </section>
             </div>
 
             <h4>Infos:</h4>
@@ -66,6 +84,7 @@
                           ref="html2Pdf">
                 <answers-pdf slot="pdf-content" :answersID="answers.UUID" :repeating="questionnaire.repeatingType !== 'single'" :AESkey="AESkey"></answers-pdf>
             </vue-html2pdf>
+
         </div>
     </b-container>
 
@@ -95,7 +114,6 @@
                 </div>
             </div>
 
-
         </b-form>
     </b-container>
 </template>
@@ -106,6 +124,7 @@
     import QuestionsContainer from "./QuestionsContainer";
     import VueHtml2pdf from 'vue-html2pdf';
     import AnswersPdf from "./../pdf/AnswersPdf.vue"
+    import QrCode from "@/components/QrCode"
     import { uuid } from 'vue-uuid';
 
     export default {
@@ -113,7 +132,8 @@
             TabNavigation,
             QuestionsContainer,
             VueHtml2pdf,
-            AnswersPdf
+            AnswersPdf,
+            QrCode
         },
 
         data() {
@@ -133,6 +153,13 @@
             },
             tabEntries() {
                 return this.answers.dateEntries;
+            },
+            content() {
+                let qrcontent = {
+                    ID: this.answers.UUID,
+                    key: Buffer.from(this.AESkey).toString('base64'),
+                }
+                return JSON.stringify(qrcontent);
             }
         },
 
@@ -321,5 +348,23 @@
 
     .navigation {
         padding: 15px 0;
+    }
+
+    .qr {
+        width: 300px;
+        height: 300px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .code {
+        border-radius: 10px;
+        border: 2px solid black;
+    }
+
+    h4 {
+        margin-top: 20px;
     }
 </style> 
