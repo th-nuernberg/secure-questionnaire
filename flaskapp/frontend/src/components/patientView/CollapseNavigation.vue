@@ -34,7 +34,7 @@
 
 
                 </b-card-header>
-                <b-collapse :id="'accordion-'+index" accordion="my-accordion" role="tabpanel" @shown="open(index)">
+                <b-collapse :id="'accordion-'+index" accordion="my-accordion" role="tabpanel" @shown="open(index)" :visible="isOpen(index)">
                     <b-card-body class="cardBody">
 
                         <Questions-Container :date="entries.date" :time="entry.time" :key="entry.time && entries.date"></Questions-Container>
@@ -127,7 +127,16 @@
         computed: {
             noEntries() {
                 return (this.entries.timeEntries.length == 1 && this.entries.timeEntries[0].time == "");
-            }
+            },
+            isOpen() {
+                return function (index) {
+                    if (this.index == index) {
+                        return true;
+                    }
+                    else return false;
+                }
+            },
+
         },
         methods: {
             addEntry() {
@@ -142,8 +151,21 @@
                 else {
                     document.getElementById("timeError").style.display = "none";
                     this.$parent.addTimeEntry(this.newTime);
+                    this.openAccordion(this.newTime);
                     this.newTime = '';
                     this.$bvModal.hide("addTimeEntry");
+                }
+            },
+
+            openAccordion(newTime) {
+                if (newTime == "") {
+                    this.index = -1;
+                }
+
+                for (let i = 0; i < this.entries.timeEntries.length; i++) {
+                    if (this.entries.timeEntries[i].time == newTime) {
+                        this.index = i;
+                    }
                 }
             },
 
@@ -154,6 +176,7 @@
                 else {
                     document.getElementById("timeError").style.display = "none";
                     this.$parent.timeInput(this.newTime, 0);
+                    this.openAccordion(this.newTime);
                     this.newTime = '';
                 }
 
@@ -172,11 +195,16 @@
                 this.editTime == '';
             },
             deleteTimeEntry() {
+                let time = "";
+                if (this.index != this.editIndex)
+                    time = this.entries.timeEntries[this.index].time;
                 this.$parent.deleteTimeEntry(this.editIndex);
+                this.editIndex = 0;
+                this.openAccordion(time);
                 this.$bvModal.hide("deleteTimeEntry");
             },
             editTimeEntry() {
-                this.resetAdding();
+                this.newTime = "";
 
                 document.getElementById("timeErrorModal").style.display = "none";
                 document.getElementById("existsErrorModal").style.display = "none";
@@ -189,6 +217,7 @@
                 else {
                     this.$parent.timeInput(this.editTime, this.editIndex);
                     this.$bvModal.hide("editTimeEntry");
+                    this.openAccordion(this.editTime);
                     this.editTime = "";
                 }
 
@@ -205,11 +234,6 @@
                     }
                 });
                 return found;
-            },
-            resetAdding() {
-                this.newTime = "";
-                document.getElementById("existsError").style.display = "none";
-                document.getElementById("timeError").style.display = "none";
             }
         }
     }

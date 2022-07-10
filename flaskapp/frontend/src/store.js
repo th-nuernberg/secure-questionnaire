@@ -127,7 +127,6 @@ export default new Vuex.Store({
                                 resolve(result.Key);
                             })
                             .catch(() => {
-                                //TODO: wird reject bis in PatientQuestionnaire.save weitergegeben?
                                 reject();
                             })
                     })
@@ -154,18 +153,6 @@ export default new Vuex.Store({
         getPatientQuestionnaire(_, id) {
             return new Promise((resolve, reject) => {
                 axios.get('/questionnaire', { params: { queID: id } })
-                    .then((res) => {
-                        resolve(res.data);
-                    })
-                    .catch(() => {
-                        reject();
-                    })
-            })
-        },
-
-        getAnalyseQuestionnaire(_, url) {
-            return new Promise((resolve, reject) => {
-                axios.get(url)
                     .then((res) => {
                         resolve(res.data);
                     })

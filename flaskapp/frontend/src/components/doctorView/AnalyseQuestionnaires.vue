@@ -5,7 +5,7 @@
             <b-spinner style="width: 3rem; height: 3rem;"></b-spinner>
         </div>
         
-        <div v-for="(que, index) in queIDs" class="mt-5">
+        <div v-else v-for="(que, index) in queIDs" class="mt-5">
             <div class="boxStyling">
                 <b-row align-h="between">
                     <b-col>
@@ -61,7 +61,7 @@
                 return queID => this.fields[queID];
             },
             title() {
-                return queID => this.ques[queID].title;
+                return queID =>this.ques[queID].title;
             }
         },
         methods: {
@@ -87,7 +87,6 @@
                         this.setupTable();
                     })
                     .catch(() => {
-                        //TODO: Fehlermeldung
                     })
             },
 
@@ -181,7 +180,6 @@
                             resolve();
                         })
                         .catch(() => {
-                            //TODO: Fehlermeldung
                         })
                 })
             },
@@ -223,7 +221,7 @@
                         str += ' ;'
                     }
 
-                    line.slice(0, line.Length - 1);
+                    line.slice(0, line.length - 1);
                     str += line + '\r\n';
                 }
 

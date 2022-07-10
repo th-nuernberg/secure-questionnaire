@@ -252,7 +252,7 @@
             },
 
             deleteTimeEntry(dateIndex, timeIndex) {
-                this.answers.dateEntries[dateIndex].timeEntries = this.answers.dateEntries[dateIndex].timeEntries.splice(timeIndex, 1);
+                this.answers.dateEntries[dateIndex].timeEntries.splice(timeIndex, 1);
                 this.sortQuestionnaire();
                 this.$store.commit("setAnswers", this.answers);
             },
@@ -292,7 +292,6 @@
 
             save() {
                 document.getElementById("upload-error").style.display = "none";
-                //TODO: Eingabevalidierung
 
                 this.sortQuestionnaire()
 
