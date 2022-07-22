@@ -83,7 +83,7 @@
    created() {
        this.startSpeechToTxt();
        this.stopIt = false;
-      //console.log(this.words);
+      console.log(this.words);
   
 
 

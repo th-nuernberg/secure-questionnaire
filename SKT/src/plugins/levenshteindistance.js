@@ -19,6 +19,9 @@ const mappings = {
     'zaun': ['zaun', 'gitter', 'gatter'],
     }
 
+
+
+
 const levenshteinDistance = (str1 = '', str2 = '') => {
     const track = Array(str2.length + 1).fill(null).map(() =>
     Array(str1.length + 1).fill(null));
@@ -72,8 +75,14 @@ const containsSimiliarityList = (sentence, wordList, dist=1) => {
 
 
 const checkSpeechforSim = (sentence, wordList, dist=1) => {
+    if(!Number.isInteger(wordList[0])){
     let wordMappingList = wordList.map(word => mappings[word])
     return wordMappingList.map( mappingList => containsSimiliarityList(sentence, mappingList, dist) )
+    }
+    wordList = wordList.map(x => x.toString())
+    return wordList.map(x => containsSimiliarityList(sentence, [x],0))
+
+
 }
 
 

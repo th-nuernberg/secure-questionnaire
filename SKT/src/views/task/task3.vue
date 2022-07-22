@@ -5,7 +5,7 @@
     <p style="float: left;">Aufgabe <strong>3</strong> von 10</p>
     <TimeBar :duration=600 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
     
-    <!--<SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedNumber.map(x => x['num'])" />-->
+    <SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedNumber.map(x => x['num'])" />
 
     <div v-if="!this.hide">
     <h5> Sie sehen hier ein Spielbrett mit bunten Spielsteinen, auf denen Zahlen stehen.<br>
@@ -32,13 +32,13 @@
 import colors from "../../plugins/colors.js"
 import TimeBar from "../../components/TimeBar.vue";
 import DisplayNumber from "../../components/DisplayNumber.vue";
-//import SpeechRecognition from "../../components/SpeechRecognition.vue";
+import SpeechRecognition from "../../components/SpeechRecognition.vue";
 
 export default {
   components:{
     TimeBar,
     DisplayNumber,
-    //SpeechRecognition
+    SpeechRecognition
   },
   data() {
     return{
