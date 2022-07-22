@@ -1,39 +1,53 @@
-<template>  
-  <div>
-    <div class="container">
-      <div class="row">
-        <span class="simplecircle" v-for="item in [0,1,2,3,4]" :key="item"></span>             
-      </div>
-      <div class="row">
-        <span class="simplecircle" v-for="item in [0,1,2,3,4]" :key="item"></span>             
-      </div>
-      <div class="row">
-        <span class="circle" v-text="listed_numbers[0]['num']" style="background: #6188EC"></span>
-        <span class="circle" v-text="listed_numbers[1]['num']" style="background: #BDC2D6"></span>
-        <span class="circle" v-text="listed_numbers[2]['num']" style="background: #D93737"></span>
-        <span class="circle" v-text="listed_numbers[3]['num']" style="background: #4CD38B"></span>
-        <span class="circle" v-text="listed_numbers[4]['num']" style="background: #8D7CE3"></span>             
-      </div>
-      <div class="row">
-        <span class="circle" v-text="listed_numbers[5]['num']" style="background: #F7AE7E"></span>
-        <span class="circle" v-text="listed_numbers[6]['num']" style="background: #7EEAF7"></span>
-        <span class="circle" v-text="listed_numbers[7]['num']" style="background: #599B5A"></span>
-        <span class="circle" v-text="listed_numbers[8]['num']" style="background: #B97ACB"></span>
-        <span class="circle" v-text="listed_numbers[9]['num']" style="background: #FA833D"></span>             
-      </div>
-    </div> 
-  </div>             
+<template>
+  <div class="container" style="width: 900px;">
+        
+    <div class="row justify-content-md-center">
+      <draggable :array="array" >
+        <div class="simplecircle" v-for="element in array" :key="element.name">{{ element.name }}</div><br>  
+        <div class="circle" v-for="element in array" :key="element.name" v-bind:style="{ background: element.color}">{{ element.name }}</div><br>       
+      </draggable>
+     </div>
+
+   
+    
+
+  </div>
 </template>
 
 <script>
-export default {
-    name: 'DisplayNumber',
-    props: {
-        listed_numbers: Array
+  import { defineComponent } from 'vue'
+  import { VueDraggableNext } from 'vue-draggable-next'
+
+  export default defineComponent({
+    props:{
+       listed_numbers: Array
     },
-    created(){
-      console.log(this.listed_numbers);
-    }
-  
-}
+    components: {
+      draggable: VueDraggableNext,
+    },
+    data() {
+      
+      return {
+        enabled: true,
+        array: [
+          { name: this.listed_numbers[0]['num'], color: this.listed_numbers[0]['color']},
+          { name: this.listed_numbers[1]['num'], color: this.listed_numbers[1]['color']},
+          { name: this.listed_numbers[2]['num'], color: this.listed_numbers[2]['color']},
+          { name: this.listed_numbers[3]['num'], color: this.listed_numbers[3]['color']},
+          { name: this.listed_numbers[4]['num'], color: this.listed_numbers[4]['color']},
+          { name: this.listed_numbers[5]['num'], color: this.listed_numbers[5]['color']},
+          { name: this.listed_numbers[6]['num'], color: this.listed_numbers[6]['color']},
+          { name: this.listed_numbers[7]['num'], color: this.listed_numbers[7]['color']},
+          { name: this.listed_numbers[8]['num'], color: this.listed_numbers[8]['color']},
+          { name: this.listed_numbers[9]['num'], color: this.listed_numbers[9]['color']},
+        ],
+          dragging: false,
+      }
+    },
+    methods: {
+      log(event) {
+        console.log(event)
+      },
+    },
+  })
 </script>

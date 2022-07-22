@@ -1,38 +1,37 @@
 <template>
   <body class="body">
 
-    <h4>Auswertung Kurztest zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen</h4><br>
+    <h4>Kurztest zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen</h4><br>
 
-    <div class="auswertung">
-      <h5>Aufgabe 1 Gegenstände benennen: Ihre Bearbeitungszeit: {{60-task_data["1"]["time"]}} Sekunden; Erkannte Gegenstände: {{task_data["1"]["images"].map(entry => entry['recognized']).reduce((x,y)=>x+y)}}/12 </h5>
-      <h5>Aufgabe 2 Gegenstände unmittelbar reproduzieren: Ihre Bearbeitungszeit: {{60-task_data["2"]["time"]}} Sekunden; Erkannte Gegenstände: {{12-task_data["2"]["missing"].length}}/12</h5>
-    </div>
+    <DisplayResults :task_data="task_data"/><br> 
 
-    <div class="Datenübermittlung">
+    <div class="Datenübermittlung" v-if="!this.transfer">
       <br><h5 class="txt-center">Datenübermittlung</h5>
-
-      <p>Durch einen Klick auf den Button „Transfer starten“ wird ihr Testergebnis übermittelt. Sie erhalten im Anschluss einen QR-Code.<br>
-      <strong>Bitte bewahren Sie den ausgedruckten QR-Code an einem sicheren Ort auf!</strong><br>
-      Wenn Sie den ausgedruckten QR Code entsorgen, achten Sie bitte auf eine sichere Zerstörung, damit niemand anderes diesen verwenden kann.</p><br>
-      
-      <qrcode-vue class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />
-
-      <button class="button" v-on:click="EncryptMessage(task_data)">Transfer starten</button><br><br>
+      <p>Durch einen Klick auf den Button „Transfer starten“ wird ihr Testergebnis übermittelt. Sie erhalten im Anschluss einen QR-Code.</p>
+      <button class="button"  v-on:click="EncryptMessage(task_data)">Transfer starten</button>     
     </div>
 
+    <div v-if="this.transfer">
+    <br><h5 class="txt-center">Bitte bewahren Sie den ausgedruckten QR-Code an einem sicheren Ort auf!</h5>
+      Wenn Sie den ausgedruckten QR Code entsorgen, achten Sie bitte auf eine sichere Zerstörung, damit niemand anderes diesen verwenden kann.<br><br>
+      <button class="button" v-on:click="DownloadCode(this.valueQR)">Download QR-Code</button>   
+      <qrcode-vue class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />
+    </div>
+    
   </body>
 </template>
 
 
 <script >
-import "bootstrap/dist/css/bootstrap.css";
 import QrcodeVue from 'qrcode.vue';
-import encryption from "../../plugins/deEncryption.js";
+import encryption from "../plugins/deEncryption.js";
+import DisplayResults from "../components/DisplayResults.vue"
 
 export default {
   name: "app",
   components:{
     QrcodeVue,
+    DisplayResults,
   },
   data() {
     return{
@@ -42,7 +41,8 @@ export default {
         data: Object,
         secret: String,
         rsa_pub_key: String,
-        task_data: []
+        task_data: [],
+        transfer: Boolean
     };
   },
   methods: {
@@ -52,8 +52,13 @@ export default {
     generateQRCode(value,id){
           this.showQR = true;
           this.valueQR = value.toLocaleString()+";"+id; 
-      },
+    },
+    DownloadCode(data){
+       console.log(data);
+      
+    },
     async EncryptMessage(message){
+      this.transfer = true;
       message = JSON.stringify(message);
       let id = crypto.randomUUID();
 
@@ -89,32 +94,29 @@ export default {
         })
 
       this.handleResponse(response)
-      
-
     },
-
     handleResponse(response){
-      //console.log(response.status)
       if(response.status == 200){
         console.log("Erfolgreich abgeschickt")
       }
-    }
+    },
+
   },
   created() {
-      this.task_data = this.getData()
-      this.rsa_pub_key = 
-  `-----BEGIN PUBLIC KEY-----
-  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxMDhX3bxEgrA+9qb67KH
-  BjQTK6xhx3NkaaCWQSdHheNKIejcZi1YQUssEGKelPKWr5/5sX2oy9W7CUx1ir3t
-  jmSwkn5R5nxCbwbvkv+XGQuRYn+xlsiktjnQJEHV2gZcui+HX82++55bV2ac/Qap
-  4mhz/TO+aQ2g5dwXeDrt+oC+qUIjlSTYDAvgDYRKlksJCKElpZLfLzEaVbhljSlo
-  JCXj5EtJq/aHJUzKfJl13X+ykzq01dQmLzqjZ5Fn0RKnym0piJFzENK4KfqEkudd
-  e601IpcoU2zUJmZYeCel/pBpn+/TMTnxd7wt64e8kmbCjTMSTAHBcBj8U/w0Q73H
-  XwIDAQAB
-  -----END PUBLIC KEY-----`;
+    this.transfer = false;
+    
+    this.task_data = this.getData()
+
+    this.rsa_pub_key = 
+    `-----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxMDhX3bxEgrA+9qb67KH
+    BjQTK6xhx3NkaaCWQSdHheNKIejcZi1YQUssEGKelPKWr5/5sX2oy9W7CUx1ir3t
+    jmSwkn5R5nxCbwbvkv+XGQuRYn+xlsiktjnQJEHV2gZcui+HX82++55bV2ac/Qap
+    4mhz/TO+aQ2g5dwXeDrt+oC+qUIjlSTYDAvgDYRKlksJCKElpZLfLzEaVbhljSlo
+    JCXj5EtJq/aHJUzKfJl13X+ykzq01dQmLzqjZ5Fn0RKnym0piJFzENK4KfqEkudd
+    e601IpcoU2zUJmZYeCel/pBpn+/TMTnxd7wt64e8kmbCjTMSTAHBcBj8U/w0Q73H
+    XwIDAQAB
+    -----END PUBLIC KEY-----`;
   },
-  mounted() {
-      
-  }
 }
 </script>

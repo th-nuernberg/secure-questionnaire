@@ -40,19 +40,34 @@ export default createRouter({
       component: () => import('../views/task/task4.vue')
     },
     {
+      path: '/task5',
+      name: 'Task5',
+      component: () => import('../views/task/task5.vue')
+    },
+    {
+      path: '/task6',
+      name: 'Task6',
+      component: () => import('../views/task/task6.vue')
+    },
+    {
+      path: '/task7',
+      name: 'Task7',
+      component: () => import('../views/task/task7.vue')
+    },
+    {
       path: '/task8',
       name: 'Task8',
       component: () => import('../views/task/task8.vue')
     },
     {
-      path: '/auswertung',
-      name: 'Auswertung',
-      component: () => import('../views/task/auswertung.vue')
-    },
-    {
       path: '/lernphase',
       name: 'Lernphase',
       component: () => import('../views/task/lernphase.vue')
+    },
+    {
+      path: '/auswertung',
+      name: 'Auswertung',
+      component: () => import('../views/Auswertung.vue')
     },
   ]
 })

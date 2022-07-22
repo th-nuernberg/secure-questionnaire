@@ -126,7 +126,8 @@
     margin: 5px;
     line-height: 135px;
     text-align: center;
-    font-size: 70px;  
+    font-size: 70px; 
+    color: transparent; 
 }
 
 .circle {
@@ -143,8 +144,22 @@
     box-shadow: 10px 20px 15px silver;
 }
 
-.row{
-    text-align:center; 
-    display:block;
+.col{
+  width: 50px;
 }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even){background-color: #f2f2f2}
+  
+
 

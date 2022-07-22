@@ -1,30 +1,26 @@
 <template>
   <body class="body">
         
-    <h3>Subtest IV: Zahlen ordnen</h3>
-    <p style="float: left;">Aufgabe <strong>4</strong> von 9</p>
+    <h3>V: Zahlen zurücklegen</h3>
+    <p style="float: left;">Aufgabe <strong>5</strong> von 9</p>
     <TimeBar :duration=6000 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
   
     <div v-if="!this.hide">
-    <h5>Wie Sie sehen, sind die Zahlen nicht geordnet. 
-      Kleine und große Zahlen sind durcheinander gemischt. 
-      Bitte ordnen Sie jetzt, so schnell Sie können, die Zahlen der Größe nach. 
-      Dazu suchen Sie die kleinste Zahl und stellen sie auf das erste Feld links oben. 
-      Dann suchen Sie die nächstgrößere Zahl und stellen sie daneben und so weiter.</h5><br>
+    <h5>Stellen Sie jetzt bitte, so schnell Sie können, die Spielsteine wieder auf ihren alten Platz zurück.</h5><br>
      
-     <BlankNumber :listed_numbers="selectedNumber"/><br> 
+     <DragNumber :listed_numbers="selectedNumber"/><br> 
 
-      <router-link class="btn-router" to="/task5" @click="timeOut">Weiter</router-link><br><br>
+    <router-link class="btn-router" to="/task6" @click="timeOut">Weiter</router-link><br><br>
     </div>  
 
     <div class="popup" v-if="this.hide && !this.selectedNumber.every(entry => entry['recognized'])">
       <h4>Die Zeit ist um!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
-      <router-link class="btn-router" to="/task5">Weiter geht's</router-link>
+      <router-link class="btn-router" to="/task6">Weiter geht's</router-link>
     </div>
 
     <div class="popup" v-if="this.hide && this.selectedNumber.every(entry => entry['recognized'])">
       <h4>Sie haben alle Zahlen vorgelesen!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
-      <router-link class="btn-router" to="/task5">Weiter geht's</router-link>
+      <router-link class="btn-router" to="/task6">Weiter geht's</router-link>
     </div>
     
   </body>
@@ -33,12 +29,12 @@
 <script>
 
 import TimeBar from "../../components/TimeBar.vue";
-import BlankNumber from "../../components/DisplayBlankNumber.vue";
+import DragNumber from "../../components/DragNumber.vue";
 
 export default {
   components:{
     TimeBar,
-    BlankNumber,
+    DragNumber,
 
   },
   data() {

@@ -9,17 +9,13 @@
 
     <div class="row justify-content-md-center">
       <div class="col-md-auto" v-for="item in listed_numbers.slice(0,5)" :key="item">
-          <div class="circle" v-if="!item['recognized'] " v-text="item['num']" v-bind:style="{ background: item['color']}"></div>
-          <div class="circle" v-if="item['recognized']" v-bind:style="{ background: item['color']}">{{item['num']}}
-          <img :src="images['checker']" style="height:50px; position:absolute; "></div>
+          <div class="circle" v-if="!item['recognized']" v-text="item['num']" style="color:gray"></div>
       </div> 
     </div>
     
     <div class="row justify-content-md-center">
       <div class="col-md-auto" v-for="item in listed_numbers.slice(5,10)" :key="item">
-          <div class="circle" v-if="!item['recognized'] " v-text="item['num']" v-bind:style="{ background: item['color']}"></div>
-          <div class="circle" v-if="item['recognized']"  v-bind:style="{ background: item['color']}">{{item['num']}}
-          <img :src="images['checker']" style="height:50px; position:absolute; "></div>
+          <div class="circle" v-if="!item['recognized']" v-text="item['num']" style="color:gray"></div>
       </div> 
     </div>
 

@@ -3,7 +3,7 @@
         
     <h3>Subtest III: Zahlen lesen</h3>
     <p style="float: left;">Aufgabe <strong>3</strong> von 10</p>
-    <TimeBar :duration=60 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
+    <TimeBar :duration=600 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
     
     <!--<SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedNumber.map(x => x['num'])" />-->
 
@@ -29,6 +29,7 @@
 
 <script>
 
+import colors from "../../plugins/colors.js"
 import TimeBar from "../../components/TimeBar.vue";
 import DisplayNumber from "../../components/DisplayNumber.vue";
 //import SpeechRecognition from "../../components/SpeechRecognition.vue";
@@ -43,6 +44,7 @@ export default {
     return{
       selectedNumber: [],
       hide: Boolean,
+      colors,
     };
   },
   methods: {
@@ -71,11 +73,13 @@ export default {
   },
   created() {
     this.hide = false;
+    let i = 0; 
     while(this.selectedNumber.length<10){
-      var num =Math.floor(Math.random()*100)
+      var num = Math.floor(Math.random()*100)
       if(!this.selectedNumber.map(x => x['num'] ).includes(num) && num>9){
-          this.selectedNumber.push({'num':num,'recognized':false});    
-      }
+        this.selectedNumber.push({'num':num, 'color': this.colors[i],'recognized':false}); 
+        i++;   
+      } 
     }
   },
 }

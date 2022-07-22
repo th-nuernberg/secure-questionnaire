@@ -11,17 +11,17 @@
     <h5>Jetzt kommen wir noch einmal zu den Gegenständen, die Sie am Anfang gesehen haben.<br>
       An welche können Sie sich noch erinnern?</h5>
     <DisplayImages :listed_images="selectedImage" />
-    <router-link class="btn-router" to="/auswertung" @click="timeOut">Weiter</router-link><br><br>
+      <router-link class="btn-router" to="/task8" @click="timeOut">Weiter</router-link><br><br>
     </div>  
 
     <div class="popup" v-if="this.hide && !this.selectedNumber.every(entry => entry['recognized'])">
       <h4>Die Zeit ist um!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
-      <router-link class="btn-router" to="/auswertung">Weiter geht's</router-link>
+      <router-link class="btn-router" to="/task8">Weiter geht's</router-link>
     </div>
 
     <div class="popup" v-if="this.hide && this.selectedNumber.every(entry => entry['recognized'])">
       <h4>Sie haben alle Zahlen vorgelesen!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
-      <router-link class="btn-router" to="/auswertung">Weiter geht's</router-link>
+      <router-link class="btn-router" to="/task8">Weiter geht's</router-link>
     </div>
 
   </body>
