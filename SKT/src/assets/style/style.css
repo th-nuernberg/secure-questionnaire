@@ -1,3 +1,7 @@
+html {
+    height: 100%;
+}
+
 /* Adds a grey background color to the top navigation */
 .navbar-default {
     background-color: #333953;
@@ -19,20 +23,22 @@
         text-decoration: none;
     }
 
-.footer {
-    position: fixed;
+.footer,
+.push {
+    height: 50px;
+    background-color: #333953;
+    color: #FFFFFF;
+    text-align: center;
     right: 0;
     bottom: 0;
     left: 0;
     padding: 1rem;
-    background-color: #333953;
-    color: #FFFFFF;
-    text-align: center;
 }
 
 .body {
     text-align: justify; 
-    padding: 0rem 2rem;       
+    padding: 0rem 2rem;     
+    min-height: 700px;  
 }
 
 .button{
@@ -160,6 +166,9 @@ table {
   }
   
   tr:nth-child(even){background-color: #f2f2f2}
+
+  .draggable{
+    min-height: 500px;
+    border: 0.15rem solid #333953;
+  }
   
-
-
