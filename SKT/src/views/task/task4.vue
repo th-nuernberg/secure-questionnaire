@@ -10,11 +10,10 @@
       Kleine und große Zahlen sind durcheinander gemischt. 
       Bitte ordnen Sie jetzt, so schnell Sie können, die Zahlen der Größe nach. 
       Dazu suchen Sie die kleinste Zahl und stellen sie auf das erste Feld links oben. 
-      Dann suchen Sie die nächstgrößere Zahl und stellen sie daneben und so weiter.</h5><br>
-     
-     <BlankNumber :listed_numbers="selectedNumber"/><br> 
+      Dann suchen Sie die nächstgrößere Zahl und stellen sie daneben und so weiter.</h5><br>  
+     <DragNumber :listed_numbers="selectedNumber"/><br> 
 
-      <router-link class="btn-router" to="/task5" @click="timeOut">Weiter</router-link><br><br>
+    <router-link class="btn-router" to="/task5" @click="timeOut">Fertig</router-link><br><br>
     </div>  
 
     <div class="popup" v-if="this.hide && !this.selectedNumber.every(entry => entry['recognized'])">
@@ -33,13 +32,12 @@
 <script>
 
 import TimeBar from "../../components/TimeBar.vue";
-import BlankNumber from "../../components/DisplayBlankNumber.vue";
+import DragNumber from "../../components/DragNumber.vue";
 
 export default {
   components:{
     TimeBar,
-    BlankNumber,
-
+    DragNumber,
   },
   data() {
     return{
@@ -74,6 +72,7 @@ export default {
     },
     finishedTask(){
       this.hide = true;
+      console.log();
       this.$store.dispatch("addData", {'task':4, 'content':{'time':this.$refs.timeBar.time}})
     },
       },

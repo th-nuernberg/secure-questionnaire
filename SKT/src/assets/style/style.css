@@ -172,3 +172,6 @@ table {
     border: 0.15rem solid #333953;
   }
   
+  .symbol{
+    font-size: 50px;
+  }

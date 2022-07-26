@@ -10,7 +10,7 @@
       Wichtig sind nur die Vierecke
       Bitte zählen Sie sie so schnell sie können</h5><br>
      
-     <BlankNumber :listed_numbers="selectedNumber"/><br> 
+     <Symbols :listed_numbers="selectedNumber"/><br> 
 
       <router-link class="btn-router" to="/task7" @click="timeOut">Weiter</router-link><br><br>
     </div>  
@@ -31,13 +31,12 @@
 <script>
 
 import TimeBar from "../../components/TimeBar.vue";
-import BlankNumber from "../../components/DisplayBlankNumber.vue";
+import Symbols from "../../components/DisplaySymbols.vue";
 
 export default {
   components:{
     TimeBar,
-    BlankNumber,
-
+    Symbols,
   },
   data() {
     return{
@@ -49,23 +48,6 @@ export default {
     getData() {
       return this.$store.getters.getData;
     },
-    shuffleArray(){
-      let array = [...this.selectedNumber]
-      console.log(array);
-      let a,
-      b, 
-      temp;
-      for (let i = 0; i < 10; i++){
-        a = Math.floor(Math.random()*10)
-        b = Math.floor(Math.random()*10);
-        temp = array[a];
-        array[a] = array[b];
-        array[b] = temp;
-        console.log(array[a]);
-      }
-      return array;
-
-    },
     timeOut(){
       console.log('TimeOUT!!!!!!!')
       this.finishedTask()
@@ -74,11 +56,9 @@ export default {
       this.hide = true;
       this.$store.dispatch("addData", {'task':4, 'content':{'time':this.$refs.timeBar.time}})
     },
-      },
+  },
   created() {
     this.hide = false;
-    this.selectedNumber = this.getData()["3"]["numbers"];
-    this.selectedNumber = this.shuffleArray(this.selectedNumber);
   },
 }
 </script>

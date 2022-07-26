@@ -1,5 +1,5 @@
 <template>  
-  <div class="container">
+  <div class="container" style="position:absolute">
 
     <div class="row justify-content-md-center" v-for="item in [0,1]" :key="item">
       <div class="col-md-auto" v-for="item in [0,1,2,3,4]" :key="item">

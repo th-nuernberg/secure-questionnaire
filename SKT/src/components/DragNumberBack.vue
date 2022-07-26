@@ -5,8 +5,8 @@
       <draggable :array="array" > 
         <div class="circle" v-for="element in array" :key="element.name" v-bind:style="{ background: element.color, color: element.font}">{{ element.name }}</div><br>       
       </draggable>
-     </div> 
-     
+     </div>  
+
   </div>
 </template>
 
@@ -26,16 +26,6 @@
       return {
         enabled: true,
         array: [
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
-          { name: '0', font: '#FFFFFF',},
           { name: this.listed_numbers[0]['num'], color: this.listed_numbers[0]['color'],},
           { name: this.listed_numbers[1]['num'], color: this.listed_numbers[1]['color']},
           { name: this.listed_numbers[2]['num'], color: this.listed_numbers[2]['color']},
@@ -46,6 +36,16 @@
           { name: this.listed_numbers[7]['num'], color: this.listed_numbers[7]['color']},
           { name: this.listed_numbers[8]['num'], color: this.listed_numbers[8]['color']},
           { name: this.listed_numbers[9]['num'], color: this.listed_numbers[9]['color']},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
+          { name: '0', font: '#FFFFFF',},
         ],
           dragging: false,
       }

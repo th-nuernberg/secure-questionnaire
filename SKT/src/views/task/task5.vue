@@ -29,7 +29,7 @@
 <script>
 
 import TimeBar from "../../components/TimeBar.vue";
-import DragNumber from "../../components/DragNumber.vue";
+import DragNumber from "../../components/DragNumberBack.vue";
 
 export default {
   components:{
