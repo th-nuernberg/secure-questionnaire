@@ -15,7 +15,7 @@
     <router-link class="btn-router" to="/task3">Beenden</router-link>
    </div>
 
-    
+    <vue-record-audio @result="onResult" />
   </body>
 </template>
 
@@ -39,6 +39,10 @@ export default {
   methods: {
     timeout(){
       this.hide= true
+    },
+    onResult (data) {
+      console.log('The blob data:', data);
+      console.log('Downloadable audio', window.URL.createObjectURL(data));
     }
   },
   created() {   

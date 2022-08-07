@@ -17,7 +17,7 @@
       <button class="button" v-on:click="DownloadCode(this.valueQR)">Download QR-Code</button>   
       <qrcode-vue class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />
     </div>
-    
+    <button @click="test">Test</button>
   </body>
 </template>
 
@@ -42,10 +42,15 @@ export default {
         secret: String,
         rsa_pub_key: String,
         task_data: [],
-        transfer: Boolean
+        transfer: Boolean,
+        audio: null,
     };
   },
   methods: {
+    test(){
+      console.log("play")
+      this.audio.play()
+    },
     getData() {
       return this.$store.getters.getData;
     },
@@ -106,7 +111,12 @@ export default {
     this.transfer = false;
     
     this.task_data = this.getData()
-
+    console.log(this.task_data)
+    //let audioUrl = URL.createObjectURL(this.task_data['1']['audio']);
+    this.audio = new Audio(this.task_data['1']['audio']);
+    this.audio.play()
+    //this.audio = new Audio(this.task_data['1']['audio']);
+    //  this.audio.play()
     this.rsa_pub_key = 
     `-----BEGIN PUBLIC KEY-----
     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxMDhX3bxEgrA+9qb67KH

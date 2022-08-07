@@ -88,5 +88,28 @@ def put(id):
     
     return Response(json.dumps(data), status = 200, mimetype='application/json')
 
+@app.route('/AUDIO', methods=['POST'])
+def audio(): 
+
+    # try:
+    #     db = get_db()
+    # except Exception as e:
+    #     return Response(response=repr(e), status = 503, mimetype='application/json')
+
+    data = request.get_json()
+    # if not isinstance(data, dict):
+    #     return Response( status = 400 )
+
+    # data['_id']=id
+
+    # try:
+    #     db.insert_one(data)
+    # except Exception as e:
+    #     return Response(response=repr(e), status = 409, mimetype='application/json')
+    print(data)
+
+    return "henlo"
+
+
 if __name__ == '__main__':
     app.run()

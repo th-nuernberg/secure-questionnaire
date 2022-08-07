@@ -1,6 +1,6 @@
 <template>
   <body class="body">
-
+    <RecordAudio></RecordAudio>
     <h3>Subtest II: Gegenstände unmittelbar reproduzieren</h3>
     <p style="float: left;">Aufgabe <strong>2</strong> von 10</p>
 
@@ -33,12 +33,14 @@ import images from "../../plugins/images.js";
 import DisplayImages from "../../components/DisplayImages.vue";
 import TimeBar from "../../components/TimeBar.vue";
 import SpeechRecognition from "../../components/SpeechRecognition.vue";
+import RecordAudio from "../../components/RecordAudio.vue";
 
 export default {
   components:{
     DisplayImages,
     TimeBar,
-    SpeechRecognition
+    SpeechRecognition,
+    RecordAudio
   },
   data() {
     return{

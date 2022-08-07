@@ -1,6 +1,8 @@
 <template>
   <body class="body">
-    
+
+    <RecordAudio @recorded="saveAudio"></RecordAudio>
+
     <h3>Subtest I: Gegenstände benennen und einprägen</h3>
     <p style="float: left;">Aufgabe <strong>1</strong> von 10</p>
 
@@ -33,21 +35,29 @@ import images from "../../plugins/images.js";
 import DisplayImages from "../../components/DisplayImages.vue";
 import TimeBar from "../../components/TimeBar.vue";
 import SpeechRecognition from "../../components/SpeechRecognition.vue";
+import RecordAudio from "../../components/RecordAudio.vue"
 
 export default {
   components:{
     DisplayImages,
     TimeBar,
-    SpeechRecognition
-  },
+    SpeechRecognition,
+    RecordAudio
+},
   data() {
     return{
       images,
       selectedImage: [],
       hide: Boolean,
+      Audio: null,
     };
   },
   methods: {
+    saveAudio(audioBlob) {
+      this.Audio = audioBlob
+      console.log("something")
+    },
+
     randomItem (items) {
       return items[Math.floor(Math.random()*items.length)];
     },
@@ -60,7 +70,7 @@ export default {
     },
     finishedTask(){
       this.hide = true;
-      this.$store.dispatch("addData", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.timeBar.time}})
+      this.$store.dispatch("addData", {'task':1, 'content':{'images':this.selectedImage ,'time':this.$refs.timeBar.time, 'audio':this.Audio}})
       this.$refs.speechRecogn.stop()
     },
     emitedWord(boolArray) {
