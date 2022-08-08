@@ -16,6 +16,9 @@
 
   export default {
    name: 'RecAudio',
+     props: {
+    taskNr: Number,
+  },
    data() {
      return {
       recorder: null,
@@ -26,7 +29,6 @@
       audio: null,
      };
    },
-   emits: ['recorded'],
    methods: {
   recordAudio() {
       this.device.then((stream) => {
@@ -36,28 +38,29 @@
           if (this.recorder.state === "inactive") {
             let blob = new Blob(this.chunks, { type: "audio/mp3" });
             this.blobObj = blob;
-            console.log(blob)
-            console.log(this.chunks)
-            this.chunks = [];
+
+            //this.chunks = [];
 
             this.audioUrl = URL.createObjectURL(this.blobObj);
             this.audio = new Audio(this.audioUrl);
-            //let data =  {'task':'audio','content':this.blobObj}
-            this.$emit('recorded', this.audioUrl)
+            let data =  {'task':this.taskNr,'content':this.chunks}
+            this.$store.dispatch("addAudio", data)
+            //this.$emit('recorded', this.audioUrl)
             //this.$store.dispatch("addData",data);
             //this.blobObj = null;
+            return this.audioUrl
           }
         };
         // start
         this.recorder.start();
       });
     },
-    stop() {
+   stop() {
  
 
-    this.recorder.stop()
+   this.recorder.stop()
     
-    
+  
     
 
     },
@@ -67,8 +70,10 @@
          this.audio.play()
 
     }
-
-   },
+  } ,
+  beforeUnmount(){
+    this.recorder.stop()
+  },
    created(){
     this.device = navigator.mediaDevices.getUserMedia({ audio: true });
     this.recordAudio()

@@ -8,16 +8,22 @@ const vuexLocal = new VuexPersistence({
 
 export default createStore({
   state:{
-    task_data: {},
+    task_data: {'audio':{}},
   },
   mutations:{
     ADD_DATA(state, payload) {
       state.task_data[payload['task']] = payload['content']
+    },
+    ADD_AUDIO(state,payload){
+      state.task_data['audio'][payload['task']] = payload['content']
     }
   },
   actions:{
     addData(context, data) {
       context.commit("ADD_DATA", data);
+    },
+    addAudio(context, data){
+      context.commit("ADD_AUDIO", data)
     }
   },
   getters:{

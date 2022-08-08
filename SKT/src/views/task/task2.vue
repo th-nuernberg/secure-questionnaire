@@ -1,6 +1,6 @@
 <template>
   <body class="body">
-    <RecordAudio></RecordAudio>
+    <RecordAudio :taskNr="2"></RecordAudio>
     <h3>Subtest II: Gegenstände unmittelbar reproduzieren</h3>
     <p style="float: left;">Aufgabe <strong>2</strong> von 10</p>
 

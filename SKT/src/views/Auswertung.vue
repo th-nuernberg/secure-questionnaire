@@ -31,7 +31,7 @@ export default {
   name: "app",
   components:{
     QrcodeVue,
-    DisplayResults,
+    DisplayResults
   },
   data() {
     return{
@@ -113,8 +113,8 @@ export default {
     this.task_data = this.getData()
     console.log(this.task_data)
     //let audioUrl = URL.createObjectURL(this.task_data['1']['audio']);
-    this.audio = new Audio(this.task_data['1']['audio']);
-    this.audio.play()
+    // this.audio = new Audio(this.task_data['1']['audio']);
+    // this.audio.play()
     //this.audio = new Audio(this.task_data['1']['audio']);
     //  this.audio.play()
     this.rsa_pub_key = 

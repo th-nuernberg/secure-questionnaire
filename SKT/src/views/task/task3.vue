@@ -1,6 +1,6 @@
 <template>
   <body class="body">
-        
+        <RecordAudio :taskNr="3"></RecordAudio>
     <h3>Subtest III: Zahlen lesen</h3>
     <p style="float: left;">Aufgabe <strong>3</strong> von 10</p>
     <TimeBar :duration=600 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
@@ -18,7 +18,7 @@
       <h4>Die Zeit ist um!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
       <router-link class="btn-router" to="/task4">Weiter geht's</router-link>
     </div>
-
+ 
     <div class="popup" v-if="this.hide && this.selectedNumber.every(entry => entry['recognized'])">
       <h4>Sie haben alle Zahlen vorgelesen!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
       <router-link class="btn-router" to="/task4">Weiter geht's</router-link>
@@ -33,12 +33,14 @@ import colors from "../../plugins/colors.js"
 import TimeBar from "../../components/TimeBar.vue";
 import DisplayNumber from "../../components/DisplayNumber.vue";
 import SpeechRecognition from "../../components/SpeechRecognition.vue";
+import RecordAudio from "../../components/RecordAudio.vue";
 
 export default {
   components:{
     TimeBar,
     DisplayNumber,
-    SpeechRecognition
+    SpeechRecognition,
+    RecordAudio
   },
   data() {
     return{
