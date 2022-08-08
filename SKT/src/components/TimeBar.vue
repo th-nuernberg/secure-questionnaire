@@ -1,18 +1,11 @@
 <template>
   <div >
-    <div>
-      <p style="text-align: right; padding-right: 30px" id="duration">
-        {{ this.time }}
-      </p>
+    <div style="text-align: right; padding-right: 30px" id="duration">
+      {{ this.time }}
     </div>
-
-    <div class="round-time-bar" :style="styleduration" id="round-time-bar">
-      <div></div>
-    </div>
+    <div class="round-time-bar" :style="styleduration" id="round-time-bar"></div>
   </div>
-
 </template>
-
 
 <script>
 export default {

@@ -1,5 +1,5 @@
 <template>
-  <body class="body">
+  <body>
 
     <h3>Lernphase</h3>
 

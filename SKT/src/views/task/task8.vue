@@ -1,8 +1,8 @@
 <template>
-  <body class="body">
+  <body>
 
     <h3>Subtest VIII: Gegenstände reproduzieren</h3>
-    <p style="float: left;">Aufgabe <strong>8</strong> von 10</p>
+    <div>Aufgabe <strong>8</strong> von 8</div>
 
     <SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
     

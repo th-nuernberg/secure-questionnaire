@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer">
+  <footer>
     2022 | IT Projekt Schlaf/Gedächtnis 
   </footer>
 </template>
