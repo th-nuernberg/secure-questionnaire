@@ -1,7 +1,11 @@
 <template>
-  <body>
-        
-    <RecordAudio :taskNr="3"></RecordAudio>
+
+  <body class="body">
+        <RecordAudio  v-if="false" :taskNr="3"></RecordAudio>
+    <h3>Subtest III: Zahlen lesen</h3>
+    <p style="float: left;">Aufgabe <strong>3</strong> von 10</p>
+    <TimeBar :duration=600 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
+    
     <SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedNumber.map(x => x['num'])" />
 
     <h3>Subtest III: Zahlen lesen</h3>
