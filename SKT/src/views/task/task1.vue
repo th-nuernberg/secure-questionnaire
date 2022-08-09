@@ -1,7 +1,7 @@
 <template>
   <body class="body">
 
-    <RecordAudio :taskNr="1"></RecordAudio>
+    <RecordAudio v-if="false" :taskNr="1"></RecordAudio>
 
     <h3>Subtest I: Gegenstände benennen und einprägen</h3>
     <p style="float: left;">Aufgabe <strong>1</strong> von 10</p>
@@ -89,7 +89,7 @@ export default {
       }
     }
     this.hide = false;
-    this.$root.test()
+    this.$root.record()
   },
   beforeUnmount() {
     if(!this.hide){    

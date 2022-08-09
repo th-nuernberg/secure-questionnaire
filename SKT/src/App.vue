@@ -3,7 +3,7 @@
     <Header></Header>
     <router-view/>      
     <Footer></Footer> 
-    <RecordAudio ></RecordAudio>
+    <RecordAudio ref="recordAudio" :taskNr="1" ></RecordAudio>
   </div>
  </template>
 
@@ -22,7 +22,15 @@ import RecordAudio from './components/RecordAudio.vue';
 },methods: {
   test(){
     console.log('Test from APP.vue')
+  },
+  record(){
+    this.$refs.recordAudio.record()
+  },
+  stop(){
+    this.$refs.recordAudio.stop()
+    console.log("STOOOP")
   }
+
 }
     };
 </script>

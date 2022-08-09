@@ -1,6 +1,6 @@
 <template>
   <body class="body">
-        <RecordAudio :taskNr="3"></RecordAudio>
+        <RecordAudio  v-if="false" :taskNr="3"></RecordAudio>
     <h3>Subtest III: Zahlen lesen</h3>
     <p style="float: left;">Aufgabe <strong>3</strong> von 10</p>
     <TimeBar :duration=600 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
