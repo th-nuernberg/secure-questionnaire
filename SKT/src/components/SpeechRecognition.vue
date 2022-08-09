@@ -34,7 +34,7 @@
     emitText(text){
 
         this.$emit('speeched', text);
-    },
+    }, 
     startSpeechToTxt() {
     // initialisation of voicereco;
     
@@ -87,6 +87,13 @@
   
 
 
-   }
+   },
+     beforeUnmount() {
+  
+    this.stop()
+  
+
+
+  } 
   }
   </script>

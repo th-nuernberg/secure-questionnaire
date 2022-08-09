@@ -98,6 +98,7 @@ export default {
       this.$refs.speechRecogn.stop()
     }
     this.hide = true;
+  this.$root.stop()
   } 
 }
 

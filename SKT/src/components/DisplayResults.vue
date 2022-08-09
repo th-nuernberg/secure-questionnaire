@@ -18,11 +18,32 @@ export default {
     },
     methods:{
         play(index){
+
+          function convertURIToBinary(dataURI) {
+  let BASE64_MARKER = ';base64,';
+  let base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+  let base64 = dataURI.substring(base64Index);
+  let raw = window.atob(base64);
+  let rawLength = raw.length;
+  let arr = new Uint8Array(new ArrayBuffer(rawLength));
+
+  for (let i = 0; i < rawLength; i++) {
+    arr[i] = raw.charCodeAt(i);
+  }
+  return arr;
+}
+
+let binary = convertURIToBinary(this.task_data['audio'][index+1]);
+let blob = new Blob([binary], {
+  type: 'audio/ogg'
+});
+let blobUrl = URL.createObjectURL(blob);
+
           console.log(index)
           console.log(this.task_data['audio']['1'])
-          let blob = new Blob(this.task_data['audio'][index+1], { type: "audio/mp3" });
-          let audioUrl = URL.createObjectURL(blob);
-          let audio = new Audio(audioUrl);
+          //let blob = new Blob(this.task_data['audio'][index+1], { type: "audio/mp3" });
+          //let audioUrl = URL.createObjectURL(blob);
+          let audio = new Audio(blobUrl);
           audio.play()
         }
     },
