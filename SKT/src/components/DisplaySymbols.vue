@@ -26,6 +26,7 @@
         number: 0,
       }
     },
+    emits: ['anzahl'],
     methods: {
       randomItem(items) {
       return items[Math.floor(Math.random()*items.length)];
@@ -45,7 +46,8 @@
         var symbol  =this.randomItem(Object.entries(this.symbols))[1]
         this.array.push(symbol);  
       }
-      this.number = this.countSymbol();     
+      this.number = this.countSymbol(); 
+      this.$emit('anzahl',this.number)     
     },
   }
 </script>

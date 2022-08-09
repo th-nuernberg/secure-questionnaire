@@ -7,6 +7,10 @@
     
     <SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedNumber.map(x => x['num'])" />
 
+    <h3>Subtest III: Zahlen lesen</h3>
+    <div>Aufgabe <strong>3</strong> von 8</div>
+
+    <TimeBar :duration=600 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>    
     <div v-if="!this.hide">
     <h5> Sie sehen hier ein Spielbrett mit bunten Spielsteinen, auf denen Zahlen stehen.<br>
       Als erstes lesen Sie bitte die Zahlen laut vor, so schnell Sie können. Sie brauchen sich die Zahlen nicht zu merken.</h5>

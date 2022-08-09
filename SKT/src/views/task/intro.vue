@@ -1,5 +1,5 @@
 <template>
-  <body class="body">
+  <body>
 
     <h3>Subtest I: Gegenstände benennen und einprägen</h3>
     <p>Ihnen werden jetzt Bilder von alltäglichen Gegenständen gezeigt.<br>

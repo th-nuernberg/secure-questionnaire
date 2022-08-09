@@ -1,15 +1,13 @@
 <template>
-  <body class="body">
+  <body>
         
     <h3>V: Zahlen zurücklegen</h3>
-    <p style="float: left;">Aufgabe <strong>5</strong> von 9</p>
-    <TimeBar :duration=6000 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
-  
+    <div>Aufgabe <strong>5</strong> von 8</div>
+
+    <TimeBar :duration=6000 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>  
     <div v-if="!this.hide">
     <h5>Stellen Sie jetzt bitte, so schnell Sie können, die Spielsteine wieder auf ihren alten Platz zurück.</h5><br>
-     
-     <DragNumber :listed_numbers="selectedNumber"/><br> 
-
+    <DragNumber :listed_numbers="selectedNumber"/><br> 
     <router-link class="btn-router" to="/task6" @click="timeOut">Weiter</router-link><br><br>
     </div>  
 

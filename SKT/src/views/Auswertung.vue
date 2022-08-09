@@ -1,9 +1,9 @@
 <template>
-  <body class="body">
+  <body>
 
     <h4>Kurztest zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen</h4><br>
 
-    <DisplayResults :task_data="task_data"/><br> 
+    <!--<DisplayResults :task_data="task_data"/><br>  -->
 
     <div class="Datenübermittlung" v-if="!this.transfer">
       <br><h5 class="txt-center">Datenübermittlung</h5>
@@ -25,13 +25,13 @@
 <script >
 import QrcodeVue from 'qrcode.vue';
 import encryption from "../plugins/deEncryption.js";
-import DisplayResults from "../components/DisplayResults.vue"
+//import DisplayResults from "../components/DisplayResults.vue"
 
 export default {
   name: "app",
   components:{
     QrcodeVue,
-    DisplayResults
+    //DisplayResults
   },
   data() {
     return{

@@ -1,5 +1,5 @@
 <template>
-  <body class="body">
+  <body>
 
     <RecordAudio v-if="false" :taskNr="1"></RecordAudio>
 
@@ -8,8 +8,10 @@
 
     <SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
     
-    <TimeBar :duration=60 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/>
-    
+    <h3>Subtest I: Gegenstände benennen und einprägen</h3>
+    <div>Aufgabe <strong>1</strong> von 8</div>
+
+    <TimeBar :duration=600 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/>    
     <div v-if="!this.hide">
     <h5>Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
     <DisplayImages :listed_images="selectedImage" />

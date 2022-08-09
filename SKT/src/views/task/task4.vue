@@ -1,10 +1,10 @@
 <template>
-  <body class="body">
+  <body>
         
     <h3>Subtest IV: Zahlen ordnen</h3>
-    <p style="float: left;">Aufgabe <strong>4</strong> von 9</p>
-    <TimeBar :duration=6000 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>
-  
+    <div>Aufgabe <strong>4</strong> von 8</div>
+
+    <TimeBar :duration=6000 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/><br>  
     <div v-if="!this.hide">
     <h5>Wie Sie sehen, sind die Zahlen nicht geordnet. 
       Kleine und große Zahlen sind durcheinander gemischt. 
@@ -12,7 +12,6 @@
       Dazu suchen Sie die kleinste Zahl und stellen sie auf das erste Feld links oben. 
       Dann suchen Sie die nächstgrößere Zahl und stellen sie daneben und so weiter.</h5><br>  
      <DragNumber :listed_numbers="selectedNumber"/><br> 
-
     <router-link class="btn-router" to="/task5" @click="timeOut">Fertig</router-link><br><br>
     </div>  
 

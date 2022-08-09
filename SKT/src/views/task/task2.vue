@@ -1,11 +1,11 @@
 <template>
-  <body class="body">
+  <body>
     <RecordAudio :taskNr="2"></RecordAudio>
-    <h3>Subtest II: Gegenstände unmittelbar reproduzieren</h3>
-    <p style="float: left;">Aufgabe <strong>2</strong> von 10</p>
-
     <SpeechRecognition v-if="!this.hide"  ref="speechRecogn" :record="hide" @speeched="emitedWord" :words="selectedImage.map(x => x['name'])" />
     
+    <h3>Subtest II: Gegenstände unmittelbar reproduzieren</h3>
+    <div>Aufgabe <strong>2</strong> von 8</div>
+
     <TimeBar :duration=60 @timeout="this.timeOut" ref="timeBar" v-if="!this.hide"/>
     <div v-if="!this.hide">
     <h5>Sagen Sie bitte jetzt, welche Gegenstände Sie gerade gesehen haben.

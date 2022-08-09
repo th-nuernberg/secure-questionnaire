@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header></Header>
-    <router-view/>      
+    <router-view class="c-container"/>        
     <Footer></Footer> 
     <RecordAudio ref="recordAudio" :taskNr="1" ></RecordAudio>
   </div>

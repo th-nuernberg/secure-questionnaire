@@ -1,8 +1,11 @@
-html {
-    height: 100%;
-}
 
-/* Adds a grey background color to the top navigation */
+body{
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+/* style top navigation bar */
 .navbar-default {
     background-color: #333953;
     justify-content: left;
@@ -10,36 +13,77 @@ html {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
-    /* Style the links inside the navigation bar */
+    /* links inside the navigation bar */
     .navbar-default a {
         color: #FFFFFF;
         padding: 1rem;
         font-size: 1.25rem;
         text-decoration: none;
     }
-    /* Change the color of links on hover */
+    /* links on hover */
     .navbar-default a:hover {
         color: #2b6fb8; 
         text-decoration: none;
     }
-
-.footer,
-.push {
+/* custom container */
+.c-container {
+    text-align: justify;    
+    padding: 0px 60px;  
+}
+footer{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding:15px;
     height: 50px;
     background-color: #333953;
     color: #FFFFFF;
     text-align: center;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    padding: 1rem;
 }
-
-.body {
-    text-align: justify; 
-    padding: 0rem 2rem;     
-    min-height: 700px;  
+/* router button */
+.btn-router{
+    width:fit-content;
+    padding: 0.5rem 1.5rem; 
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    color: #333953;
+    text-decoration: none;
 }
+.btn-router:hover{
+    background-color: #333953;
+    color: #FFFFFF;
+}
+/* Style the time-bar */
+.round-time-bar {
+    height: 7px;
+    animation: roundtime calc(var(--duration) * 1s) linear forwards;
+    transform-origin: left center;
+    background: linear-gradient(to right, #333953,#2b6fb8);
+}  
+@keyframes roundtime {
+    to {
+        transform: scaleX(0);
+    }
+}
+/*Style custom row, column, card */
+.c-row {
+    padding: 10px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 140 * 5px;
+}
+    .c-column {
+        padding: 1%;
+        text-align: center;
+        border: 0;
+    }
+        .c-card {
+            width: 10rem;
+            height: 10rem;
+            display: flex;
+            flex-direction: column;
+            border: #FFFFFF;
+        }
 
 .button{
     color: #333953;
@@ -53,55 +97,6 @@ html {
         background-color: #2b6fb8;
         color: #FFFFFF;
     }
-
-.btn-router{
-    color: #333953;
-    text-decoration: none;
-    border: 0.15rem solid #333953;
-    border-radius: 0.25rem;
-    padding: 0.5rem 1.5rem;   
-}
-    .btn-router:hover{
-        background-color: #333953;
-        color: #FFFFFF;
-    }
-
-/* Style the time-bar */
-.round-time-bar {
-    height: 7px;
-    animation: roundtime calc(var(--duration) * 1s) linear forwards;
-    transform-origin: left center;
-    background: linear-gradient(to right, #333953,#2b6fb8);
-  }  
-  @keyframes roundtime {
-    to {
-      /* More performant than `width` */
-      transform: scaleX(0);
-    }
-  }
-
-
-.c-row {
-    padding: 10px 0px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 140 * 5px;
-}
-.c-column {
-    padding: 1%;
-    text-align: center;
-    border: 0;
-}
-
-.c-card {
-    width: 10rem;
-    height: 10rem;
-    display: flex;
-    flex-direction: column;
-    border: #FFFFFF;
-}
-
 /*Sytle of the popup*/
 .popup {
     padding: 60px 60px 60px;
@@ -114,14 +109,12 @@ html {
     text-align: center;
     color: #333953;
   }
-
 .qrcode{
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
 }
-
 .simplecircle {
     height: 150px;
     width: 150px;
@@ -135,7 +128,6 @@ html {
     font-size: 70px; 
     color: transparent; 
 }
-
 .circle {
     height: 150px;
     width: 150px;
@@ -149,11 +141,9 @@ html {
     font-size: 70px;  
     box-shadow: 10px 20px 15px silver;
 }
-
 .col{
   width: 50px;
 }
-
 table {
     border-collapse: collapse;
     width: 100%;
@@ -166,7 +156,6 @@ table {
   }
   
   tr:nth-child(even){background-color: #f2f2f2}
-
   .draggable{
     min-height: 500px;
     border: 0.15rem solid #333953;
