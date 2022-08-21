@@ -24,6 +24,7 @@
         symbols: ['★','✻','▢'],
         array: [],
         number: 0,
+      
       }
     },
     emits: ['anzahl'],

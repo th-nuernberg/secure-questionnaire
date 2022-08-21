@@ -1,11 +1,9 @@
 <template>
-  <footer>
-    2022 | IT Projekt Schlaf/Gedächtnis 
-  </footer>
+  <footer>2022 | IT Projekt Schlaf/Gedächtnis</footer>
 </template>
 
 <script>
 export default {
-  name: 'Footer',
+  name: "Footer",
 };
 </script>

@@ -1,9 +1,13 @@
 <template>
-  <div >
+  <div>
     <div style="text-align: right; padding-right: 30px" id="duration">
       {{ this.time }}
     </div>
-    <div class="round-time-bar" :style="styleduration" id="round-time-bar"></div>
+    <div
+      class="round-time-bar"
+      :style="styleduration"
+      id="round-time-bar"
+    ></div>
   </div>
 </template>
 
@@ -30,15 +34,15 @@ export default {
     this.Timer = setInterval(function () {
       if (vm.time < 1 && !this.done) {
         //clearInterval(vm.Timer);
-        vm.$emit("timeout")
+        vm.$emit("timeout");
         vm.done = true;
       } else {
-        if(!this.done){
-        vm.time = vm.time - 1;
+        if (!this.done) {
+          vm.time = vm.time - 1;
         }
       }
     }, 1000);
   },
-  emits: ['timeout']
+  emits: ["timeout"],
 };
 </script>
