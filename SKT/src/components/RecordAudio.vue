@@ -1,9 +1,5 @@
 <template>
-  <div>
-    <button @click="recordAudio()">Rec</button>
-    <button @click="stop()">Stop</button>
-    <button @click="playAudio()">Play</button>
-  </div>
+<div></div>
 </template>
 
 <script>
@@ -17,9 +13,10 @@ export default {
       recorder: null,
       chunks: [],
       device: null,
-      blobObj: null,
-      audioUrl: null,
-      audio: null,
+      //blobObj: null,
+      //audioUrl: null,
+      //audio: null,
+      recording: false,
     };
   },
   methods: {
@@ -30,47 +27,35 @@ export default {
           this.chunks.push(e.data);
           if (this.recorder.state === "inactive") {
             let blob = new Blob(this.chunks, { type: "audio/mp3" });
-            //this.blobObj = blob;
             let vue = this;
-            //this.chunks = [];
             var reader = new FileReader();
             reader.readAsDataURL(blob);
             reader.onloadend = function () {
               var base64String = reader.result;
               let data = { task: vue.taskNr, content: base64String };
-              console.log(base64String);
               vue.$store.dispatch("addAudio", data);
             };
-            //this.audioUrl = URL.createObjectURL(this.blobObj);
-            //this.audio = new Audio(this.audioUrl);
-
-            //this.$emit('recorded', this.audioUrl)
-            //this.$store.dispatch("addData",data);
-            //this.blobObj = null;
+     
           }
         };
-        // start
         this.recorder.start();
       });
     },
     stop() {
+      if(this.recording){
       this.recorder.stop();
+      this.recording = false;
+      }
     },
     record() {
       this.device = navigator.mediaDevices.getUserMedia({ audio: true });
       this.recordAudio();
+      this.recording = true;
     },
 
     playAudio() {
       this.audio.play();
     },
-  },
-  beforeUnmount() {
-    //this.recorder.stop()
-  },
-  created() {
-    //this.device = navigator.mediaDevices.getUserMedia({ audio: true });
-    //this.recordAudio()
-  },
+  }
 };
 </script>

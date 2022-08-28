@@ -19,15 +19,11 @@
      Header,
      RecordAudio
    }, methods: {
-     test() {
-       console.log('Test from APP.vue')
-     },
      record() {
        this.$refs.recordAudio.record()
      },
      stop() {
        this.$refs.recordAudio.stop()
-       console.log("STOOOP")
      }
  
    }

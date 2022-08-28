@@ -14,7 +14,7 @@ export default createStore({
       state.task_data[payload["task"]] = payload["content"];
     },
     ADD_AUDIO(state, payload) {
-      state.task_data["audio"][payload["task"]] = payload["content"];
+      state.task_data["audio"] = payload["content"];
     },
   },
   actions: {
