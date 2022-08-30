@@ -169,3 +169,8 @@ table {
   .symbol{
     font-size: 50px;
   }
+
+  .error{
+    color: red;
+    font-size:large;
+  }

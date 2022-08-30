@@ -14,13 +14,17 @@
     </div>
 
     <div v-if="this.transfer">
-      {{this.responseText}}
-      <br>
-      <h5 class="txt-center">Bitte bewahren Sie den ausgedruckten QR-Code an einem sicheren Ort auf!</h5>
-      Wenn Sie den ausgedruckten QR Code entsorgen, achten Sie bitte auf eine sichere Zerstörung, damit niemand anderes
-      diesen verwenden kann.<br><br>
-      <button class="button" v-on:click="DownloadCode(this.valueQR)">Download QR-Code</button>
-      <qrcode-vue class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />
+      <div v-if="this.error">
+        <div class="error">{{this.responseText}}</div>
+      </div>
+      <div v-if="!this.error">
+        <br>
+        <h5 class="txt-center">Bitte bewahren Sie den ausgedruckten QR-Code an einem sicheren Ort auf!</h5>
+        Wenn Sie den ausgedruckten QR Code entsorgen, achten Sie bitte auf eine sichere Zerstörung, damit niemand anderes
+        diesen verwenden kann.<br><br>
+        <button class="button"  v-on:click="downloadQRCode()">Download QR-Code</button>
+        <qrcode-vue id="qrcode" class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />                
+      </div>
     </div><br>
   </body>
 </template>
@@ -46,6 +50,7 @@ export default {
       rsa_pub_key: String,
       task_data: [],
       transfer: Boolean,
+      error: Boolean,
       audio: null,
       responseText: "",
     };
@@ -58,9 +63,12 @@ export default {
       this.showQR = true;
       this.valueQR = value.toLocaleString() + ";" + id;
     },
-    DownloadCode(data) {
-      console.log(data);
-
+    downloadQRCode() {
+      const a = document.createElement("a");
+      var canvas = document.getElementById("qrcode");
+      a.href  = canvas.toDataURL("image/png");   
+      a.download = "qrcode.png";
+      a.click(); 
     },
     async EncryptMessage(message) {
       this.transfer = true;
@@ -116,6 +124,7 @@ export default {
     },
     handleErrors(error){
       console.log(error);
+      this.error = true;
       this.responseText = "Es gab einen Fehler bei der Datenübermittlung. Überprüfen Sie ihre Internetverbindung oder wenden Sie sich an den technischen Support."
     }
 
