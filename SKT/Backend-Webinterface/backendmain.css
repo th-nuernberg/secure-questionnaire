@@ -2,16 +2,44 @@ body {
 	background-color: #f4f4f4;
     color: #555555;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 16px;
 
     line-height: 1.6em;
     margin: 0;
 }
 
-.container{
-    width: 35%;
+ul{
+    list-style-type: none;
+    width: 200%
+}
+
+li{
+    list-style-type: '➡️' ;
+    padding-left: 10px;
+    padding-bottom: 15px;
+}
+
+.navbar {
+    color: #f4f4f4;
+    background-color: #333953;
+    height: 75px;
+    border: 5px;
+    margin-top: -21px;
+    font-size: smaller;
+    padding-left: 1em;
+}
+
+.container-explanation{
+    margin: left;
+    width: 50%;
+    padding: 10px;
+}
+
+.container-decryption{ 
     margin: auto;
+    width: 50%;
+    padding: 10px;
 }
 
 .box-1 h1{
@@ -19,16 +47,14 @@ body {
     border-left: 5px;
     border-top: 1000px;
     border-bottom: 5px; 
-
-    border: 100px;
-    border-width: 100px;
-
-
-    font-family: Tahoma;
-    font-weight: 800;
-    font-style: italic;
-    text-decoration: underline;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    word-spacing: 0.25em;
 }
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #333953;
+    color: white;
+    text-align: center;
+  }

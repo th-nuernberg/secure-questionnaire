@@ -5,23 +5,38 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title> Decrypt a secret Message</title>
       <link rel= "stylesheet" type = "text/css" href = "backendmain.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com"> 
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div class = "container">
+    <div class = "navbar">
+      <h1 class="headline">
+        <br> Entschlüsselung der Patientendaten <br>
+      </h1>
+    </div>
+
+    <div class = "container-explanation">
+        <br> Anleitung: <br>
+        <ul>
+          <li> Klicken Sie auf "Request Camera Permission" oder " Scan an Image File"</li>
+          <li> Scannen Sie den QR-Code über Ihre Webcam ein oder laden diesen als png-Datei hoch</li>
+          <li> Listenelement 3</li>
+        </ul>
+    </div>
+    
+    <div class = "container-decryption">
       <div class = "box-1">
-          <h1>Unverschlüsselte Daten: </h1>
-  
-          <h3>QR Scanner</h3>
-          <div id="qr-reader" style="width:500px"></div>
+          <h1>QR-Scanner</h1>
+
+          <div id="qr-reader" style="width:400px"></div>
           <div id="qr-reader-results"></div>
       </div>
     </div>
 
-    <div class="container">
-      <h5 id="task1"> </h5>
-      <h5 id="task2"> </h5>
+    <div class="footer">
+      <p>2022 | IT Projekt Schlaf/Gedächtnis</p>
     </div>
-  
 </body>
 
 
@@ -147,21 +162,11 @@
   }
 
 
-
-
-
-
-
   //QR Scanner
   var resultContainer = document.getElementById('qr-reader-results');
   var lastResult, countResults = 0;
   var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
   html5QrcodeScanner.render(onScanSuccess);
-
-
-
-
-
 
 
   // from https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
@@ -222,7 +227,6 @@ IwJoDTpZj8R+ruW4EDpszfM=-----END RSA PRIVATE KEY-----`;
       ["decrypt"]
     );
   }
-
 
 </script>
 </body>
