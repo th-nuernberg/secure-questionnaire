@@ -37,16 +37,10 @@ li{
 }
 
 .container-decryption{ 
-    margin: auto;
-    width: 50%;
-    padding: 10px;
-}
-
-.box-1 h1{
-    border-right: 5px;
-    border-left: 5px;
-    border-top: 1000px;
-    border-bottom: 5px; 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .footer {
