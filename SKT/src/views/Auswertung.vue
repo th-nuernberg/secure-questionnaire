@@ -134,6 +134,7 @@ export default {
     this.transfer = false;
     this.$root.stop();
     this.task_data = this.getData()
+    // Zeigt Ergebnis an: console.log(this.task_data)
     this.rsa_pub_key =
       `-----BEGIN PUBLIC KEY-----
     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxMDhX3bxEgrA+9qb67KH

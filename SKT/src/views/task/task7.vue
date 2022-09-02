@@ -16,8 +16,9 @@
       </h5>
       <DisplayImages :listed_images="selectedImages" />
 
-      <!--Entfernen (Nur für Testzwecke):-->
-      <router-link class="btn-router" to="/task8" @click="finishedTask">Weiter</router-link><br><br>
+      <!--Nur für Testzwecke:
+      <router-link class="btn-router" to="/task8" @click="finishedTask">Weiter</router-link><br><br>-->
+
     </div>
 
     <div class="popup" v-if="this.hide && !this.selectedImages.every(entry => entry['recognized'])">

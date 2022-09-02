@@ -21,8 +21,9 @@
 
       <Symbols @anzahl="anzahlSymbole" /><br />
 
-      <!--Entfernen (Nur für Testzwecke):-->
-      <router-link class="btn-router" to="/task7" @click="finishedTask">Weiter</router-link><br><br>
+      <!--Nur für Testzwecke:
+      <router-link class="btn-router" to="/task7" @click="finishedTask">Weiter</router-link><br><br>-->
+
     </div>
 
     <div class="popup" v-if="this.hide">

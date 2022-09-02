@@ -15,8 +15,9 @@
       </h5>
       <DisplayAllImages :listed_images="selectedImage" />
 
-      <!--Entfernen (Nur für Testzwecke):-->
-      <router-link class="btn-router" to="/auswertung" @click="finishedTask">Weiter</router-link><br /><br />
+      <!--Nur für Testzwecke:
+      <router-link class="btn-router" to="/auswertung" @click="finishedTask">Weiter</router-link><br /><br />-->
+
     </div>
 
     <div class="popup" v-if="this.hide && !this.selectedImage.every((entry) => entry['recognized'])">
@@ -73,6 +74,7 @@ export default {
       });
       this.$refs.speechRecogn.stop();
     },
+  
     emitedWord(boolArray) {
       let test = boolArray
         .map((value, index) => {
@@ -96,6 +98,7 @@ export default {
     this.selectedImage = this.selectedImage.map((entry) => {
       return { ...entry, recognized: false };
     });
+  
   },
   beforeUnmount() {
     if (!this.hide) {

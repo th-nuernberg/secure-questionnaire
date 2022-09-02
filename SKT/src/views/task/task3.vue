@@ -17,8 +17,9 @@
       </h5>
       <DisplayNumber :listed_numbers="selectedNumber" /><br />
 
-      <!--Entfernen (Nur für Testzwecke):-->
-      <router-link class="btn-router" to="/task4" @click="finishedTask">Weiter</router-link><br /><br />
+      <!--Nur für Testzwecke:
+      <router-link class="btn-router" to="/task4" @click="finishedTask">Weiter</router-link><br /><br />-->
+
     </div>
 
     <div class="popup" v-if="this.hide && !this.selectedNumber.every((entry) => entry['recognized'])">

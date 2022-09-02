@@ -132,6 +132,7 @@ footer{
     text-align: center;
     font-size: 70px; 
     color: transparent; 
+    justify-content:end;
 }
 .circle {
     height: 150px;

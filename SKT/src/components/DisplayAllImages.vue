@@ -45,7 +45,20 @@ export default {
   methods: {
     randomItem(items) {
       return items[Math.floor(Math.random() * items.length)];
-      
+    },
+    shuffleArray(array) {
+        let a,
+        b,
+        temp;
+      for (let i = 0; i < 35; i++) {
+        a = Math.floor(Math.random() * 35)
+        b = Math.floor(Math.random() * 35);
+        temp = array[a];
+        array[a] = array[b];
+        array[b] = temp;
+
+      }
+      return array;
     },
   },
   created() {
@@ -63,7 +76,10 @@ export default {
         });
       }
     }
-    console.log(this.allImages)
+
+    this.allImages = this.shuffleArray(this.allImages)
+
+    
   },
 };
 </script>
