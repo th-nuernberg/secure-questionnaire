@@ -21,7 +21,7 @@
         <ul>
           <li> Klicken Sie auf "Request Camera Permission" oder " Scan an Image File"</li>
           <li> Scannen Sie den QR-Code über Ihre Webcam ein oder laden diesen als png-Datei hoch</li>
-          <li> Listenelement 3</li>
+          <li> Ihnen werden nun die einzelnen Aufgaben angezeigt mit der jeweiligen Bearbeitungszeit<br></li>
         </ul>
     </div>
     
@@ -30,6 +30,11 @@
 
       <div id="qr-reader" style="width:400px"></div>
       <div id="qr-reader-results"></div>
+    </div>
+
+    <div class="container-tasks">
+      <h5 id="task1"> </h5>
+      <h5 id="task2"> </h5>
     </div>
 
     <div class="footer">
@@ -44,7 +49,6 @@
 
   let datafeld;
 
-
   function get_data(url, id) {
     return fetch(url + '/' + id, {
       "method": "GET",
@@ -53,11 +57,8 @@
       .then(response => {
         return response.json()
       })
-    //ToDo: Return Codes / Fehlerverarbeitung
   }
 
-
-  //ToDo: Fehlerverarbeitung bei Fehlerhaften QR-Codes/ Keys
   function importAESKey(key) {
     return window.crypto.subtle.importKey(
       "raw",
@@ -96,7 +97,7 @@
     })
   }
   //let outsidebody;
-  //ToDo: Fehlerverarbeitung von Fehlern bei Scans uws..
+
   function onScanSuccess(decodedText, decodedResult) {
     if (decodedText !== lastResult) {
       ++countResults;
