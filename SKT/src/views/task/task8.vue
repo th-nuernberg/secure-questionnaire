@@ -13,7 +13,7 @@
         Unter diesen befinden sich auch diejenigen, die Sie vorhin gesehen haben. 
         Suchen Sie diese bitte heraus.
       </h5>
-      <DisplayImages :listed_images="selectedImage" />
+      <DisplayAllImages :listed_images="selectedImage" />
 
       <!--Entfernen (Nur für Testzwecke):-->
       <router-link class="btn-router" to="/auswertung" @click="finishedTask">Weiter</router-link><br /><br />
@@ -34,13 +34,13 @@
 
 <script>
 import images from "../../plugins/images.js";
-import DisplayImages from "../../components/DisplayImages.vue";
+import DisplayAllImages from "../../components/DisplayAllImages.vue";
 import TimeBar from "../../components/TimeBar.vue";
 import SpeechRecognition from "../../components/SpeechRecognition.vue";
 
 export default {
   components: {
-    DisplayImages,
+    DisplayAllImages,
     TimeBar,
     SpeechRecognition,
   },
@@ -80,16 +80,9 @@ export default {
             ...this.selectedImage[index],
             recognized: value || this.selectedImage[index]["recognized"],
           };
-        })
-        .sort((a, b) => {
-          if (a["recognized"] == b["recognized"]) {
-            return 0;
-          }
-          if (a["recognized"] && !b["recognized"]) {
-            return -1;
-          }
-          return 1;
         });
+   
+
 
       this.selectedImage = test;
       if (this.selectedImage.every((entry) => entry["recognized"])) {
@@ -101,7 +94,7 @@ export default {
     this.hide = false;
     this.selectedImage = this.getData()["1"]["images"];
     this.selectedImage = this.selectedImage.map((entry) => {
-      return { ...entry, recognized: false, url: images["white"] };
+      return { ...entry, recognized: false };
     });
   },
   beforeUnmount() {
