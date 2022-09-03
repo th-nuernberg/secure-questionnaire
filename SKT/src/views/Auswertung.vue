@@ -71,6 +71,8 @@ export default {
       a.click(); 
     },
     async EncryptMessage(message) {
+
+      console.log(message);
       this.transfer = true;
       message = JSON.stringify(message);
       let id = crypto.randomUUID();
@@ -82,8 +84,7 @@ export default {
       let body = {
         'Message': values['Cipher'],
         'IV': values['IV'],
-        'ID': id,
-        'test': values['Key']
+        'ID': id
       }
 
       values = await encryption['AES']['encrypt'](body['Message'])
@@ -96,9 +97,9 @@ export default {
       
 
       let url = "http://localhost/POST/" + id
-
+      //let url = "http://localhost:5000/POST/" + id
       console.log(url)
-
+      console.log(body)
       fetch(url, {
         'method': "POST",
         "headers": {
@@ -110,7 +111,7 @@ export default {
 
     },
     handleResponse(response) {
-
+      console.log(response)
       if (response.ok) {
         this.responseText = "Die Daten wurden erfolgreich Übermittelt.";
       }
