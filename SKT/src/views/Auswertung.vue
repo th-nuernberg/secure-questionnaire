@@ -72,7 +72,6 @@ export default {
     },
     async EncryptMessage(message) {
 
-      console.log(message);
       this.transfer = true;
       message = JSON.stringify(message);
       let id = crypto.randomUUID();
@@ -97,9 +96,8 @@ export default {
       
 
       let url = "http://localhost/POST/" + id
-      //let url = "http://localhost:5000/POST/" + id
-      console.log(url)
-      console.log(body)
+
+  
       fetch(url, {
         'method': "POST",
         "headers": {
@@ -111,7 +109,7 @@ export default {
 
     },
     handleResponse(response) {
-      console.log(response)
+
       if (response.ok) {
         this.responseText = "Die Daten wurden erfolgreich Übermittelt.";
       }
@@ -123,8 +121,8 @@ export default {
       }
       return response
     },
-    handleErrors(error){
-      console.log(error);
+    handleErrors(){
+
       this.error = true;
       this.responseText = "Es gab einen Fehler bei der Datenübermittlung. Überprüfen Sie ihre Internetverbindung oder wenden Sie sich an den technischen Support."
     }
