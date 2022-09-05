@@ -48,7 +48,13 @@ export default {
       }
     },
     record() {
-      this.device = navigator.mediaDevices.getUserMedia({ audio: true });
+      const constraints = {
+        audio: {
+          sampleRate: 8000,
+          sampleSize: 8
+        }
+      }
+      this.device = navigator.mediaDevices.getUserMedia({audio: constraints });
       this.recordAudio();
       this.recording = true;
     },
