@@ -37,14 +37,21 @@ li{
 }
 
 .container-decryption{ 
-    position: fixed;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    float: left;
+    top: 100%;
+    width: 32%; 
+    border: 10px;
+    margin-right: 2%; 
+    padding: 20px; 
+    box-sizing: border-box; 
 }
 
-.container-tasks{
-
+.container-tasks:last-child{
+    position: fixed;
+    white-space: pre;
+    margin-right: 0;
+    top: 90%;
+    bottom: 50%;
 }
 
 .footer {

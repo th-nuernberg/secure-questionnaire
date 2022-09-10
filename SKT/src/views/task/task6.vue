@@ -70,9 +70,9 @@ export default {
     },
     auswertung() {
       if (this.eingabe == this.anzahl) {
-        this.ergebnis = true;
+        this.ergebnis = "Richtig";
       } else {
-        this.ergebnis = false;
+        this.ergebnis = "Falsch";
       }
       this.finishedTask();
     },
