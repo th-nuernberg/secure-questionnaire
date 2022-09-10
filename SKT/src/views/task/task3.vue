@@ -86,6 +86,7 @@ export default {
     },
   },
   created() {
+    this.$root.stop();
     this.hide = false;
     let i = 0;
     while (this.selectedNumber.length < 10) {

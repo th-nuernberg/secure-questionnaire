@@ -14,10 +14,12 @@
     </div>
 
     <div v-if="this.transfer">
+     
       <div v-if="this.error">
         <div class="error">{{this.responseText}}</div>
       </div>
       <div v-if="!this.error">
+        <div class="error">{{this.responseText}}</div>
         <br>
         <h5 class="txt-center">Bitte bewahren Sie den ausgedruckten QR-Code an einem sicheren Ort auf!</h5>
         Wenn Sie den ausgedruckten QR Code entsorgen, achten Sie bitte auf eine sichere Zerstörung, damit niemand anderes
@@ -60,6 +62,7 @@ export default {
       return this.$store.getters.getData;
     },
     generateQRCode(value, id) {
+      console.log("henlo")
       this.showQR = true;
       this.valueQR = value.toLocaleString() + ";" + id;
     },
@@ -71,7 +74,7 @@ export default {
       a.click(); 
     },
     async EncryptMessage(message) {
-
+      this.error = false
       this.transfer = true;
       message = JSON.stringify(message);
       let id = crypto.randomUUID();
@@ -94,7 +97,7 @@ export default {
       body['Key'] = await encryption['RSA']['encrypt'](this.rsa_pub_key, values['Key'])
 
       
-
+      console.log(body)
       let url = "http://localhost/POST/" + id
 
   
