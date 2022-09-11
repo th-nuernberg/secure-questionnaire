@@ -94,10 +94,10 @@ export default {
         second_index = first_index + 1;
         if (arr[second_index] - arr[first_index] < 0)
         {
-        return false;
+        return "Falsch";
         } 
       }
-      return true;
+      return "Richtig";
     },
   },
   created() {

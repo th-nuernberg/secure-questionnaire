@@ -110,9 +110,9 @@ export default {
           i++;
         }
         else{
-          return false
+          return "Falsch"
         }   
-        return true     
+        return "Richtig"    
       }
      
 
