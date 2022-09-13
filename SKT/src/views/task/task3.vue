@@ -6,7 +6,7 @@
       :words="selectedNumber.map((x) => x['num'])" />
 
     <h3>Subtest III: Zahlen lesen</h3>
-    <div>Aufgabe <strong>3</strong> von 8</div>
+    <div>Aufgabe <strong>3</strong> von 7</div>
 
     <div v-if="!this.hide">      
       <TimeBar :duration="60" @timeout="this.finishedTask" ref="timeBar" /><br />
@@ -52,6 +52,7 @@ export default {
   data() {
     return {
       selectedNumber: [],
+      missingNumber: [],
       hide: Boolean,
       colors,
     };
@@ -74,12 +75,21 @@ export default {
     addData(data) {
       this.$store.dispatch("addData", data);
     },
+    
     finishedTask() {
       this.hide = true;
+
+      this.selectedNumber.map((entry) => {
+        if (entry["recognized"] == false) {
+          this.missingNumber.push(entry["name"]);
+        }
+      });
+
       this.$store.dispatch("addData", {
         task: 3,
         content: {
           numbers: this.selectedNumber,
+          missing: this.missingNumber,
           time: this.$refs.timeBar.time,
         },
       });

@@ -3,7 +3,7 @@
   <body>
     <div v-if="!this.hide">
       <h3>Subtest IV: Zahlen ordnen</h3>
-      <div>Aufgabe <strong>4</strong> von 8</div>
+      <div>Aufgabe <strong>4</strong> von 7</div>
       <TimeBar :duration=60 @timeout="this.timeOut" ref="timeBar" /><br>
       <h5> Wie Sie sehen, sind die Zahlen nicht geordnet.
         Kleine und große Zahlen sind durcheinander gemischt.

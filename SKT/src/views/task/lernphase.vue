@@ -7,11 +7,7 @@
     <div v-if="!this.hide">
       <TimeBar :duration="5" @timeout="timeout" ref="time"/>      
       <DisplayImages :listed_images="selectedImage" />
-
-      <!--Entfernen (Nur für Testzwecke):-->
-      <router-link class="btn-router" to="/task3">Weiter</router-link><br><br> 
-
-    </div>
+   </div>
 
    <div class="popup" v-if="this.hide"  id="timeout-show">
     <h5>Hier geht es weiter zur nächsten Aufgabe</h5><br>

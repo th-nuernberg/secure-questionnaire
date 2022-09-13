@@ -55,11 +55,6 @@ export default createRouter({
       component: () => import("../views/task/task7.vue"),
     },
     {
-      path: "/task8",
-      name: "Task8",
-      component: () => import("../views/task/task8.vue"),
-    },
-    {
       path: "/lernphase",
       name: "Lernphase",
       component: () => import("../views/task/lernphase.vue"),

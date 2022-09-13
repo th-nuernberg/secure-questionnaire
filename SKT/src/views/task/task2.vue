@@ -5,7 +5,7 @@
       :words="selectedImages.map((x) => x['name'])" />
 
     <h3>Subtest II: Gegenstände unmittelbar reproduzieren</h3>
-    <div>Aufgabe <strong>2</strong> von 8</div>
+    <div>Aufgabe <strong>2</strong> von 7</div>
 
     <div v-if="!this.hide">      
       <TimeBar :duration="60" @timeout="this.finishedTask" ref="timeBar"/><br/>

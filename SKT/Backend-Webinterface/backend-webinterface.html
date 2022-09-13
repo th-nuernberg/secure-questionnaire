@@ -1,54 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head> 
-      <meta charset = "UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title> Decrypt a secret Message</title>
-      <link rel= "stylesheet" type = "text/css" href = "backendmain.css">
-      <link rel="preconnect" href="https://fonts.googleapis.com"> 
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
-      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div class = "navbar">
-      <h1 class="headline">
-        <br> Entschlüsselung der Patientendaten <br>
-      </h1>
-    </div>
 
-    <div class = "container-explanation">
-        <h3>Anleitung:</h3> 
-        <ul>
-          <li> Klicken Sie auf "Request Camera Permission" oder " Scan an Image File"</li>
-          <li> Scannen Sie den QR-Code über Ihre Webcam ein oder laden diesen als png-Datei hoch</li>
-          <li> Ihnen werden die Testergebnisse angezeigt mit der jeweiligen Bearbeitungszeit und Korrektheit<br></li>
-        </ul>
-    </div>
-    
-    <div class = "container-decryption">
-      <h1>QR-Scanner</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Decrypt a secret Message</title>
+  <link rel="stylesheet" type="text/css" href="backendmain.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+</head>
 
-      <div id="qr-reader" style="width:400px"></div>
-      <div id="qr-reader-results"></div>
-    </div>
+<body>
+  <div class="navbar">
+    <h1 class="headline">
+      <br> Entschlüsselung der Patientendaten <br>
+    </h1>
+  </div>
 
-    <div class="container-tasks">
-      <br>
-      <h2>📈 Testergebnisse:</h2>
-        <h5 id="task1"> </h5>
-        <h5 id="task2"> </h5>
-        <h5 id="task3"> </h5>
-        <h5 id="task4"> </h5>
-        <h5 id="task5"> </h5>
-        <h5 id="task6"> </h5>
-        <h5 id="task7"> </h5>
-        <h5 id="task8"> </h5>
-        <h5 id="audio_rec"> </h5>
-    </div>
+  <div class="container-explanation">
+    <h3>Anleitung:</h3>
+    <ul>
+      <li> Klicken Sie auf "Request Camera Permission" oder " Scan an Image File"</li>
+      <li> Scannen Sie den QR-Code über Ihre Webcam ein oder laden diesen als png-Datei hoch</li>
+      <li> Ihnen werden die Testergebnisse angezeigt mit der jeweiligen Bearbeitungszeit und Korrektheit<br></li>
+    </ul>
+  </div>
 
-    <div class="footer">
-      <p>2022 | IT Projekt Schlaf/Gedächtnis</p>
-    </div>
+  <div class="container-decryption">
+    <h1>QR-Scanner</h1>
+
+    <div id="qr-reader" style="width:400px"></div>
+    <div id="qr-reader-results"></div>
+  </div>
+
+  <div class="container-tasks">
+    <br>
+    <h2>📈 Testergebnisse:</h2>
+    <h5 id="task1"> </h5>
+    <h5 id="task2"> </h5>
+    <h5 id="task3"> </h5>
+    <h5 id="task4"> </h5>
+    <h5 id="task5"> </h5>
+    <h5 id="task6"> </h5>
+    <h5 id="task7"> </h5>
+    <h5 id="audio_rec"> </h5>
+    <button onclick="play()">
+      Play Audio
+    </button>
+  </div>
+
+  <div class="footer">
+    <p>2022 | IT Projekt Schlaf/Gedächtnis</p>
+  </div>
 </body>
 
 
@@ -57,6 +61,7 @@
 <script>
 
   let datafeld;
+  let message;
 
   function get_data(url, id) {
     return fetch(url + '/' + id, {
@@ -66,6 +71,37 @@
       .then(response => {
         return response.json()
       })
+  }
+
+  function play() {
+
+    console.log(message['audio'])
+
+    let binary = convertURIToBinary(message['audio']);
+    console.log(binary)
+
+    
+    let blob = new Blob([binary], {
+      type: "audio/ogg",
+    });
+    let blobUrl = URL.createObjectURL(blob);
+
+    let audio = new Audio(blobUrl);
+    audio.play();
+  }
+
+  function convertURIToBinary(dataURI) {
+    let BASE64_MARKER = ";base64,";
+    let base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+    let base64 = dataURI.substring(base64Index);
+    let raw = window.atob(base64);
+    let rawLength = raw.length;
+    let arr = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (let i = 0; i < rawLength; i++) {
+      arr[i] = raw.charCodeAt(i);
+    }
+    return arr;
   }
 
   function importAESKey(key) {
@@ -123,81 +159,74 @@
 
       get_data("http://localhost/GET", id
       ).then(data => {
-        
+
         return importprivateKey(pemEncodedKey).then(rsaKey => {
-          
+
           return decryptRSAcipher(rsaKey, new Uint8Array(Object.values(data['Key'])))
         }).then(encaeskey => {
-          
+
           return importAESKey(new Uint8Array(encaeskey))
         })
           .then(aeskeyobj => {
             let iv2 = new Uint8Array(Object.values(data['IV2']))
             let ciphertext2 = new Uint8Array(Object.values(data['Message']))
-            
+
             return decryptAEScipher(aeskeyobj, ciphertext2, iv2)
           })
           .then(enc => {
             data['Message2'] = enc
-            
+
             return data
           })
       }).then(data => {
-          return importAESKey(new Uint8Array(keyarray)).then(qrkey => {
-            
-            let iv = new Uint8Array(Object.values(data['IV']));
-            let ciphertext = new Uint8Array(data['Message2'].split(',').map(x => parseInt(x)))
-            return decryptAEScipher(qrkey, ciphertext, iv)
-          }).then((msg) => {
-            // datafeld.textContent = msg
-            msg =  JSON.parse(msg);
-            console.log(msg);
-            task1 = document.getElementById("task1")
-            task1_rec = msg['1']['images'].map(entry => entry['recognized']).reduce((x,y)=>x+y)
-            task1_time = 60-parseInt(msg['1']['time'])
-            task1.textContent = "Aufgabe 1 - Gegenstände benennen: Ihre Bearbeitungszeit: " + task1_time + " Sekunden  ---  Erkannte Gegenstände: " + task1_rec +"/12" 
-            //{{task_data["1"]["images"].map(entry => entry['recognized']).reduce((x,y)=>x+y)}}/12"
-            
-            task2 = document.getElementById("task2")
-            task2_rec = 12 - (msg['2']['missing']).length
-            task2_time = 60-parseInt(msg['2']['time'])
-            task2.textContent = "Aufgabe 2 - Gegenstände unmittelbar reproduzieren: Ihre Bearbeitungszeit: " + task2_time + " Sekunden  ---  Erkannte Gegenstände: " + task2_rec + "/12"
+        return importAESKey(new Uint8Array(keyarray)).then(qrkey => {
 
-            task3 = document.getElementById("task3")
-            task3_numbers = 10 - (msg['3']['numbers']).length
-            task3_time = 60-parseInt(msg['3']['time'])
-            task3.textContent = "Aufgabe 3 - Zahlen lesen: Ihre Bearbeitungszeit: " + task3_time +" Sekunden  ---  Vorgelesene Zahlen: " + task3_numbers + "/10"
+          let iv = new Uint8Array(Object.values(data['IV']));
+          let ciphertext = new Uint8Array(data['Message2'].split(',').map(x => parseInt(x)))
+          return decryptAEScipher(qrkey, ciphertext, iv)
+        }).then((msg) => {
+          // datafeld.textContent = msg
+          msg = JSON.parse(msg);
+       
+          task1 = document.getElementById("task1")
+          task1_rec = msg['1']['images'].map(entry => entry['recognized']).reduce((x, y) => x + y)
+          task1_time = 60 - parseInt(msg['1']['time'])
+          task1.textContent = "Aufgabe 1 - Gegenstände benennen: Ihre Bearbeitungszeit: " + task1_time + " Sekunden  ---  Erkannte Gegenstände: " + task1_rec + "/12"
+          //{{task_data["1"]["images"].map(entry => entry['recognized']).reduce((x,y)=>x+y)}}/12"
 
-            task4 = document.getElementById("task4")
-            task4_correct = (msg['4']['richtig'])
-            task4_time = 60-parseInt(msg['4']['time'])
-            task4.textContent = "Aufgabe 4 - Zahlen ordnen: Ihre Bearbeitungszeit: " + task4_time + " Sekunden  ---  Zahlen wurden richtig geordnet: " + task4_correct
+          task2 = document.getElementById("task2")
+          task2_rec = 12 - (msg['2']['missing']).length
+          task2_time = 60 - parseInt(msg['2']['time'])
+          task2.textContent = "Aufgabe 2 - Gegenstände unmittelbar reproduzieren: Ihre Bearbeitungszeit: " + task2_time + " Sekunden  ---  Erkannte Gegenstände: " + task2_rec + "/12"
 
-            task5 = document.getElementById("task5")
-            task5_correct = (msg['5']['richtig'])
-            task5_time = 60-parseInt(msg['5']['time'])
-            task5.textContent = "Aufgabe 5 - Zahlen zurücklegen: Ihre Bearbeitungszeit: " + task5_time + " Sekunden  ---  Zahlen wurden richtig zurückgelegt: " + task5_correct
-            
-            task6 = document.getElementById("task6")
-            task6_time = 60-parseInt(msg['6']['time'])
-            taks6_result = (msg['6']['result'])
-            task6.textContent = "Aufgabe 6 - Symbole zählen: Ihre Bearbeitungszeit: " + task6_time + " Sekunden  ---  Richige Anzahl der Symbole: " + taks6_result
+          task3 = document.getElementById("task3")
+          task3_numbers = 10 - (msg['3']['missing']).length
+          task3_time = 60 - parseInt(msg['3']['time'])
+          task3.textContent = "Aufgabe 3 - Zahlen lesen: Ihre Bearbeitungszeit: " + task3_time + " Sekunden  ---  Vorgelesene Zahlen: " + task3_numbers + "/10"
 
-            task7 = document.getElementById("task7")
-            task7_rec = 12 - (msg['7']['missing']).length
-            task7_time = 60-parseInt(msg['7']['time'])
-            task7.textContent = "Aufgabe 7 - Gegenstände nach Ablenkung reproduzieren: Ihre Bearbeitungszeit:  " + task7_time + " Sekunden  ---  Erkannte Gegenstände: " + task7_rec + "/12"
+          task4 = document.getElementById("task4")
+          task4_correct = (msg['4']['richtig'])
+          task4_time = 60 - parseInt(msg['4']['time'])
+          task4.textContent = "Aufgabe 4 - Zahlen ordnen: Ihre Bearbeitungszeit: " + task4_time + " Sekunden  ---  Zahlen wurden richtig geordnet: " + task4_correct
 
-            task8 = document.getElementById("task8")
-            task8_rec = 12 - (msg['8']['missing']).length
-            task8_time = 60-parseInt(msg['8']['time'])
-            task8.textContent = "Aufgabe 8 - Gegenstände wiedererkennen: Ihre Bearbeitungszeit: " + task8_time + " Sekunden  ---  Erkannte Gegenstände: " + task8_rec + "/12"
+          task5 = document.getElementById("task5")
+          task5_time = 60 - parseInt(msg['5']['time'])
+          taks5_result = (msg['5']['result'])
+          task5.textContent = "Aufgabe 5 - Symbole zählen: Ihre Bearbeitungszeit: " + task5_time + " Sekunden  ---  Richige Anzahl der Symbole: " + taks5_result
 
-            audio_rec = document.getElementById("audio/mp3")
-            
-            
-          })
+          task6 = document.getElementById("task6")
+          task6_rec = 12 - (msg['6']['missing']).length
+          task6_time = 60 - parseInt(msg['6']['time'])
+          task6.textContent = "Aufgabe 6 - Gegenstände nach Ablenkung reproduzieren: Ihre Bearbeitungszeit:  " + task6_time + " Sekunden  ---  Erkannte Gegenstände: " + task6_rec + "/12"
+
+          task7 = document.getElementById("task7")
+          task7_rec = 12 - (msg['7']['missing']).length
+          task7_time = 60 - parseInt(msg['7']['time'])
+          task7.textContent = "Aufgabe 7 - Gegenstände wiedererkennen: Ihre Bearbeitungszeit: " + task7_time + " Sekunden  ---  Erkannte Gegenstände: " + task7_rec + "/12"
+
+          message = msg;
         })
+      })
     }
   }
 

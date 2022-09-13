@@ -2,8 +2,6 @@
   <div class="container">
     <div class="symbol">
 
-      <div style="text-align: center"><u>▢</u></div>
-
       <div class="row justify-content-md-center" v-for="item in [0,1,2,3,4,5,6,7,8,9,]" :key="item">
         <div class="col-md-auto" v-for="item in array.slice(item*13,13*item+13)" :key="item">
             <div v-text="item"></div>

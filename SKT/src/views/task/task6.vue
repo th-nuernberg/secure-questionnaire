@@ -1,33 +1,33 @@
 <template>
+
   <body>
 
-    <h3>VI: Symbole zählen</h3>
-    <div>Aufgabe <strong>6</strong> von 8</div>
+    <h3>Subtest VI: Gegenstände nach Ablenkung reproduzieren</h3>
+    <div>Aufgabe <strong>6</strong> von 7</div>
+
+    <SpeechRecognition v-if="!this.hide" ref="speechRecogn" :record="hide" @speeched="emitedWord"
+      :words="selectedImages.map(x => x['name'])" />
 
     <div v-if="!this.hide">
-      <TimeBar :duration="60" @timeout="this.finishedTask" ref="timeBar"/><br />
+      <TimeBar :duration=60 @timeout="this.finishedTask" ref="timeBar"/><br />
       <h5>
-        Sie sehen hier auf dieser Tafel verschiedene Symbole: Vierecke, Sterne
-        und Blumen. Wichtig sind nur die Vierecke. Bitte zählen Sie sie so
-        schnell sie können.
+        Jetzt kommen wir noch einmal zu den Gegenständen, die Sie am Anfang gesehen haben.<br>
+        An welche können Sie sich noch erinnern?
       </h5>
-
-      <div class="input-group mb-3" style="width: 500px">
-        <input type="text" class="form-control" placeholder="Anzahl gezählter Vierecke" v-model="eingabe"/>
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="text" @click="this.auswertung"> OK </button>
-        </div>
-      </div>
-
-      <Symbols @anzahl="anzahlSymbole" /><br />
+      <DisplayImages :listed_images="selectedImages" />
 
       <!--Nur für Testzwecke:
-      <router-link class="btn-router" to="/task7" @click="finishedTask">Weiter</router-link><br><br>-->
+      <router-link class="btn-router" to="/task8" @click="finishedTask">Weiter</router-link><br><br>-->
 
     </div>
 
-    <div class="popup" v-if="this.hide">
-      <h4>Hier geht es weiter zur nächsten Aufgabe</h4><br />
+    <div class="popup" v-if="this.hide && !this.selectedImages.every(entry => entry['recognized'])">
+      <h4>Die Zeit ist um!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
+      <router-link class="btn-router" to="/task7">Weiter geht's</router-link>
+    </div>
+
+    <div class="popup" v-if="this.hide && this.selectedImages.every(entry => entry['recognized'])">
+      <h4>Sie haben alle Gegenstände vorgelesen!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>
       <router-link class="btn-router" to="/task7">Weiter geht's</router-link>
     </div>
 
@@ -35,20 +35,24 @@
 </template>
 
 <script>
+
+import images from "../../plugins/images.js";
+import DisplayImages from "../../components/DisplayImages.vue";
 import TimeBar from "../../components/TimeBar.vue";
-import Symbols from "../../components/DisplaySymbols.vue";
+import SpeechRecognition from "../../components/SpeechRecognition.vue";
 
 export default {
   components: {
+    DisplayImages,
     TimeBar,
-    Symbols,
+    SpeechRecognition
   },
   data() {
     return {
+      images,
+      selectedImages: [],
+      missingImages: [],
       hide: Boolean,
-      anzahl: "",
-      eingabe: "",
-      ergebnis: Boolean,
     };
   },
   methods: {
@@ -57,28 +61,52 @@ export default {
     },
     finishedTask() {
       this.hide = true;
-      this.$store.dispatch("addData", {
-        task: 6,
+
+      this.selectedImages.map(entry => {
+        if (entry['recognized'] == false) {
+          this.missingImages.push(entry['name'])
+        }
+      })
+
+      this.$store.dispatch("addData", { 
+        task: 6, 
         content: { 
-          time: this.$refs.timeBar.time, 
-          result: this.ergebnis },
-      });
+          missing: this.missingImages, 
+          time: this.$refs.timeBar.time } })
+      this.$refs.speechRecogn.stop()
     },
-    anzahlSymbole(anzahl) {
-      this.anzahl = anzahl;
-      //console.log(this.anzahl);
-    },
-    auswertung() {
-      if (this.eingabe == this.anzahl) {
-        this.ergebnis = "Richtig";
-      } else {
-        this.ergebnis = "Falsch";
+    emitedWord(boolArray) {
+      let test = boolArray.map((value, index) => {
+        return { ...this.selectedImages[index], 'recognized': value || this.selectedImages[index]['recognized'] }
+      }).sort((a, b) => {
+        if (a['recognized'] == b['recognized']) {
+          return 0;
+        }
+        if (a['recognized'] && !b['recognized']) {
+          return -1;
+        }
+        return 1;
       }
-      this.finishedTask();
-    },
+      )
+
+      this.selectedImages = test;
+      if (this.selectedImages.every(entry => entry['recognized'])) {
+        this.finishedTask()
+      }
+    }
   },
   created() {
     this.hide = false;
+    this.selectedImages = this.getData()["1"]["images"];
+    this.selectedImages = this.selectedImages.map(entry => { return { ...entry, 'recognized': false, 'url': images['white'] } })
   },
-};
+  beforeUnmount() {
+    if (!this.hide) {
+      this.$refs.speechRecogn.stop()
+    }
+    this.hide = true;
+  }
+}
+
 </script>
+
