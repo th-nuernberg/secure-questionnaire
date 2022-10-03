@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   mongo:
-    image: 'mongo:latest'
+    image: 'mongo:4.4.6'
     volumes: 
       - ./mongo-volume:/data/db 
     restart: always
@@ -16,8 +16,20 @@ services:
       - APP_NAME=MyFlaskApp
     expose:
       - 8080
+  
+  frontend:
+    build: ./frontend
+    container_name:  frontend
+    restart: always
+    #  mount the volumes so we can change code and hot reload
+    volumes:
+        - './frontend:/frontend'
 
-
+    #  port allows the host machine to link to container
+    #  8000 for vue ui, 5000 for our vue app
+    ports:
+        - "8000:8000"
+        - "5000:5000"
 
   nginx:
     build: ./nginx
@@ -27,4 +39,5 @@ services:
       - "80:80"
     depends_on:
       - flask
+      - frontend
 

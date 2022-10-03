@@ -1,0 +1,37 @@
+<template>
+    <div>
+        <heading :question="question"></heading>
+        <p class="mb-1">(Mehrere Antworten möglich)</p>
+        <b-form-group>
+            <b-form-checkbox-group v-model="answer">
+                <b-form-checkbox v-for="option in question.options" :key="option.id" :value=option.text @input="input()">
+                    {{option.text}}
+                </b-form-checkbox>
+            </b-form-checkbox-group>
+        </b-form-group>
+    </div>
+</template>
+
+<script>
+    import Heading from '../heading.vue';
+    export default {
+        components: { Heading, },
+        props: {
+            question: Object,
+            storedAnswer: [String, Array]
+        },
+        data() {
+            return {
+                answer: this.storedAnswer == "" ? [] : this.storedAnswer,
+            }
+        },
+        methods: {
+            input() {
+                this.$parent.getInputFromChild(this.question.id, this.answer);
+            }
+        }
+    }
+</script>
+
+<style scoped>
+</style>
