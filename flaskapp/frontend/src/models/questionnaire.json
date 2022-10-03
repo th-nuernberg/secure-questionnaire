@@ -1,0 +1,48 @@
+{
+    "questionnaire": {
+        "queID": "446392a2-edb7-4f6f-aa05-c11106e409aa",
+        "title": "Fragebogen",
+        "elements": [
+            {
+                "type": "description",
+                "id": 1,
+                "text": "Notizen"
+            },
+            {
+                "type": "singlechoice",
+                "id": 2,
+                "options": [
+                    {
+                        "id": 1,
+                        "text": "Ja"
+                    },
+                    {
+                        "id": 2,
+                        "text": "Nein"
+                    } 
+                ],
+                "text": "Haben Sie vorm Schlafen gehen Alkohol getrunken?"
+            },
+            {
+                "type": "time_",
+                "id": 3,
+                "text": "Wann sind Sie ins Bett gegangen?"
+            },
+            {
+                "type": "scale",
+                "id": 4,
+                "text": "Wie würden Sie Ihren Schlaf bewerten?",
+                "from": 1,
+                "to": 5,
+                "step": 1,
+                "description": "1: sehr schlecht, 5: sehr gut"
+            },
+            {
+                "type": "number",
+                "id": 5,
+                "text": "Wie viele Minuten haben Sie zum Einschlafen gebraucht?"
+            }
+        ],
+        "repeatingType": "single"
+    }
+}
