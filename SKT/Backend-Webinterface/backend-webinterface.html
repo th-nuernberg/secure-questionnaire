@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Decrypt a secret Message</title>
+  <link rel="stylesheet" type="text/css" href="backendmain.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="navbar">
+    <h1 class="headline">
+      <br> Entschlüsselung der Patientendaten <br>
+    </h1>
+  </div>
+
+  <div class="container-explanation">
+    <h3>Anleitung:</h3>
+    <ul>
+      <li> Klicken Sie auf "Request Camera Permission" oder " Scan an Image File"</li>
+      <li> Scannen Sie den QR-Code über Ihre Webcam ein oder laden diesen als png-Datei hoch</li>
+      <li> Ihnen werden die Testergebnisse angezeigt mit der jeweiligen Bearbeitungszeit und Korrektheit<br></li>
+    </ul>
+  </div>
+
+  <div class="container-decryption">
+    <h1>QR-Scanner</h1>
+
+    <div id="qr-reader" style="width:400px"></div>
+    <div id="qr-reader-results"></div>
+  </div>
+
+  <div class="container-tasks">
+    <br>
+    <h2>📈 Testergebnisse:</h2>
+    <h5 id="task1"> </h5>
+    <h5 id="task2"> </h5>
+    <h5 id="task3"> </h5>
+    <h5 id="task4"> </h5>
+    <h5 id="task5"> </h5>
+    <h5 id="task6"> </h5>
+    <h5 id="task7"> </h5>
+    <h5 id="audio_rec"> </h5>
+    <button onclick="play()">
+      Play Audio
+    </button>
+  </div>
+
+  <div class="footer">
+    <p>2022 | IT Projekt Schlaf/Gedächtnis</p>
+  </div>
+</body>
+
+
+<script src="html5-qrcode.min.js"></script>
+
+<script>
+
+  let datafeld;
+  let message;
+
+  function get_data(url, id) {
+    return fetch(url + '/' + id, {
+      "method": "GET",
+      "headers": {}
+    })
+      .then(response => {
+        return response.json()
+      })
+  }
+
+  function play() {
+
+    console.log(message['audio'])
+
+    let binary = convertURIToBinary(message['audio']);
+    console.log(binary)
+
+    
+    let blob = new Blob([binary], {
+      type: "audio/ogg",
+    });
+    let blobUrl = URL.createObjectURL(blob);
+
+    let audio = new Audio(blobUrl);
+    audio.play();
+  }
+
+  function convertURIToBinary(dataURI) {
+    let BASE64_MARKER = ";base64,";
+    let base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+    let base64 = dataURI.substring(base64Index);
+    let raw = window.atob(base64);
+    let rawLength = raw.length;
+    let arr = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (let i = 0; i < rawLength; i++) {
+      arr[i] = raw.charCodeAt(i);
+    }
+    return arr;
+  }
+
+  function importAESKey(key) {
+    return window.crypto.subtle.importKey(
+      "raw",
+      key,
+      "AES-GCM",
+      true,
+      ["decrypt"]
+    )
+  }
+
+  function decryptAEScipher(key, cipher, iv) {
+    return window.crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: iv
+      },
+      key,
+      cipher
+    ).then((encodedMSG) => {
+      let dec = new TextDecoder();
+      return dec.decode(encodedMSG)
+    })
+
+  }
+
+  function decryptRSAcipher(privateKey, ciphertext) {
+    return window.crypto.subtle.decrypt(
+      {
+        name: "RSA-OAEP"
+      },
+      privateKey,
+      ciphertext
+    ).then((encodedMSG) => {
+      let dec = new TextDecoder();
+      return dec.decode(encodedMSG).split(',').map(x => parseInt(x))
+    })
+  }
+  //let outsidebody;
+
+  function onScanSuccess(decodedText, decodedResult) {
+    if (decodedText !== lastResult) {
+      ++countResults;
+      lastResult = decodedText;
+
+      // console.log(decodedText)
+      let id = decodedText.split(';')[1]
+
+      // console.log(id)
+      let keyarray = decodedText.split(';')[0].split(',').map(x => parseInt(x))
+
+      // console.log(keyarray)
+
+
+      get_data("http://localhost/GET", id
+      ).then(data => {
+
+        return importprivateKey(pemEncodedKey).then(rsaKey => {
+
+          return decryptRSAcipher(rsaKey, new Uint8Array(Object.values(data['Key'])))
+        }).then(encaeskey => {
+
+          return importAESKey(new Uint8Array(encaeskey))
+        })
+          .then(aeskeyobj => {
+            let iv2 = new Uint8Array(Object.values(data['IV2']))
+            let ciphertext2 = new Uint8Array(Object.values(data['Message']))
+
+            return decryptAEScipher(aeskeyobj, ciphertext2, iv2)
+          })
+          .then(enc => {
+            data['Message2'] = enc
+
+            return data
+          })
+      }).then(data => {
+        return importAESKey(new Uint8Array(keyarray)).then(qrkey => {
+
+          let iv = new Uint8Array(Object.values(data['IV']));
+          let ciphertext = new Uint8Array(data['Message2'].split(',').map(x => parseInt(x)))
+          return decryptAEScipher(qrkey, ciphertext, iv)
+        }).then((msg) => {
+          // datafeld.textContent = msg
+          msg = JSON.parse(msg);
+       
+          task1 = document.getElementById("task1")
+          task1_rec = msg['1']['images'].map(entry => entry['recognized']).reduce((x, y) => x + y)
+          task1_time = 60 - parseInt(msg['1']['time'])
+          task1.textContent = "Aufgabe 1 - Gegenstände benennen: Ihre Bearbeitungszeit: " + task1_time + " Sekunden  ---  Erkannte Gegenstände: " + task1_rec + "/12"
+          //{{task_data["1"]["images"].map(entry => entry['recognized']).reduce((x,y)=>x+y)}}/12"
+
+          task2 = document.getElementById("task2")
+          task2_rec = 12 - (msg['2']['missing']).length
+          task2_time = 60 - parseInt(msg['2']['time'])
+          task2.textContent = "Aufgabe 2 - Gegenstände unmittelbar reproduzieren: Ihre Bearbeitungszeit: " + task2_time + " Sekunden  ---  Erkannte Gegenstände: " + task2_rec + "/12"
+
+          task3 = document.getElementById("task3")
+          task3_numbers = 10 - (msg['3']['missing']).length
+          task3_time = 60 - parseInt(msg['3']['time'])
+          task3.textContent = "Aufgabe 3 - Zahlen lesen: Ihre Bearbeitungszeit: " + task3_time + " Sekunden  ---  Vorgelesene Zahlen: " + task3_numbers + "/10"
+
+          task4 = document.getElementById("task4")
+          task4_correct = (msg['4']['richtig'])
+          task4_time = 60 - parseInt(msg['4']['time'])
+          task4.textContent = "Aufgabe 4 - Zahlen ordnen: Ihre Bearbeitungszeit: " + task4_time + " Sekunden  ---  Zahlen wurden richtig geordnet: " + task4_correct
+
+          task5 = document.getElementById("task5")
+          task5_time = 60 - parseInt(msg['5']['time'])
+          taks5_result = (msg['5']['result'])
+          task5.textContent = "Aufgabe 5 - Symbole zählen: Ihre Bearbeitungszeit: " + task5_time + " Sekunden  ---  Richige Anzahl der Symbole: " + taks5_result
+
+          task6 = document.getElementById("task6")
+          task6_rec = 12 - (msg['6']['missing']).length
+          task6_time = 60 - parseInt(msg['6']['time'])
+          task6.textContent = "Aufgabe 6 - Gegenstände nach Ablenkung reproduzieren: Ihre Bearbeitungszeit:  " + task6_time + " Sekunden  ---  Erkannte Gegenstände: " + task6_rec + "/12"
+
+          task7 = document.getElementById("task7")
+          task7_rec = 12 - (msg['7']['missing']).length
+          task7_time = 60 - parseInt(msg['7']['time'])
+          task7.textContent = "Aufgabe 7 - Gegenstände wiedererkennen: Ihre Bearbeitungszeit: " + task7_time + " Sekunden  ---  Erkannte Gegenstände: " + task7_rec + "/12"
+
+          message = msg;
+        })
+      })
+    }
+  }
+
+
+  //QR Scanner
+  var resultContainer = document.getElementById('qr-reader-results');
+  var lastResult, countResults = 0;
+  var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+  html5QrcodeScanner.render(onScanSuccess);
+
+
+  // from https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+  function str2ab(str) {
+    const buf = new ArrayBuffer(str.length);
+    const bufView = new Uint8Array(buf);
+    for (let i = 0, strLen = str.length; i < strLen; i++) {
+      bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
+  }
+
+  const pemEncodedKey = `-----BEGIN RSA PRIVATE KEY-----MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDEwOFfdvESCsD7
+2pvrsocGNBMrrGHHc2RpoJZBJ0eF40oh6NxmLVhBSywQYp6U8pavn/mxfajL1bsJ
+THWKve2OZLCSflHmfEJvBu+S/5cZC5Fif7GWyKS2OdAkQdXaBly6L4dfzb77nltX
+Zpz9BqniaHP9M75pDaDl3Bd4Ou36gL6pQiOVJNgMC+ANhEqWSwkIoSWlkt8vMRpV
+uGWNKWgkJePkS0mr9oclTMp8mXXdf7KTOrTV1CYvOqNnkWfREqfKbSmIkXMQ0rgp
++oSS5117rTUilyhTbNQmZlh4J6X+kGmf79MxOfF3vC3rh7ySZsKNMxJMAcFwGPxT
+/DRDvcdfAgMBAAECggEAG/2ism2d6yargMj/cJ8j1W6YIZjzCihw6xQE/Dzl0Hbe
+54cUv9aInTVgDe6xx9fhNxgHskgBuQntg2uktznA74aEljqxVRxtaRUwBRYmfVIn
+ez9WWPCvehsscNQK4+sOyxAS7r67Alnrfboj8F0/0u1wPt/bIV/meXz/u8OKcp4Z
+NXoWjV13PNXUyYBMrYrYT+6v1Ybk0gfBmPIpECxDE59wKVOpEiPDwz+Apm+hRiOZ
+UzOZj4SVeZk2Prbz0tCDxcDk0oQZkKIklomKP5meSvJbZeTzMB8inueS0AdfZ68t
+xOzVP+kEZdkOTZE7isgRrHWULVa0mqcq2QRfJ/Ye9QKBgQDPvYERGrW2LpKGEZBg
+FQqF/rms2dUi3FUyHUwBGXnR2Mj4+phxj/ivo4bZxAbENqKGBOzy0hKZnLWT+Ry3
+2UOC2Mm6aNtGM11pmom5QtjO5gCQRI9eCrxRN2A9DabTvR9b35TWgpbZ12GspHRC
+LNNxv+PfnWtrupE09RFtQIE5vQKBgQDydfsWzdl47LKDwGwsyqi0DnLMMTC7WdvL
+NLytiNxEbtnzhvrlPVDVtUa0fqFIJxgOwZiuo+Jca60Ocex7wA+nP/TUasTSVM9u
+Fx5KUEQ2PQYTzWw9vaLGq5U5LVmrMh43ORxWhDU587O5V6xUvQnLxQYkv+OBc+nJ
+zzZV7vqhSwKBgFhS4gU7rfZ/ZpzJ6vBvAcJmwtrS4uOnejGMczwkcL7fxNLW+OmP
+pNRIWpVL2vShpggFIBk9Z9sX3bvENomUPjfrpBk1a8U1IYo8wkGaQkP1VlgATlRV
+jCubt7c9jqiHyEVvkgCCFVEZWdXlNejM1jmOtHvmmj17XTF+4KHqwwahAoGBAPIS
+iRZDf5UT/Uc9nsM5syXSJxtnIVhsZt2DUb2QnxpT8pcJdQXbKhG0Y1th8nSvU32o
+HGCAj0fm2WlKpOkI4JgDatWJo+i7dD5eJofbi777Pk4XErKx2wqv1NS5SoV6DGDm
+TDy00s+BWTb7KbuQ4W7ozzFxxBtDN2+dyooRh3nxAoGAT3k7mTbxfLp6NxKewEpE
+TIcWNggwCG72s1Ng8p0j+fRUHWwrDD1RtxRnSwdY6VaZQ3c7etjiQzIaVmkaZWug
+BgxLg4SJBg+Ca8sBkNmqKZnnodtdYyyC3DbH/vaQe6kiRgJd59jz5KO4ijgE5POC
+IwJoDTpZj8R+ruW4EDpszfM=-----END RSA PRIVATE KEY-----`;
+
+  function importprivateKey(pem) {
+    // fetch the part of the PEM string between header and footer
+    const pemHeader = "-----BEGIN RSA PRIVATE KEY-----";
+    const pemFooter = "-----END RSA PRIVATE KEY-----";
+    const pemContents = pem.substring(pemHeader.length, pem.length - pemFooter.length);
+    // base64 decode the string to get the binary data
+    const binaryDerString = window.atob(pemContents);
+    // convert from a binary string to an ArrayBuffer
+    const binaryDer = str2ab(binaryDerString);
+
+    return window.crypto.subtle.importKey(
+      "pkcs8",
+      binaryDer,
+      {
+        name: "RSA-OAEP",
+        hash: "SHA-256"
+      },
+      true,
+      ["decrypt"]
+    );
+  }
+
+</script>
+</body>
+
+</html>

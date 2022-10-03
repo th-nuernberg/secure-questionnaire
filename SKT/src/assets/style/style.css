@@ -1,0 +1,177 @@
+
+body{
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+/* style top navigation bar */
+.navbar-default {
+    background-color: #333953;
+    justify-content: left;
+    display: flex;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+    /* links inside the navigation bar */
+    .navbar-default a {
+        color: #FFFFFF;
+        padding: 1rem;
+        font-size: 1.25rem;
+        text-decoration: none;
+    }
+    /* links on hover */
+    .navbar-default a:hover {
+        color: #2b6fb8; 
+        text-decoration: none;
+    }
+/* custom container */
+.c-container {
+    text-align: justify;    
+    padding: 0px 60px;  
+}
+footer{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding:15px;
+    height: 50px;
+    background-color: #333953;
+    color: #FFFFFF;
+    text-align: center;
+}
+/* router button */
+.btn-router{
+    width:fit-content;
+    padding: 0.5rem 1.5rem; 
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    color: #333953;
+    text-decoration: none;
+}
+.btn-router:hover{
+    background-color: #333953;
+    color: #FFFFFF;
+}
+/* Style the time-bar */
+.round-time-bar {
+    height: 7px;
+    animation: roundtime calc(var(--duration) * 1s) linear forwards;
+    transform-origin: left center;
+    background: linear-gradient(to right, #333953,#2b6fb8);
+}  
+@keyframes roundtime {
+    to {
+        transform: scaleX(0);
+    }
+}
+/*Style custom row, column, card */
+.c-row {
+    padding: 10px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 140 * 5px;
+}
+    .c-column {
+        padding: 1%;
+        text-align: center;
+        border: 0;
+    }
+        .card {
+            width: 10rem;
+            height: 10rem;
+            display: flex;
+            flex-direction: column;
+            border: #FFFFFF;
+
+        }
+        .card img {
+            width: 10rem;
+            height: 10rem;
+        }
+
+.button{
+    color: #333953;
+    text-decoration: none;
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1.5rem;  
+    background-color: #FFFFFF;
+}
+    .button:hover{
+        background-color: #2b6fb8;
+        color: #FFFFFF;
+    }
+/*Sytle of the popup*/
+.popup {
+    padding: 60px 60px 60px;
+    margin: 10% auto;
+    width: 50%;
+    position: relative;
+    background: #97b7da;
+    border-radius: 3px;
+    box-shadow: 0 2px 12px 0 #333953;
+    text-align: center;
+    color: #333953;
+  }
+.qrcode{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.simplecircle {
+    height: 150px;
+    width: 150px;
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px;
+    line-height: 135px;
+    text-align: center;
+    font-size: 70px; 
+    color: transparent; 
+    justify-content:end;
+}
+.circle {
+    height: 150px;
+    width: 150px;
+    border: 0.15rem solid #333953;
+    border-radius: 0.25rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px;
+    line-height: 135px;
+    text-align: center;
+    font-size: 70px;  
+    box-shadow: 10px 20px 15px silver;
+}
+.col{
+  width: 50px;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even){background-color: #f2f2f2}
+  .draggable{
+    min-height: 500px;
+    border: 0.15rem solid #333953;
+  }
+  
+  .symbol{
+    font-size: 50px;
+  }
+
+  .error{
+    color: red;
+    font-size:large;
+  }
