@@ -21,6 +21,8 @@ services:
     build: ./frontend
     container_name:  frontend
     restart: always
+    environment:
+      - NODE_OPTIONS=--openssl-legacy-provider  
     #  mount the volumes so we can change code and hot reload
     volumes:
         - './frontend:/frontend'
