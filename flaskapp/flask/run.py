@@ -16,12 +16,12 @@ def get_db():
         client = pymongo.MongoClient(mongodb_Url,
         serverSelectionTimeoutMS=600)
         client.server_info()
-        db = client.database
-        fs = gridfs.GridFS(db)
+        db = client.database.data
+        # fs = gridfs.GridFS(db)
     except Exception as e:
         raise e
     
-    return fs
+    return db
 
 
 

@@ -16,5 +16,8 @@ COPY . .
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+
+ENV NODE_OPTIONS=--openssl-legacy-provider
+RUN npm run build
 COPY . .
 CMD ["npm", "run", "serve", "--", "--port", "5000"]
