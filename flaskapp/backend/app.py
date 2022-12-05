@@ -1,7 +1,7 @@
 import os
 import json
 from flask import request, Flask, Response
-import pymongo, gridfs
+import pymongo
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -17,7 +17,6 @@ def get_db():
         serverSelectionTimeoutMS=600)
         client.server_info()
         db = client.database.data
-        # fs = gridfs.GridFS(db)
     except Exception as e:
         raise e
     
