@@ -1,0 +1,31 @@
+{
+  "name": "myviteprojekt",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.6",
+    "axios": "^1.2.1",
+    "bootstrap": "^5.2.3",
+    "bootstrap-vue": "^2.23.1",
+    "propper": "^1.0.4",
+    "qrcode.vue": "^3.3.3",
+    "vue": "^3.2.45",
+    "vue-html2pdf": "^1.8.0",
+    "vue-router": "^4.1.6",
+    "vue-uuid": "^3.0.0",
+    "vue3-qrcode-reader": "^0.0.1",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.2.0",
+    "sass": "^1.56.1",
+    "vite": "^3.2.3",
+    "vite-plugin-qrcode": "^0.2.0"
+  }
+}
