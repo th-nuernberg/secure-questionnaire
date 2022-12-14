@@ -123,22 +123,22 @@
             </div>
         </div>
 
-        <vue-html2pdf :show-layout="false"
-                      :float-layout="true"
-                      :enable-download="false"
-                      :preview-modal="true"
-                      :paginate-elements-by-height="1400"
-                      filename="QR-Code für Fragebogen"
-                      :pdf-quality="2"
-                      :manual-pagination="false"
-                      pdf-format="a4"
-                      pdf-orientation="portrait"
-                      pdf-content-width="800px"
-                      @hasStartedGeneration="hasStartedGeneration()"
-                      @hasGenerated="hasGenerated($event)"
-                      ref="html2Pdf">
-            <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf>
-        </vue-html2pdf>
+<!--        <vue3-html2pdf :show-layout="false"-->
+<!--                      :float-layout="true"-->
+<!--                      :enable-download="false"-->
+<!--                      :preview-modal="true"-->
+<!--                      :paginate-elements-by-height="1400"-->
+<!--                      filename="QR-Code für Fragebogen"-->
+<!--                      :pdf-quality="2"-->
+<!--                      :manual-pagination="false"-->
+<!--                      pdf-format="a4"-->
+<!--                      pdf-orientation="portrait"-->
+<!--                      pdf-content-width="800px"-->
+<!--                      @hasStartedGeneration="hasStartedGeneration()"-->
+<!--                      @hasGenerated="hasGenerated($event)"-->
+<!--                      ref="html2Pdf">-->
+<!--            <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf>-->
+<!--        </vue3-html2pdf>-->
 
         <div class="boxStyling">
             <section class="user-details p-5">
@@ -177,7 +177,7 @@
 <script>
     import CreateQuestionControl from './CreateQuestionControl.vue';
     import InfoTooltip from './../util/InfoTooltip.vue';
-    import VueHtml2pdf from 'vue-html2pdf';
+    //import { Vue3Html2pdf } from 'vue3-html2pdf';
     import QuestionnairePdf from './../pdf/QuestionnairePdf.vue';
     import QrCode from "../QrCode.vue"
 
@@ -185,7 +185,7 @@
         components: {
             CreateQuestionControl,
             InfoTooltip,
-            VueHtml2pdf,
+           // Vue3Html2pdf,
             QuestionnairePdf,
             QrCode,
         },
@@ -329,7 +329,7 @@
                 this.saved = false;
             },
             async downloadPdf() {
-                this.$refs.html2Pdf.generatePdf();
+                //this.$refs.html2Pdf.generatePdf();
             },
         },
     }

@@ -68,22 +68,22 @@
             <b-button variant="outline-primary" @click="$router.push('/patient')">Zur Startseite</b-button>
 
 
-            <vue-html2pdf :show-layout="false"
-                          :float-layout="true"
-                          :enable-download="false"
-                          :preview-modal="true"
-                          :paginate-elements-by-height="1400"
-                          filename="QR-Code für Fragebogen"
-                          :pdf-quality="2"
-                          :manual-pagination="false"
-                          pdf-format="a4"
-                          pdf-orientation="portrait"
-                          pdf-content-width="800px"
-                          @hasStartedGeneration="hasStartedGeneration()"
-                          @hasGenerated="hasGenerated($event)"
-                          ref="html2Pdf">
-                <answers-pdf slot="pdf-content" :answersID="answers.UUID" :repeating="questionnaire.repeatingType !== 'single'" :AESkey="AESkey"></answers-pdf>
-            </vue-html2pdf>
+<!--            <vue3-html2pdf :show-layout="false"-->
+<!--                          :float-layout="true"-->
+<!--                          :enable-download="false"-->
+<!--                          :preview-modal="true"-->
+<!--                          :paginate-elements-by-height="1400"-->
+<!--                          filename="QR-Code für Fragebogen"-->
+<!--                          :pdf-quality="2"-->
+<!--                          :manual-pagination="false"-->
+<!--                          pdf-format="a4"-->
+<!--                          pdf-orientation="portrait"-->
+<!--                          pdf-content-width="800px"-->
+<!--                          @hasStartedGeneration="hasStartedGeneration()"-->
+<!--                          @hasGenerated="hasGenerated($event)"-->
+<!--                          ref="html2Pdf">-->
+<!--                <answers-pdf slot="pdf-content" :answersID="answers.UUID" :repeating="questionnaire.repeatingType !== 'single'" :AESkey="AESkey"></answers-pdf>-->
+<!--            </vue3-html2pdf>-->
 
         </div>
     </b-container>
@@ -122,7 +122,7 @@
 
     import TabNavigation from "./TabNavigation.vue";
     import QuestionsContainer from "./QuestionsContainer.vue";
-    import VueHtml2pdf from 'vue-html2pdf';
+   // import { Vue3Html2pdf } from 'vue3-html2pdf';
     import AnswersPdf from "./../pdf/AnswersPdf.vue"
     import QrCode from "../QrCode.vue"
     import { uuid } from 'vue-uuid';
@@ -131,7 +131,7 @@
         components: {
             TabNavigation,
             QuestionsContainer,
-            VueHtml2pdf,
+        //    Vue3Html2pdf,
             AnswersPdf,
             QrCode
         },
@@ -313,7 +313,7 @@
             },
 
             async downloadPdf() {
-                this.$refs.html2Pdf.generatePdf();
+               // this.$refs.html2Pdf.generatePdf();
             },
         },
     };

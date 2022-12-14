@@ -1,23 +1,35 @@
-FROM node:lts-alpine
+#FROM node:lts-alpine
+#
+## install project dependencies
+#RUN npm install -g @vue/cli
+#
+#WORKDIR /app
+## copy project files and folders to the current working directory (i.e. 'app' folder)
+#COPY . /frontend
+#COPY . .
+#
+## vue ui --headless --port 8000 --host 0.0.0.0
+##CMD [ "vue", "ui", "--headless" , "--port", "8000",  "--host", "0.0.0.0" ]
+## CMD [ "npm", "run", "serve", "--host", "0.0.0.0" ]
+#
+##FROM node:lts-alpine as build-stage
+#WORKDIR /app
+#COPY package*.json ./
+#RUN npm install
+#
+#ENV NODE_OPTIONS=--openssl-legacy-provider
+#RUN npm run build
+#COPY . .
+#CMD ["npm", "run", "dev", "--port" , "5000" ]
 
-# install project dependencies
-RUN npm install -g @vue/cli
-
+FROM node:lts
 WORKDIR /app
-# copy project files and folders to the current working directory (i.e. 'app' folder)
+COPY package.json .
 COPY . /frontend
 COPY . .
 
-# vue ui --headless --port 8000 --host 0.0.0.0
-#CMD [ "vue", "ui", "--headless" , "--port", "8000",  "--host", "0.0.0.0" ]
-# CMD [ "npm", "run", "serve", "--host", "0.0.0.0" ]
-
-#FROM node:lts-alpine as build-stage
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-
-ENV NODE_OPTIONS=--openssl-legacy-provider
-RUN npm run build
+RUN npm i
 COPY . .
-CMD ["npm", "run", "serve", "--", "--port", "5000"]
+## EXPOSE [Port you mentioned in the vite.config file]
+EXPOSE 5000
+CMD ["npm", "run", "dev", "--port" , "5000" ]

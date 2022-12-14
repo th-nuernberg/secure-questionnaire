@@ -2,6 +2,7 @@ import { createApp , h} from 'vue'
 import './style.css'
 import App from './App.vue'
 import store from './store'
+import uuid from 'vue-uuid';
 import {createRouter, createWebHistory} from 'vue-router'
 import VueQrcodeReader from "vue3-qrcode-reader";
 import Home from './components/Home.vue';
@@ -55,6 +56,7 @@ const app = createApp({
 });
 
 app.use( router )
+app.use( uuid )
 app.use(VueQrcodeReader)
 app.use(store)
 app.mount('#app');
