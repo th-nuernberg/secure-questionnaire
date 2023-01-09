@@ -1,41 +1,46 @@
 <template>
     <div>
-        <b-container>
-            <b-row class="navigationMenu text-center" align-h="center">
-                <b-col cols="2">
-                    <b-button @click="back" :disabled="index === 0" class="btnNavigate" variant="outline-primary">
-                        <b-icon-chevron-left font-scale="2"></b-icon-chevron-left>
-                    </b-button>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button v-b-modal.calendar class="date btn-accent">
+        <div class="container">
+            <div class="row navigationMenu text-center" align-h="center">
+                <div  class="col" >
+                    <button  type="button" class="btn btn-outline-primary" @click="back" :disabled="index == 1" >
+                        <!-- <i class="bi bi-chevron-left"></i> -->
+                        back
+                    </button>
+                </div>
+                <div class="col" >
+                    <!-- <button v-modal.calendar class="date btn-accent">
                         {{currentDate}}
-                    </b-button>
+                    </button> -->
+                    <button type="button" class="date btn-accent" v-modal.calendar data-bs-toggle="modal" data-bs-target="#firstEntry">
+                        <!-- Datum hinzufügen! -->
+                        {{currentDate}}
+                    </button>
 
-                    <b-button-toolbar class="editBtnsGroup">
-                        <b-button-group>
-                            <b-button v-b-modal.editEntry size="sm" class="dateBtns btn-white" variant="outline">
-                                <b-icon-pencil-fill></b-icon-pencil-fill>
-                                <span class="d-none d-lg-inline"> Datum bearbeiten</span>
-                            </b-button>
-                            <b-button variant="outline" v-b-modal.deleteEntry size="sm" class="dateBtns btn-white">
-                                <b-icon-trash></b-icon-trash>
-                                <span class="d-none d-lg-inline"> Datum löschen</span>
-                            </b-button>
-                            <b-button @click="openAddingModal" size="sm" class="dateBtns btn-white" variant="outline">
-                                <b-icon-plus-circle></b-icon-plus-circle>
-                                <span class="d-none d-lg-inline"> Datum hinzufügen</span>
-                            </b-button>
-                        </b-button-group>
-                    </b-button-toolbar>
+                    <div class="btn-toolbar">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-primary" v-modal.calendar data-bs-toggle="modal" data-bs-target="#editEntry">
+                                Datum bearbeiten
+                            </button>                           
 
-                </b-col>
-                <b-col cols="2">
-                    <b-button @click="forward" :disabled="index === entries.length - 1" class="btnNavigate" variant="outline-primary">
-                        <b-icon-chevron-right font-scale="2"></b-icon-chevron-right>
-                    </b-button>
-                </b-col>
-            </b-row>
+                            <button type="button" class="btn btn-primary" v-modal.calendar data-bs-toggle="modal" data-bs-target="#deleteEntry">
+                                Datum löschen
+                            </button> 
+
+                            <button type="button" class="btn btn-primary" v-modal.calendar data-bs-toggle="modal" data-bs-target="#addEntry">
+                                Datum hinzufügen
+                            </button>  
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col">
+                    <button @click="forward" :disabled="index === entries.length - 1" type="button" class="btn btn-outline-primary"  variant="outline-primary">
+                        <!-- <i class="bi bi-chevron-right"></i> -->
+                        forward
+                    </button>
+                </div>
+            </div>
 
             <div class="questionsContainer">
                 <Collapse-Navigation v-if="type == 'dateTime'"
@@ -49,80 +54,99 @@
             </div>
 
 
-        </b-container>
+        </div>
 
-        <b-modal id="calendar" size="md"
+        <div class="modal" id="calendar" size="md"
                  hide-header hide-footer centered>
-            <b-button @click="cancelModal" class="closeBtn btn-white" variant="outline"><b-icon-x-circle></b-icon-x-circle></b-button>
+            <button @click="cancelModal" class="closeBtn btn-white" variant="outline"></button>
 
             <h4>Alle Einträge:</h4>
-            <b-button v-for="entry in entries" :key="entry.date" @click="goTo(entry.date)" class="button-calendar">
+            <button v-for="entry in entries" :key="entry.date" @click="goTo(entry.date)" class="button-calendar">
                 {{entry.date}}
-            </b-button>
-        </b-modal>
+            </button>
+        </div >
 
-        <b-modal id="addEntry" size="md"
-                 hide-header hide-footer centered>
-            <h4>Datum hinzufügen:</h4>
-            <b-input type="date" v-model="date"></b-input>
-            <p id="dateError" style="display:none; color:red;">Bitte geben Sie ein Datum an.</p>
-            <p id="dateExistsError" style="display:none; color:red;">Datum existiert bereits.</p>
-            <b-row align-h="between" class="mt-3">
-                <b-col cols="auto">
-                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button @click="addDateEntry" variant="primary">Eintrag hinzufügen</b-button>
-                </b-col>
-            </b-row>
 
-        </b-modal>
+        <!-- Modal -->
+        <div class="modal fade" id="firstEntry" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Datum bearbeiten</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Fügen Sie ein Datum hinzu, um mit dem Fragebogen zu starten:</h4>
+                        <input id="myInput" type="date" v-model="date"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="setDate" data-bs-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <b-modal id="firstEntry" size="md"
-                 hide-header hide-footer centered no-close-on-esc no-close-on-backdrop>
-            <h4>Fügen Sie ein Datum hinzu, um mit dem Fragebogen zu starten:</h4>
-            <b-input type="date" v-model="date"></b-input>
-            <p id="dateError" style="display:none; color:red;">Bitte geben Sie ein Datum an.</p>
-            <p id="dateExistsError" style="display:none; color:red;">Datum existiert bereits.</p>
-            <b-row align-h="between" class="mt-3">
-                <b-col cols="auto">
-                    <b-button @click="$router.push('/patient')" variant="outline">Zurück zur Startseite</b-button>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button @click="setDate" variant="primary" :disabled="date == ''">Eintrag hinzufügen</b-button>
-                </b-col>
-            </b-row>
-        </b-modal>
+        <div class="modal fade" id="editEntry" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Datum bearbeiten</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Ändern Sie das aktuelle Datum:</h4>
+                        <input id="myInput" type="date" v-model="date"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="setDate" data-bs-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <b-modal id="editEntry" size="md"
-                 hide-header hide-footer centered>
-            <h4>Datum bearbeiten</h4>
-            <b-input type="date" v-model="date"></b-input>
-            <p id="dateError" style="display:none; color:red;">Bitte geben Sie ein Datum an.</p>
-            <p id="dateExistsError" style="display:none; color:red;">Datum existiert bereits.</p>
-            <b-row align-h="between" class="mt-3">
-                <b-col cols="auto">
-                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button @click="setDate" variant="primary">Aktualisieren</b-button>
-                </b-col>
-            </b-row>
-        </b-modal>
+        <div class="modal fade" id="addEntry" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Datum Hinzufügen</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <p id="dateError" style="display:none; color:red;">Bitte geben Sie ein Datum an.</p>
+                        <p id="dateExistsError" style="display:none; color:red;">Datum existiert bereits.</p>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Fügen Sie ein Datum hinzu:</h4>
+                        <input id="myInput" type="date" v-model="date"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="addDateEntry" data-bs-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <b-modal id="deleteEntry" size="md"
-                 hide-header hide-footer centered>
-            <h4>Wollen Sie diesen Eintrag wirklich löschen?</h4>
-            <p>Alle Einträge zu diesem Datum werden dadurch gelöscht.</p>
-            <b-row align-h="between" class="mt-3">
-                <b-col cols="auto">
-                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button @click="deleteEntry" variant="danger">Löschen</b-button>
-                </b-col>
-            </b-row>
-        </b-modal>
+
+        <div class="modal fade" id="deleteEntry" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Datum löschen</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Wollen Sie diesen Eintrag wirklich löschen?</h4>
+                        <p>Alle Einträge zu diesem Datum werden dadurch gelöscht.</p>
+                        {{ currentDate }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="deleteEntry" data-bs-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -148,9 +172,19 @@
             }
         },
         mounted() {
-            if (this.entries.length == 1 && this.entries[0].date == "") {
+            if (this.entries.length == 1 && this.entries[0].date === "") {
                 this.$nextTick(function () { //waiting for child components to be mounted
-                    this.$bvModal.show("firstEntry");
+                    //this.$bvModal.show("firstEntry");
+                    // var myModal = document.getElementById('firstEntry')
+                    // var myInput = document.getElementById('myInput')
+
+                    // myModal.on('shown.bs.modal', function () {
+    
+                    // });
+
+                    // myModal.on('shown.bs.modal', function () {
+                    //         myInput.trigger('focus')
+                    //     })
                 })
             }
             else {
@@ -186,42 +220,45 @@
                     let dateIndex = this.entries.indexOf(this.entries.find(entry => entry.date == this.german(this.date)));
 
                     this.index = dateIndex;
-                    this.$bvModal.hide("addEntry");
+                    //this.$bvModal.hide("addEntry");
                 }
 
             },
             addTimeEntry(time) {
                 this.$parent.addTimeEntry(this.index, time);
+                setDate();
             },
-
+            setDate() {
+                if (this.validate()) {
+                    this.$parent.setDate(this.german(this.date), this.index);
+                    //this.$bvModal.hide("firstEntry");
+                    //this.$bvModal.hide("editEntry");
+                }
+            },
             back() {
                 this.index = this.index - 1;
+                setDate();
             },
             forward() {
                 this.index = this.index + 1;
+                setDate();
             },
             getInputFromChild(questionID, answer, timeIndex = 0) {
                 this.$parent.getInputFromChild(questionID, answer, this.index, timeIndex);
             },
             goTo(date) {
                 this.index = this.entries.findIndex((element) => element.date === date);
-                this.$bvModal.hide("calendar");
+                //this.$bvModal.hide("calendar");
             },
             openAddingModal() {
                 this.date = "";
-                this.$bvModal.show("addEntry");
+                //this.$bvModal.show("addEntry");
             },
-            setDate() {
-                if (this.validate()) {
-                    this.$parent.setDate(this.german(this.date), this.index);
-                    this.$bvModal.hide("firstEntry");
-                    this.$bvModal.hide("editEntry");
-                }
-            },
+
             deleteEntry() {
                 if (this.entries.length == 1) {
                     this.$store.commit("resetAnswers");
-                    this.$bvModal.show("firstEntry");
+                    //this.$bvModal.show("firstEntry");
                 }
                 else {
                     this.$parent.deleteEntry(this.currentDate);
@@ -231,7 +268,7 @@
                         this.index--;
                 }
 
-                this.$bvModal.hide("deleteEntry");
+               // this.$bvModal.hide("deleteEntry");
             },
             deleteTimeEntry(timeIndex) {
                 if (this.entries[this.index].timeEntries.length == 1) {
@@ -242,10 +279,10 @@
                 }
             },
             cancelModal() {
-                this.$bvModal.hide("editEntry");
-                this.$bvModal.hide("addEntry");
-                this.$bvModal.hide("deleteEntry");
-                this.$bvModal.hide("calendar");
+                // this.$bvModal.hide("editEntry");
+                // this.$bvModal.hide("addEntry");
+                // this.$bvModal.hide("deleteEntry");
+                // this.$bvModal.hide("calendar");
             },
             german(date) {
                 let year = date.slice(0, 4);

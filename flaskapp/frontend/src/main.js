@@ -1,10 +1,14 @@
+import { Buffer } from 'buffer'
+globalThis.Buffer = Buffer
 import { createApp , h} from 'vue'
 import './style.css'
 import App from './App.vue'
+import Vuex from 'vuex';
 import store from './store'
 import uuid from 'vue-uuid';
 import {createRouter, createWebHistory} from 'vue-router'
 import VueQrcodeReader from "vue3-qrcode-reader";
+import html2pdf from 'html2pdf'
 import Home from './components/Home.vue';
 import PatientView from './components/PatientView.vue';
 import DoctorView from './components/DoctorView.vue';
@@ -13,6 +17,7 @@ import AnalyseQuestionnaires from './components/doctorView/AnalyseQuestionnaires
 import CreateQuestionnaire from './components/doctorView/CreateQuestionnaire.vue';
 import "bootstrap/dist/css/bootstrap.css"
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 
 const router = createRouter(
     {
@@ -57,8 +62,10 @@ const app = createApp({
 
 app.use( router )
 app.use( uuid )
+app.use(html2pdf)
 app.use(VueQrcodeReader)
 app.use(store)
+app.use(Vuex)
 app.mount('#app');
 
 

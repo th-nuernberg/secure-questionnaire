@@ -19,7 +19,7 @@
           <!--    </a>-->
           <!--  </div>-->
           <!--  <HelloWorld msg="Vite + Vue" />-->
-            <router-view class="router-container" />
+            <router-view></router-view>
           <div>
             <!-- footer -->
             <Foot />

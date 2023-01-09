@@ -1,11 +1,11 @@
 <template>
-    <div class=".container">
-        <button @click="close" class="closeBtn"><i class="bi bi-x-circle"></i></button>
+    <div class="container">
+        <button @click="close" class="btn-close"><i class="bi bi-x-circle"></i></button>
         <br>
         <h5>Neuen Fragebogen ausfüllen</h5><br>
-        <input class="form-control" type="text" placeholder="Code" :state="codeValidation"/>
+        <input class="form-control" type="text" placeholder="Code" id="inputcode" :state="codeValidation" v-model="codeNew" @input="codeValidation = null"/>
         <br>
-        <button class="mt-3 btn-big" variant="primary" @click="submit()">Bestätigen</button>
+        <button  class="btn btn-secondary mt-5"  variant="primary" @click="submit()" >Bestätigen</button>
     </div>
 </template>
 
@@ -20,15 +20,16 @@
 
         methods: {
             submit() {
+                
                 if (this.codeNew !== "") {
-                    //this.$router.push({path: `/patient/questionnaire/${this.codeNew}` });
+                    this.$router.push({path: `/patient/questionnaire/${this.codeNew}` });
                 }
                 else {
                     this.codeValidation = false
                 }
             },
             close() {
-                //this.$emit('manually');
+                this.$emit('manually');
             }
         },
     };
@@ -39,18 +40,18 @@
         max-width: 300px;
     }
 
-    .container {
+    div[class="container"] {
+        text-align: left;
         background-color: white;
         padding: 30px;
         max-width: 700px;
         position: relative;
     }
 
-    .closeBtn {
+    button[class="btn-close"]{
         position: absolute;
         top: 5px;
         right: 5px;
-        background: none;
         color: black;
         border: none;
     }

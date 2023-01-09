@@ -2,16 +2,17 @@
     <div>
         <div v-if="noEntries">
             <p>Fügen Sie eine Uhrzeit hinzu, um mit der Bearbeitung zu starten:</p>
-            <b-row>
-                <b-col style="max-width: 150px;">
-                    <b-input type="time" v-model="newTime"></b-input>
-                </b-col>
-                <b-col class="text-left" cols="auto">
-                    <b-button @click="setTime" variant="primary" class="addBtn">
-                        <b-icon-plus></b-icon-plus>
-                    </b-button>
-                </b-col>
-            </b-row>
+            <div class="row">
+                <div class="col" style="max-width: 150px;">
+                    <input type="time" v-model="newTime" />
+                </div>
+                <div class="col"  cols="auto">
+                    <button @click="setTime" variant="primary" class="addBtn">
+                        Add
+                        <!-- <b-icon-plus></b-icon-plus> -->
+                    </button>
+                </div>
+            </div>
 
             <p id="timeError" style="display:none; color:red;">Bitte geben Sie eine Uhrzeit an.</p>
             <p id="existsError" style="display:none; color:red;">Uhrzeit existiert bereits.</p>
@@ -20,89 +21,89 @@
 
         <div v-else v-for="(entry,index) in entries.timeEntries" :key="entry.time"
              class="accordion" role="tablist">
-            <b-card no-body class="mb-3">
-                <b-card-header header-tag="header" class="p-0" role="tab">
-                    <b-button v-b-toggle="'accordion-'+index" class="timeBtn" variant="primary">{{entry.time}}</b-button>
-                    <b-button-group class="editBtnsGroup">
-                        <b-button @click="setIndex(index)" v-b-modal.editTimeEntry size="sm" class="editBtns" variant="outlined">
-                            <b-icon-pencil-fill></b-icon-pencil-fill>
-                        </b-button>
-                        <b-button @click="setIndex(index)" class="editBtns" variant="outlined" v-b-modal.deleteTimeEntry size="sm">
-                            <b-icon-trash></b-icon-trash>
-                        </b-button>
-                    </b-button-group>
+            <div class="card mb-3">
+                <div class="card-header" header-tag="header"   role="tab">
+                    <button v-b-toggle="'accordion-'+index" class="timeBtn" variant="primary">{{entry.time}}</button>
+                    <button-group class="editBtnsGroup">
+                        <button @click="setIndex(index)" v-b-modal.editTimeEntry size="sm" class="editBtns" variant="outlined">
+                            <!-- <b-icon-pencil-fill></b-icon-pencil-fill> -->
+                        </button>
+                        <button @click="setIndex(index)" class="editBtns" variant="outlined" v-b-modal.deleteTimeEntry size="sm">
+                            <!-- <b-icon-trash></b-icon-trash> -->
+                        </button>
+                    </button-group>
 
 
-                </b-card-header>
-                <b-collapse :id="'accordion-'+index" accordion="my-accordion" role="tabpanel" @shown="open(index)" :visible="isOpen(index)">
-                    <b-card-body class="cardBody">
+                </div>
+                <button class="btn btn-primary" type="button" data-toggle="collapse"  :id="'accordion-'+index" accordion="my-accordion" role="tabpanel" @shown="open(index)" :visible="isOpen(index)">
+                    <div class="card-body">
 
                         <Questions-Container :date="entries.date" :time="entry.time" :key="entry.time && entries.date"></Questions-Container>
 
-                    </b-card-body>
-                </b-collapse>
-            </b-card>
+                    </div>
+                </button>
+            </div>
         </div>
 
-        <b-row class="text-center mt-3">
-            <b-col>
-                <b-button v-if="!noEntries" class="addBtn btn-accent" v-b-modal.addTimeEntry>
-                    <b-icon-plus></b-icon-plus>
-                </b-button>
-            </b-col>
+        <div class="row text-center mt-3">
+            <div class="col">
+                <button v-if="!noEntries" class="addBtn btn-accent" v-b-modal.addTimeEntry>
+                    <!-- <b-icon-plus></b-icon-plus> -->
+                </button>
+            </div>
 
-        </b-row>
+        </div>
 
 
-        <b-modal id="addTimeEntry" size="md"
+        <div class="modal"  id="addTimeEntry" size="md"
                  hide-header hide-footer centered>
             <h4>Uhrzeit hinzufügen</h4>
 
-            <b-input type="time" v-model="newTime"></b-input>
+            <input type="time" v-model="newTime"/>
             <p id="timeError" style="display:none; color:red;">Bitte geben Sie eine Uhrzeit an.</p>
             <p id="existsError" style="display:none; color:red;">Uhrzeit existiert bereits.</p>
-            <b-row align-h="between" class="mt-3">
-                <b-col cols="auto">
-                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button @click="addEntry" variant="primary">Eintrag hinzufügen</b-button>
-                </b-col>
-            </b-row>
-        </b-modal>
+            <div class="row" align-h="between" >
+                <div class="col" cols="auto">
+                    <button @click="cancelModal" variant="outline-danger">Abbrechen</button>
+                </div>
+                <div class="col"  cols="auto">
+                    <button @click="addEntry" variant="primary">Eintrag hinzufügen</button>
+                </div>
+            </div>
+        </div>
 
 
-        <b-modal id="deleteTimeEntry" size="md"
+        <div class="modal" id="deleteTimeEntry" size="md"
                  hide-header hide-footer centered>
             <h4>Wollen Sie diesen Eintrag wirklich löschen?</h4>
             <p>Alle Antworten zu dieser Uhrzeit werden dadurch gelöscht.</p>
-            <b-row align-h="between" class="mt-3">
-                <b-col cols="auto">
-                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button @click="deleteTimeEntry" variant="danger">Löschen</b-button>
-                </b-col>
-            </b-row>
+            <div class="row" align-h="between" >
+                <div class="col"  cols="auto">
+                    <button @click="cancelModal" variant="outline-danger">Abbrechen</button>
+                </div>
+                <div class="col"  cols="auto">
+                    <button @click="deleteTimeEntry" variant="danger">Löschen</button>
+                </div>
+            </div>
 
-        </b-modal>
+        </div>
 
-        <b-modal id="editTimeEntry" size="md"
+        <div class="modal" id="editTimeEntry" size="md"
                  hide-header hide-footer centered>
             <h4>Uhrzeit bearbeiten: {{this.entries.timeEntries[editIndex].time}}</h4>
-            <b-input type="time" v-model="editTime"></b-input>
+            <input type="time" v-model="editTime"/>
             <p id="timeErrorModal" style="display:none; color:red;">Bitte geben Sie eine Uhrzeit an.</p>
             <p id="existsErrorModal" style="display:none; color:red;">Uhrzeit existiert bereits.</p>
-            <b-row align-h="between" class="mt-3">
-                <b-col cols="auto">
-                    <b-button @click="cancelModal" variant="outline-danger">Abbrechen</b-button>
-                </b-col>
-                <b-col cols="auto">
-                    <b-button @click="editTimeEntry" variant="primary">Aktualisieren</b-button>
-                </b-col>
-            </b-row>
+            <div class="row" align-h="between" >
+                <div class="row" cols="auto">
+                    <button @click="cancelModal" variant="outline-danger">Abbrechen</button>
+                </div>
+                <div class="row" cols="auto">
+                    <button @click="editTimeEntry" variant="primary">Aktualisieren</button>
+                </div>
+            </div>
 
-        </b-modal>
+        </div>
     </div>
 </template>
 

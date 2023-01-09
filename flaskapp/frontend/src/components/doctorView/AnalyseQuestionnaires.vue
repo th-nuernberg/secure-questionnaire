@@ -2,7 +2,9 @@
     <b-container :key="componentKey">
         <h2 class="mt-5">Ergebnisse</h2>
         <div v-if="loading" class="d-flex justify-content-center mb-3">
-            <b-spinner style="width: 3rem; height: 3rem;"></b-spinner>
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
         
         <div v-else v-for="(que, index) in queIDs" class="mt-5">
@@ -167,7 +169,7 @@
                                 });
                             }
 
-                            //pro Frage eine Spalte in Tabelle hinzufügen
+                            //pro Frage eine Spalte in Tabelle hinzufï¿½gen
                             this.ques[queID].elements.forEach(question => {
                                 if (question.type !== "description") {
                                     this.fields[queID].push({

@@ -7,15 +7,15 @@
                 <div class="row">
                     <!-- copyright column -->
                     <div class="col-sm">
-                        <div class="p-3 text-white text-center">
-                            © Copyright: Schlafambulanz
+                        <div class="p-3 text-black text-center">
+                            © Copyright: Patientenfragebogen
                         </div>
                     </div>                  
                     <!-- Privacy Policy link and Terms Condition link column -->
                     <div class="col-sm p-3  text-white text-center">
                         <div class="col">
-                            <a href="javascript:void(0)" class="text-decoration-none text-white pe-3">Privacy Policy </a>
-                            <a href="javascript:void(0)" class="text-decoration-none text-white ps-3"> Terms Condition</a>
+                            <a href="javascript:void(0)" class="text-decoration-none text-black pe-3">Privacy Policy </a>
+                            <a href="javascript:void(0)" class="text-decoration-none text-black ps-3"> Terms Condition</a>
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,8 @@
 
 <style scoped>
     .foot {
-        background-color: #2A2A2A;
+        background-color: lightgray;
         margin-top: 300px;
+        color: black;
     }
 </style>

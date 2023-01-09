@@ -3,29 +3,29 @@
         <div class="container">
             <h1>Fragebogen erstellen</h1>
             <div>
-                <div class="mb-2" align="left" >
+                <div class="mb-2">
                     <label>Titel: </label>
                     <input type="text"  v-model="questionnaire.title"  >
                 </div>
                 <div class="row g-5">
-                  <h4 class="fw-bold text-center mt-3"></h4>
-                  <form class="px-2" action="">
+                  <h4 class="fw-bold"></h4>
+                  <form class="px-2" text-align="left" action="">
                     <p class="fw-bold">Geben Sie an, ob der Patient den Fragebogen einmalig oder mehrmals ausfüllen soll. Falls es sich um einen wiederholenden Fragebogen handelt, müssen Sie angeben, in welchem Intervall der Fragebogen ausgefüllt werden soll.</p>
-                    <div class="form-check mb-lg-2">
-                      <input class="form-check-input" type="radio" name="exampleForm" id="radio_single" />
-                      <label class="form-check-label" for="radio_single">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" />
+                      <label class="form-check-label" margin-left="20px" for="checkbox_single">
                         Einmalig
                       </label>
                     </div>
-                    <div class="form-check mb-2">
-                      <input class="form-check-input" type="radio" name="exampleForm" id="radio_date" />
-                      <label class="form-check-label" for="radio_date">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_date" />
+                      <label class="form-check-label" margin-left="20px" for="checkbox_date">
                         Wiederholend (Datum)
                       </label>
                     </div>
-                    <div class="form-check mb-2">
-                      <input class="form-check-input" type="radio" name="exampleForm" id="radio_dateTime" />
-                      <label class="form-check-label" for="radio_dateTime">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_dateTime" />
+                      <label class="form-check-label" margin-left="20px" for="checkbox_dateTime">
                         Wiederholend (Datum und Uhrzeit)
                       </label>
                     </div>
@@ -34,7 +34,7 @@
 
                 <div v-for="question in questionnaire.elements" :key="question.id" :class="[question.id % 2 == 0 ? 'background-color' : '', 'mb-3 p-3']">
                     <div class="row center">
-                        <div class="col g-5">
+                        <div class="col">
                             <create-question-control @deleteQuestion="deleteQuestion(question)"
                                                      @upwards="questionUpwards(question)"
                                                      @downwards="questionDownwards(question)">
@@ -114,31 +114,31 @@
             <h3 class="text-center mb-3">Erfolgreich gespeichert!</h3>
             <div class="row">
                 <div class="col center">
-                    <b-button @click="downloadPdf()" class="mt-3 btn-big btnPDF" variant="primary">
+                    <button type="button" class="btn btn-outline-primary" @click="downloadPdf()" variant="primary">
                         <b-icon-download></b-icon-download>
                         Infoblatt
-                    </b-button>
+                    </button>
                     <b-button @click="restart()" class="mt-3 btn-big" variant="outline-primary">Neuer Fragebogen</b-button>
                 </div>
             </div>
         </div>
 
-<!--        <vue3-html2pdf :show-layout="false"-->
-<!--                      :float-layout="true"-->
-<!--                      :enable-download="false"-->
-<!--                      :preview-modal="true"-->
-<!--                      :paginate-elements-by-height="1400"-->
-<!--                      filename="QR-Code für Fragebogen"-->
-<!--                      :pdf-quality="2"-->
-<!--                      :manual-pagination="false"-->
-<!--                      pdf-format="a4"-->
-<!--                      pdf-orientation="portrait"-->
-<!--                      pdf-content-width="800px"-->
-<!--                      @hasStartedGeneration="hasStartedGeneration()"-->
-<!--                      @hasGenerated="hasGenerated($event)"-->
-<!--                      ref="html2Pdf">-->
-<!--            <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf>-->
-<!--        </vue3-html2pdf>-->
+       <html2pdf :show-layout="false"
+                     :float-layout="true"
+                     :enable-download="false"
+                     :preview-modal="true"
+                     :paginate-elements-by-height="1400"
+                     filename="QR-Code für Fragebogen"
+                     :pdf-quality="2"
+                     :manual-pagination="false"
+                     pdf-format="a4"
+                     pdf-orientation="portrait"
+                     pdf-content-width="800px"
+                     @hasStartedGeneration="hasStartedGeneration()"
+                     @hasGenerated="hasGenerated($event)"
+                     ref="html2Pdf">
+           <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf>
+       </html2pdf>
 
         <div class="boxStyling">
             <section class="user-details p-5">
@@ -177,7 +177,7 @@
 <script>
     import CreateQuestionControl from './CreateQuestionControl.vue';
     import InfoTooltip from './../util/InfoTooltip.vue';
-    //import { Vue3Html2pdf } from 'vue3-html2pdf';
+    import html2pdf from 'html2pdf';
     import QuestionnairePdf from './../pdf/QuestionnairePdf.vue';
     import QrCode from "../QrCode.vue"
 
@@ -185,7 +185,7 @@
         components: {
             CreateQuestionControl,
             InfoTooltip,
-           // Vue3Html2pdf,
+            html2pdf,
             QuestionnairePdf,
             QrCode,
         },
@@ -350,10 +350,13 @@
 
         background-color : #11111111;
         margin-left: 10px;
-
+        color: black;
     }
 
-
+    form[class="px-2"]
+    {
+        text-align: left;
+    }
 
     .background-color {
         background: #11111111;

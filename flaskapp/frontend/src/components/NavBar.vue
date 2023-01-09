@@ -9,7 +9,7 @@
 <!--            <b-nav-item to="/doctorView/create">Fragebogen erstellen</b-nav-item>-->
 <!--        </navbar-nav>-->
 <!--    </navbar>-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light">
   <a class="navbar-brand" href="#">Patientenfragebogen</a>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -18,10 +18,10 @@
         <a class="nav-link" href="/">Home </a>
       </li>
       <li v-if="doctorViewCreate" class="nav-item">
-        <a class="nav-link" href="/doctorView/create">Frageboigen analysieren</a>
+        <a class="nav-link" href="/doctorView/create">Fragebogen analysieren</a>
       </li>
       <li v-else-if="doctorView" class="nav-item">
-        <a class="nav-link" href="/doctorView/create">Frageboigen erstellen</a>
+        <a class="nav-link" href="/doctorView/create">Fragebogen erstellen</a>
       </li>
 
     </ul>
@@ -46,14 +46,14 @@
 
 <style scoped>
     .navbar {
-        background-color: #00538F;
+        background-color: lightgray;
         margin-bottom: 30px;
     }
     .ms-auto {
         margin-right: 20px;
     }
 
-    .brand {
+    .navbar-brand {
         margin-left: 20px;
         margin-right: 20px;
     }

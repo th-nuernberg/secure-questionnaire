@@ -1,7 +1,7 @@
 <template>
     <span>
-        <b-button variant="primary" size="sm" class="info-button" id="button">i</b-button>
-        <b-tooltip target="button">{{msg}}</b-tooltip>
+        <button variant="primary" size="sm" class="info-button" id="button">i</button>
+        <tooltip target="button">{{msg}}</tooltip>
     </span>
 </template> 
 

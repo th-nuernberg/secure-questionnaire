@@ -1,7 +1,7 @@
 <template>
     <div>
         <heading :question="question"></heading>
-        <b-input type="number" v-model="answer" @input="input()"></b-input>
+        <input type="number" v-model="answer" @input="input()"/>
     </div>
 </template>
 

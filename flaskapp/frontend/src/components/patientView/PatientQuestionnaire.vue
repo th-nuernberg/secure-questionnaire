@@ -1,36 +1,38 @@
 <template>
-    <b-container v-if="pageState === 'loading'">
+    <div class="container" v-if="pageState === 'loading'">
         <div class="text-center mt-5">
-            <b-spinner variant="primary"></b-spinner>
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
-    </b-container>
+    </div>
 
-    <b-container v-else-if="pageState === 'error'">
+    <div class="container" v-else-if="pageState === 'error'">
         <div class="text-center mt-5">
             <p>Fehler beim Laden</p>
-            <b-button variant="primary" to="/patient">Zur Startseite</b-button>
+            <button variant="primary" to="/patient">Zur Startseite</button>
         </div>
-    </b-container>
+    </div>
 
-    <b-container v-else-if="pageState === 'saved'">
+    <div class="container" v-else-if="pageState === 'saved'">
         <div class="saved">
-            <b-button variant="outline" @click="pageState='ready'" class="mb-4">
-                <b-icon-arrow-left></b-icon-arrow-left>
+            <button variant="outline" @click="pageState='ready'" class="mb-4">
+                <!-- <b-icon-arrow-left></b-icon-arrow-left> -->
                 Zurück zum Fragebogen
-            </b-button>
+            </button>
 
             <div class="boxStyling mb-5">
                 <h3 class="text-center mb-3">Erfolgreich gespeichert!</h3>
                 <p class="text-center mb-3">Laden Sie Ihren QR-Code herunter, um Ihre Antworten später noch einmal zu bearbeiten oder dem Arzt zeigen zu können.</p>
 
-                <b-row>
-                    <b-col class="text-center">
-                        <b-button variant="primary" @click="downloadPdf()" class="mt-3 btn-big">
-                            <b-icon-download></b-icon-download>
+                <div class="row">
+                    <div class="col ext-center">
+                        <button variant="primary" @click="downloadPdf()" class="mt-3 btn-big">
+                            <!-- <b-icon-download></b-icon-download> -->
                             QR-Code
-                        </b-button>
-                    </b-col>
-                </b-row>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="boxStyling">
@@ -65,7 +67,7 @@
             </p>
 
 
-            <b-button variant="outline-primary" @click="$router.push('/patient')">Zur Startseite</b-button>
+            <button variant="outline-primary" @click="$router.push('/patient')">Zur Startseite</button>
 
 
 <!--            <vue3-html2pdf :show-layout="false"-->
@@ -86,17 +88,17 @@
 <!--            </vue3-html2pdf>-->
 
         </div>
-    </b-container>
+    </div>
 
-    <b-container v-else>
-        <b-form>
+    <div class="container" v-else>
+        <form>
             <h1 class="mt-5">{{ questionnaire.title }}</h1>
 
-            <b-row class="name mb-4 mt-4">
-                <b-col>
-                    <b-input class="boxStyling" v-model="patientName" @input="setName" placeholder="Bitte geben Sie Ihren Namen ein."></b-input>
-                </b-col>
-            </b-row>
+            <div  class="row">
+                <div class="col">
+                    <input class="text" v-model="patientName" @input="setName" placeholder="Bitte geben Sie Ihren Namen ein."/>
+                </div>
+            </div>
 
             <tab-navigation v-if="questionnaire.repeatingType !== 'single'"
                             :entries="tabEntries"
@@ -107,15 +109,15 @@
             <Questions-Container v-else class="boxStyling" date="" time=""></Questions-Container>
 
             <div class="text-center">
-                <b-button @click="save()" variant="success" class="btn-big">Speichern</b-button>
+                <button @click="save()" variant="success" type="button" class="btn btn-outline-primary" >Speichern</button>
                 <div id="upload-error" style="display: none;">
                     <i class="fas fa-exclamation-circle"></i>
                     <p class="m-1 d-inline">Fehler beim Upload. Bitte versuchen Sie es erneut.</p>
                 </div>
             </div>
 
-        </b-form>
-    </b-container>
+        </form>
+    </div>
 </template>
 
 <script>
@@ -321,6 +323,13 @@
 
 
 <style scoped lang="scss">
+
+    input[type="text"], textarea {
+
+        background-color : #11111111;
+        margin-left: 10px;
+        color: black;
+    }
 
     .question {
         padding-top: 15px;
