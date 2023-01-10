@@ -16,7 +16,7 @@
 
     <div class="container" v-else-if="pageState === 'saved'">
         <div class="saved">
-            <button variant="outline" @click="pageState='ready'" class="mb-4">
+            <button variant="outline" @click="pageState='ready'" class="btn btn-secondary mt-5">
                 <!-- <b-icon-arrow-left></b-icon-arrow-left> -->
                 Zurück zum Fragebogen
             </button>
@@ -27,7 +27,7 @@
 
                 <div class="row">
                     <div class="col ext-center">
-                        <button variant="primary" @click="downloadPdf()" class="mt-3 btn-big">
+                        <button class="btn btn-secondary mt-5" variant="primary" @click="downloadPdf()" >
                             <!-- <b-icon-download></b-icon-download> -->
                             QR-Code
                         </button>
@@ -67,7 +67,7 @@
             </p>
 
 
-            <button variant="outline-primary" @click="$router.push('/patient')">Zur Startseite</button>
+            <button class="btn btn-secondary mt-5" variant="outline-primary" @click="$router.push('/patient')">Zur Startseite</button>
 
 
 <!--            <vue3-html2pdf :show-layout="false"-->
@@ -96,7 +96,7 @@
 
             <div  class="row">
                 <div class="col">
-                    <input class="text" v-model="patientName" @input="setName" placeholder="Bitte geben Sie Ihren Namen ein."/>
+                    <input type="text" v-model="patientName" @input="setName" placeholder="Bitte geben Sie Ihren Namen ein."/>
                 </div>
             </div>
 
@@ -326,7 +326,7 @@
 
     input[type="text"], textarea {
 
-        background-color : #11111111;
+        background-color : #d6d3d311;
         margin-left: 10px;
         color: black;
     }
