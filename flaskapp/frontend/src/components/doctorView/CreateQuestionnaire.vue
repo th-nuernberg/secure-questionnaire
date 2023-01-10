@@ -123,7 +123,7 @@
             </div>
         </div>
 
-       <html2pdf :show-layout="false"
+       <!-- <html2pdf :show-layout="false"
                      :float-layout="true"
                      :enable-download="false"
                      :preview-modal="true"
@@ -136,12 +136,12 @@
                      pdf-content-width="800px"
                      @hasStartedGeneration="hasStartedGeneration()"
                      @hasGenerated="hasGenerated($event)"
-                     ref="html2Pdf">
-           <questionnaire-pdf slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf>
-       </html2pdf>
+                     ref="html2Pdf"> -->
+           <!-- <questionnaire-pdf  slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf> -->
+         <!--  </html2pdf> -->
 
-        <div class="boxStyling">
-            <section class="user-details p-5">
+        <div class="boxStyling" >
+            <section class="user-details p-5" ref="document">
                 <div class="text-center">
                     <h1>Infoblatt zum Fragebogen</h1>
                     <h1>{{questionnaire.title}}</h1>
@@ -177,7 +177,7 @@
 <script>
     import CreateQuestionControl from './CreateQuestionControl.vue';
     import InfoTooltip from './../util/InfoTooltip.vue';
-    import html2pdf from 'html2pdf';
+    import html2pdf from 'html2pdf.js'
     import QuestionnairePdf from './../pdf/QuestionnairePdf.vue';
     import QrCode from "../QrCode.vue"
 
@@ -330,6 +330,13 @@
             },
             async downloadPdf() {
                 //this.$refs.html2Pdf.generatePdf();
+                html2pdf(this.$refs.document, {
+					margin: 1,
+					filename: 'document.pdf',
+					image: { type: 'jpeg', quality: 0.98 },
+					html2canvas: { dpi: 250, letterRendering: false },
+					jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+				})
             },
         },
     }
@@ -384,12 +391,12 @@
 
     .qr {
         display: inline-block;
-        width: 300px;
-        height: 300px;
+        width: 280px;
+        height: 280px;
         margin-right: auto;
         margin-left: auto;
-        margin-top: 50px;
-        margin-bottom: 50px;
+        margin-top: 30px;
+        margin-bottom: 30px;
     }
 
     .code {

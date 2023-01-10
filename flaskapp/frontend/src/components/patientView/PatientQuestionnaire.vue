@@ -36,7 +36,7 @@
             </div>
 
             <div class="boxStyling">
-                <section class="user-details p-5">
+                <section class="user-details p-5" ref="document">
                     <div class="text-center">
                         <h1>Ihr ausgefüllter Fragebogen</h1>
                         <qr-code class="qr" :content=content></qr-code>
@@ -124,7 +124,7 @@
 
     import TabNavigation from "./TabNavigation.vue";
     import QuestionsContainer from "./QuestionsContainer.vue";
-   // import { Vue3Html2pdf } from 'vue3-html2pdf';
+    import html2pdf from 'html2pdf.js'
     import AnswersPdf from "./../pdf/AnswersPdf.vue"
     import QrCode from "../QrCode.vue"
     import { uuid } from 'vue-uuid';
@@ -133,7 +133,7 @@
         components: {
             TabNavigation,
             QuestionsContainer,
-        //    Vue3Html2pdf,
+            html2pdf,
             AnswersPdf,
             QrCode
         },
@@ -316,6 +316,13 @@
 
             async downloadPdf() {
                // this.$refs.html2Pdf.generatePdf();
+               html2pdf(this.$refs.document, {
+					margin: 1,
+					filename: 'document.pdf',
+					image: { type: 'jpeg', quality: 0.98 },
+					html2canvas: { dpi: 250, letterRendering: false },
+					jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+				})
             },
         },
     };
@@ -359,12 +366,12 @@
     }
 
     .qr {
-        width: 300px;
-        height: 300px;
+        width: 280px;
+        height: 280px;
         margin-right: auto;
         margin-left: auto;
-        margin-top: 50px;
-        margin-bottom: 50px;
+        margin-top: 30px;
+        margin-bottom: 30px;
     }
 
     .code {

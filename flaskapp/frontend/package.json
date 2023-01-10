@@ -22,7 +22,7 @@
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vue-uuid": "^3.0.0",
-    "vue3-html2pdf": "^1.1.2",
+    "html2pdf.js": "^0.8.2",
     "vue3-qrcode-reader": "^0.0.1",
     "vuex": "^4.1.0"
   },
