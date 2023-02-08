@@ -4,7 +4,7 @@
             <div class="col-12">
                 <div class="wrapper">
                     <code-scanner @addAnalyseID="addAnalyseID"></code-scanner>
-                    <div class="info">
+                    <!-- <div class="info">
                         <div :show="existsCountDown" class="alert alert-primary" role="alert"
                                  variant="warning"
                                  @dismissed="existsCountDown=0"
@@ -17,20 +17,21 @@
                              @dismiss-count-down="addedCountDownChanged">
                             <h1 class="m-0">+</h1>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="col" >
                 <h4>Folgende Bögen wurden erfasst:</h4>
                 <div v-if="idsKeys.length > 0">
                     <div class="ids">
-                        <div class="row">
+                        <div class="row" v-for="(obj, index) in idsKeys" :key="obj.id" align-v="center">
                             <div class="col">
                                 {{obj.id}}
                             </div>
                             <div class="col">
                                 <button class="btn btn-primary" @click="deleteID(index)" variant="danger" size="sm" >
-                                    <i class="fas fa-trash"></i>
+                                    <!-- <i class="fas fa-trash"></i> -->
+                                    delete
                                 </button>
                             </div>
                         </div>

@@ -1,13 +1,12 @@
 <template>
     <div class="d-inline">
-        <button type="button" class="btn btn-outline-primary" @click="upwards()" variant="primary" >Up</button>
-<!--            <i class="fas fa-caret-up"></i>-->
+        <button type="button" class="btn btn-outline-primary" @click="upwards()" variant="primary" ><BootstrapIcon icon="arrow-up" size="2x" /></button>
+        
 
-        <button type="button" class="btn btn-outline-primary" @click="deleteQuestion()" variant="danger" >Delete</button>
-<!--            <i class="fas fa-trash"></i>-->
+        <button type="button" class="btn btn-outline-primary" @click="deleteQuestion()" variant="danger" ><BootstrapIcon icon="trash" size="2x" /></button>
+        
 
-        <button type="button" class="btn btn-outline-primary" @click="downwards()" variant="primary" >Down</button>
-<!--            <i class="fas fa-caret-down"></i>-->
+        <button type="button" class="btn btn-outline-primary" @click="downwards()" variant="primary" ><BootstrapIcon icon="arrow-down" size="2x" /></button>
 
     </div>
 </template>

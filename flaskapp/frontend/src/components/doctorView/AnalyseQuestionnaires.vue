@@ -1,5 +1,5 @@
 <template>
-    <b-container :key="componentKey">
+    <div class=container :key="componentKey">
         <h2 class="mt-5">Ergebnisse</h2>
         <div v-if="loading" class="d-flex justify-content-center mb-3">
             <div class="spinner-border" role="status">
@@ -9,32 +9,33 @@
         
         <div v-else v-for="(que, index) in queIDs" class="mt-5">
             <div class="boxStyling">
-                <b-row align-h="between">
-                    <b-col>
+                <div class="row" align-h="between">
+                    <div class="col">
                         <h5> {{title(que)}} ({{que}})</h5>
-                    </b-col>
-                    <b-col cols="auto">
-                        <b-button class="exportBtn" variant="primary" @click="exportCSV(que)" pill v-b-tooltip.hover title="Download CSV">
-                            <b-icon-download></b-icon-download>
-                        </b-button>
-                    </b-col>
-                </b-row>
+                    </div>
+                    <div class="col" cols="auto">
+                        <button class="exportBtn" variant="primary" @click="exportCSV(que)" pill title="Download CSV">
+                            <BootstrapIcon icon="download" size="2x" />
+                            <!-- <b-icon-download></b-icon-download> -->
+                        </button>
+                    </div>
+                </div>
 
-
-                <b-table id="table"
+                <h1>{{ answersFromOneQue() }}</h1>
+                <h1>{{ fieldsForOneQue() }}</h1>
+                <table class="table" id="table"
                          :items="answersFromOneQue(que)"
                          :fields="fieldsForOneQue(que)"
                          striped responsive>
-                </b-table>
+                </table>
+                  
             </div>
         </div>
-
-    </b-container>
-
-
+    </div>
 </template>
 
 <script>
+
     export default {
         name: "AnalyseQuestionnaires",
         data() {
@@ -154,20 +155,20 @@
                                 sortable: true
                             }];
 
-                            if (this.ques[queID].repeatingType.includes("date")) {
-                                this.fields[queID].push({
-                                    key: "date",
-                                    label: "Datum",
-                                    sortable: true
-                                });
-                            }
-                            if (this.ques[queID].repeatingType == "dateTime") {
-                                this.fields[queID].push({
-                                    key: "time",
-                                    label: "Uhrzeit",
-                                    sortable: true
-                                });
-                            }
+                            // if (this.ques[queID].repeatingType.includes("date")) {
+                            //     this.fields[queID].push({
+                            //         key: "date",
+                            //         label: "Datum",
+                            //         sortable: true
+                            //     });
+                            // }
+                            // if (this.ques[queID].repeatingType == "dateTime") {
+                            //     this.fields[queID].push({
+                            //         key: "time",
+                            //         label: "Uhrzeit",
+                            //         sortable: true
+                            //     });
+                            // }
 
                             //pro Frage eine Spalte in Tabelle hinzuf�gen
                             this.ques[queID].elements.forEach(question => {

@@ -9,22 +9,22 @@
                 </div>
                 <div class="row g-5">
                   <h4 class="fw-bold"></h4>
-                  <form class="px-2" text-align="left" action="">
+                  <form class="px-2" text-align="left" action="" >
                     <p class="fw-bold">Geben Sie an, ob der Patient den Fragebogen einmalig oder mehrmals ausfüllen soll. Falls es sich um einen wiederholenden Fragebogen handelt, müssen Sie angeben, in welchem Intervall der Fragebogen ausgefüllt werden soll.</p>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" />
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" v-model="questionnaire.repeatingType"/>
                       <label class="form-check-label" margin-left="20px" for="checkbox_single">
                         Einmalig
                       </label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_date" />
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_date" v-model="questionnaire.repeatingType"/>
                       <label class="form-check-label" margin-left="20px" for="checkbox_date">
                         Wiederholend (Datum)
                       </label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_dateTime" />
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_dateTime" v-model="questionnaire.repeatingType"/>
                       <label class="form-check-label" margin-left="20px" for="checkbox_dateTime">
                         Wiederholend (Datum und Uhrzeit)
                       </label>
@@ -90,7 +90,8 @@
 
                 <div class="dropdown" >
                     <button class="btn btn-secondary dropdown-toggle" type="button" @click="toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Fragenmenue
+                        <BootstrapIcon icon="exclamation-circle-fill" size="2x" /><br>
+                        Fragenmenue
                     </button>
                         <div v-if="active">
                           <button class="dropdown-item" @click="addQuestion(question.type)" v-for="question in questionTypes" :key="question.text" type="button" >
@@ -99,9 +100,10 @@
                         </div>
                 </div>
 
-                <button @click="save()" class="btn btn-secondary mt-5" variant="success">Fragebogen speichern</button>
+                <button @click="save()" class="btn btn-secondary mt-5" variant="success"><BootstrapIcon icon="save2" size="2x" /><br>
+                    Fragebogen speichern</button>
                 <div id="upload-error" style="display: none;">
-                    <i class="fas fa-exclamation-circle"></i>
+                    <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
                     <p class="m-1 d-inline">Fehler beim Upload. Bitte versuchen Sie es erneut.</p>
                 </div>
                 
@@ -115,10 +117,12 @@
             <div class="row">
                 <div class="col center">
                     <button type="button" class="btn btn-outline-primary" @click="downloadPdf()" variant="primary">
-                        <b-icon-download></b-icon-download>
+                        <BootstrapIcon icon="download" size="2x" />
                         Infoblatt
                     </button>
-                    <b-button @click="restart()" class="mt-3 btn-big" variant="outline-primary">Neuer Fragebogen</b-button>
+                    <button @click="restart()" type="button" class="btn btn-outline-primary" variant="outline-primary">
+                        <BootstrapIcon icon="menu-down" size="2x" /> 
+                        Neuer Fragebogen</button>
                 </div>
             </div>
         </div>

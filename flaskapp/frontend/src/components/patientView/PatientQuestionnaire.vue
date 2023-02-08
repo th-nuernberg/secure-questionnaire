@@ -18,6 +18,7 @@
         <div class="saved">
             <button variant="outline" @click="pageState='ready'" class="btn btn-secondary mt-5">
                 <!-- <b-icon-arrow-left></b-icon-arrow-left> -->
+                <BootstrapIcon icon="arrow-left" size="2x" />
                 Zurück zum Fragebogen
             </button>
 
@@ -28,7 +29,7 @@
                 <div class="row">
                     <div class="col ext-center">
                         <button class="btn btn-secondary mt-5" variant="primary" @click="downloadPdf()" >
-                            <!-- <b-icon-download></b-icon-download> -->
+                            <BootstrapIcon icon="qr-code" size="2x" />
                             QR-Code
                         </button>
                     </div>
@@ -69,7 +70,6 @@
 
             <button class="btn btn-secondary mt-5" variant="outline-primary" @click="$router.push('/patient')">Zur Startseite</button>
 
-
 <!--            <vue3-html2pdf :show-layout="false"-->
 <!--                          :float-layout="true"-->
 <!--                          :enable-download="false"-->
@@ -109,9 +109,9 @@
             <Questions-Container v-else class="boxStyling" date="" time=""></Questions-Container>
 
             <div class="text-center">
-                <button @click="save()" variant="success" type="button" class="btn btn-outline-primary" >Speichern</button>
+                <button @click="save()" variant="success" type="button" class="btn btn-outline-primary" ><BootstrapIcon icon="download" size="2x" /></button>
                 <div id="upload-error" style="display: none;">
-                    <i class="fas fa-exclamation-circle"></i>
+                    <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
                     <p class="m-1 d-inline">Fehler beim Upload. Bitte versuchen Sie es erneut.</p>
                 </div>
             </div>
@@ -320,7 +320,7 @@
 					margin: 1,
 					filename: 'document.pdf',
 					image: { type: 'jpeg', quality: 0.98 },
-					html2canvas: { dpi: 250, letterRendering: false },
+					html2canvas: { dpi: 500, letterRendering: false },
 					jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
 				})
             },

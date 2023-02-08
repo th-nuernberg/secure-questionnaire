@@ -5,29 +5,32 @@
                 <div  class="col" >
                     <button  type="button" class="btn btn-outline-primary" @click="back" :disabled="index == 1" >
                         <!-- <i class="bi bi-chevron-left"></i> -->
-                        back
+                        <BootstrapIcon icon="arrow-left" size="2x" />
                     </button>
                 </div>
-                <div class="col" >
+                <div class="col" align-h="center" >
                     <!-- <button v-modal.calendar class="date btn-accent">
                         {{currentDate}}
                     </button> -->
-                    <button type="button" class="date btn-accent" v-modal.calendar data-bs-toggle="modal" data-bs-target="#firstEntry">
+                    <button type="button" class="date btn-primary" v-modal.calendar data-bs-toggle="modal" data-bs-target="#firstEntry">
                         <!-- Datum hinzufügen! -->
                         {{currentDate}}
                     </button>
 
-                    <div class="btn-toolbar">
-                        <div class="btn-group me-2">
+                    <div class="btn-toolbar" align-h="center">
+                        <div class="btn-group me-2" >
                             <button type="button" class="btn btn-primary" v-modal.calendar data-bs-toggle="modal" data-bs-target="#editEntry">
+                                <BootstrapIcon icon="pencil-fill" size="2x" /><br/>
                                 Datum bearbeiten
                             </button>                           
 
                             <button type="button" class="btn btn-primary" v-modal.calendar data-bs-toggle="modal" data-bs-target="#deleteEntry">
+                                <BootstrapIcon icon="trash" size="2x" /><br/>
                                 Datum löschen
                             </button> 
 
                             <button type="button" class="btn btn-primary" v-modal.calendar data-bs-toggle="modal" data-bs-target="#addEntry">
+                                <BootstrapIcon icon="plus-circle" size="2x" /><br/>
                                 Datum hinzufügen
                             </button>  
                         </div>
@@ -37,7 +40,7 @@
                 <div class="col">
                     <button @click="forward" :disabled="index === entries.length - 1" type="button" class="btn btn-outline-primary"  variant="outline-primary">
                         <!-- <i class="bi bi-chevron-right"></i> -->
-                        forward
+                        <BootstrapIcon icon="arrow-right" size="2x" />
                     </button>
                 </div>
             </div>
@@ -347,7 +350,7 @@
         margin-left: auto;
         margin-right: auto;
         font-size: 150%;
-        width: 100%;
+        width: 90%;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }

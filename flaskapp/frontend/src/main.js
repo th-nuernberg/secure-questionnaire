@@ -17,6 +17,7 @@ import AnalyseQuestionnaires from './components/doctorView/AnalyseQuestionnaires
 import CreateQuestionnaire from './components/doctorView/CreateQuestionnaire.vue';
 import "bootstrap/dist/css/bootstrap.css"
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import BootstrapIcon from '@dvuckovic/vue3-bootstrap-icons';
 
 
 const router = createRouter(
@@ -66,6 +67,7 @@ app.use(html2pdf)
 app.use(VueQrcodeReader)
 app.use(store)
 app.use(Vuex)
+app.component('BootstrapIcon', BootstrapIcon);
 app.mount('#app');
 
 

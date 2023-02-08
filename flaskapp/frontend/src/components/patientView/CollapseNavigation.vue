@@ -27,9 +27,11 @@
                     <button-group class="editBtnsGroup">
                         <button @click="setIndex(index)" v-b-modal.editTimeEntry size="sm" class="editBtns" variant="outlined">
                             <!-- <b-icon-pencil-fill></b-icon-pencil-fill> -->
+                            <BootstrapIcon icon="pencil-fill" size="2x" />
                         </button>
                         <button @click="setIndex(index)" class="editBtns" variant="outlined" v-b-modal.deleteTimeEntry size="sm">
                             <!-- <b-icon-trash></b-icon-trash> -->
+                            <BootstrapIcon icon="trash" size="2x" />
                         </button>
                     </button-group>
 

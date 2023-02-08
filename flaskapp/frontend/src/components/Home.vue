@@ -10,11 +10,9 @@
             <p id="head">
                 Willkommen auf der Startseite. Wählen Sie einen Bereich aus:
             </p>
-<!--            <b-button pill variant="dark" class="btn" to="patient">Patient</b-button>-->
-                <router-link to="patient">Patient</router-link>
+                <router-link to="patient"><span class="badge rounded-pill bg-dark">Patient</span></router-link>
             <br />
-<!--            <b-button pill variant="dark" class="btn" to="doctorView">Arzt</b-button>-->
-                <router-link to="doctorView" >Arzt</router-link>
+                <router-link to="doctorView" ><span class="badge rounded-pill bg-dark">Arzt</span></router-link>
             <br />
         </div>
     </div>
