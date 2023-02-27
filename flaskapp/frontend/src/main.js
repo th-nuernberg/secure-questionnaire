@@ -20,6 +20,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import BootstrapIcon from '@dvuckovic/vue3-bootstrap-icons';
 
 
+
 const router = createRouter(
     {
         history: createWebHistory(),

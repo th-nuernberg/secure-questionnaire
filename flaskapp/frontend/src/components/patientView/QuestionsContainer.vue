@@ -45,7 +45,7 @@
 
         methods: {
             getInputFromChild(questionID, answer) {
-                if (this.$parent.getInputFromChild == undefined) {                 //in CollapseNavigation wird automatisch accordeon-Komponente eingefügt
+                if (this.$parent.getInputFromChild == undefined) {                 //in CollapseNavigation wird automatisch accordeon-Komponente eingefï¿½gt
                     this.$parent.$parent.getInputFromChild(questionID, answer);
                 }
                 else {

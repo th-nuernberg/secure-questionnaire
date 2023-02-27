@@ -17,8 +17,8 @@
                         {{currentDate}}
                     </button>
 
-                    <div class="btn-toolbar" align-h="center">
-                        <div class="btn-group me-2" >
+                    <div class="btn-toolbar">
+                        <div class="btn-group me-2"  align-h="center" >
                             <button type="button" class="btn btn-primary" v-modal.calendar data-bs-toggle="modal" data-bs-target="#editEntry">
                                 <BootstrapIcon icon="pencil-fill" size="2x" /><br/>
                                 Datum bearbeiten

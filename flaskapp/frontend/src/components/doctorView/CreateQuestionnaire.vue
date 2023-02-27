@@ -11,25 +11,35 @@
                   <h4 class="fw-bold"></h4>
                   <form class="px-2" text-align="left" action="" >
                     <p class="fw-bold">Geben Sie an, ob der Patient den Fragebogen einmalig oder mehrmals ausfüllen soll. Falls es sich um einen wiederholenden Fragebogen handelt, müssen Sie angeben, in welchem Intervall der Fragebogen ausgefüllt werden soll.</p>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" v-model="questionnaire.repeatingType"/>
+                    <!-- <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" value="single" v-model="questionnaire.repeatingType"/>
                       <label class="form-check-label" margin-left="20px" for="checkbox_single">
                         Einmalig
                       </label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_date" v-model="questionnaire.repeatingType"/>
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_date" value="date" v-model="questionnaire.repeatingType"/>
                       <label class="form-check-label" margin-left="20px" for="checkbox_date">
                         Wiederholend (Datum)
                       </label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_dateTime" v-model="questionnaire.repeatingType"/>
+                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_dateTime" value="dateTime" v-model="questionnaire.repeatingType"/>
                       <label class="form-check-label" margin-left="20px" for="checkbox_dateTime">
                         Wiederholend (Datum und Uhrzeit)
                       </label>
+                    </div> -->
+
+                   <div>
+                        <select v-model="questionnaire.repeatingType">
+                            <option disabled value="">Bitte wählen!</option>
+                            <option value="single">Einmalig</option>
+                            <option value="date">Wiederholend (Datum)</option>
+                            <option value="dateTime">Wiederholend (Datum und Uhrzeit)</option>
+                        </select>
+                        <!-- <h5>{{ questionnaire.repeatingType }}</h5> -->
                     </div>
-                  </form>
+                </form>
                 </div>
 
                 <div v-for="question in questionnaire.elements" :key="question.id" :class="[question.id % 2 == 0 ? 'background-color' : '', 'mb-3 p-3']">
@@ -53,17 +63,17 @@
                             <span v-if="choiceQuestion(question.type)">
                                 <span class="d-block mt-2">Optionen: </span>
                                 <span v-for="(option, index) in question.options" :key="option.id">
-                                    <input type="text" class="form-control" v-model="option.text"  :placeholder="'Option ' + (index + 1)">
+                                    <input type="text" class="form-control" v-model="option.text" :key="option.id"  :placeholder="'Option ' + (index + 1)">
                                     <button type="button" class="btn btn-outline-primary" v-if="index !== 0 && index !== 1"
                                               @click="deleteOption(question, option)"
                                               variant="danger" >
-                                        Delete
+                                              <BootstrapIcon icon="trash" size="1x" />
                                     </button>
                                     <br />
                                 </span>
 
                                 <button type="button" class="btn btn-outline-primary" @click="addOption(question.id)">
-                                    Add
+                                    <BootstrapIcon icon="plus-circle" size="1x" />
                                 </button>
                             </span>
 
@@ -75,7 +85,7 @@
                                     <button v-if="index >= 2"
                                               @click="deleteOption(question, option)"
                                               variant="danger" size="sm">
-                                        <i class="fas fa-trash"></i>
+                                              <BootstrapIcon icon="trash" size="1x" />
                                     </button>
                                     <br />
                                 </span>
@@ -88,9 +98,18 @@
                     </div>
                 </div>
 
+                <!-- <div class="dropdown" >
+
+                    <select @click="addQuestion(question.type)" >
+                        <option disabled value="">Bitte wählen!</option>
+                        <option   v-for="question in questionTypes" :key="question.text" > {{question.text}} </option>
+
+                    </select>
+                   <h5>{{ questionnaire.repeatingType }}</h5> 
+                </div> -->
                 <div class="dropdown" >
                     <button class="btn btn-secondary dropdown-toggle" type="button" @click="toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <BootstrapIcon icon="exclamation-circle-fill" size="2x" /><br>
+                        <BootstrapIcon icon="question-circle-fill" size="1x" /><br>
                         Fragenmenue
                     </button>
                         <div v-if="active">

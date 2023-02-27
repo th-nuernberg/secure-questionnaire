@@ -21,14 +21,23 @@
                     </div>
                 </div>
 
-                <h1>{{ answersFromOneQue() }}</h1>
-                <h1>{{ fieldsForOneQue() }}</h1>
-                <table class="table" id="table"
+                <!-- <h4>{{ answersFromOneQue(que) }}</h4>
+                <h4>{{ fieldsForOneQue(que) }}</h4> -->
+<!--                 <table class="table" id="table"
                          :items="answersFromOneQue(que)"
                          :fields="fieldsForOneQue(que)"
                          striped responsive>
-                </table>
-                  
+                </table> -->
+                <table-lite
+                    :is-loading="table.isLoading"
+                    :columns="fieldsForOneQue(que)"
+                    :rows="answersFromOneQue(que)"
+                    :total="table.totalRecordCount"
+                    :sortable="table.sortable"
+                    :messages="table.messages"
+                    @do-search="doSearch"
+                    @is-finished="table.isLoading = false"
+                ></table-lite>
             </div>
         </div>
     </div>
@@ -36,9 +45,100 @@
 
 <script>
 
-    export default {
+import { defineComponent, reactive } from "vue";
+import TableLite from "vue3-table-lite";
+
+const sampleData1 = (offst, limit) => {
+  offst = offst + 1;
+  let data = [];
+  for (let i = offst; i <= limit; i++) {
+    data.push({
+      id: i,
+      name: "TEST" + i,
+      email: "test" + i + "@example.com",
+    });
+  }
+  return data;
+};
+// Fake Data for 'desc' sortable
+const sampleData2 = (offst, limit) => {
+  let data = [];
+  for (let i = limit; i > offst; i--) {
+    data.push({
+      id: i,
+      name: "TEST" + i,
+      email: "test" + i + "@example.com",
+    });
+  }
+  return data;
+};
+
+
+
+export default {
         name: "AnalyseQuestionnaires",
-        data() {
+
+        components: { TableLite },
+  setup() {
+    // Table config
+    const table = reactive({
+      isLoading: false,
+      columns: [
+        {
+          label: "ID",
+          field: "id",
+          width: "3%",
+          sortable: true,
+          isKey: true,
+        },
+        {
+          label: "Name",
+          field: "name",
+          width: "10%",
+          sortable: true,
+        },
+        {
+          label: "Email",
+          field: "email",
+          width: "15%",
+          sortable: true,
+        },
+      ],
+      rows: [],
+      totalRecordCount: 0,
+      sortable: {
+        order: "patientName",
+        sort: "asc",
+      },
+    });
+    /**
+     * Search Event
+     */
+    const doSearch = (offset, limit, order, sort) => {
+      table.isLoading = true;
+      setTimeout(() => {
+        table.isReSearch = offset == undefined ? true : false;
+        if (offset >= 10 || limit >= 20) {
+          limit = 20;
+        }
+        if (sort == "asc") {
+          table.rows = sampleData1(offset, limit);
+        } else {
+          table.rows = sampleData2(offset, limit);
+        }
+        table.totalRecordCount = 20;
+        table.sortable.order = order;
+        table.sortable.sort = sort;
+      }, 600);
+    };
+    // First get data
+    doSearch(0, 10, 'id', 'asc');
+    return {
+      table,
+      //doSearch,
+    };
+  },
+    data() {
             return {
                 answers: {},
                 queIDs: [],
@@ -47,6 +147,8 @@
                 componentKey: 0,
                 fields: {},
                 ques: {},
+                // headers: Header = fieldsForOneQue(queID),
+                // items: Item =  fieldsForOneQue(queID) ,
                 loading: true
             };
         },
@@ -61,10 +163,10 @@
                 return queID => this.tableData[queID];
             },
             fieldsForOneQue() {
-                return queID => this.fields[queID];
+                return  queID => this.fields[queID];
             },
             title() {
-                return queID =>this.ques[queID].title;
+                return  queID =>this.ques[queID].title;
             }
         },
         methods: {
@@ -150,31 +252,31 @@
                     this.loadQuestionnaire(queID)
                         .then(() => {
                             this.fields[queID] = [{
-                                key: "patientName",
+                                field: "patientName",
                                 label: "Patientenname",
                                 sortable: true
                             }];
 
-                            // if (this.ques[queID].repeatingType.includes("date")) {
-                            //     this.fields[queID].push({
-                            //         key: "date",
-                            //         label: "Datum",
-                            //         sortable: true
-                            //     });
-                            // }
-                            // if (this.ques[queID].repeatingType == "dateTime") {
-                            //     this.fields[queID].push({
-                            //         key: "time",
-                            //         label: "Uhrzeit",
-                            //         sortable: true
-                            //     });
-                            // }
+                            if (this.ques[queID].repeatingType.includes("date")) {
+                                this.fields[queID].push({
+                                    field: "date",
+                                    label: "Datum",
+                                    sortable: true
+                                });
+                            }
+                            if (this.ques[queID].repeatingType == "dateTime") {
+                                this.fields[queID].push({
+                                    field: "time",
+                                    label: "Uhrzeit",
+                                    sortable: true
+                                });
+                            }
 
                             //pro Frage eine Spalte in Tabelle hinzuf�gen
                             this.ques[queID].elements.forEach(question => {
                                 if (question.type !== "description") {
                                     this.fields[queID].push({
-                                        key: question.id.toString(),
+                                        field: question.id.toString(),
                                         label: question.text
                                     });
                                 }

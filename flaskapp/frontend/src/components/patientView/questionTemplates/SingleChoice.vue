@@ -9,14 +9,20 @@
                 </b-form-radio>
             </b-form-radio-group>
         </b-form-group> -->
-        <form class="px-2" text-align="left" action="">
-            <div class="form-check" v-for="option in question.options" :key="option.id" :value=option.text  >
-                        <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" />
-                        <label class="form-check-label" margin-left="20px" for="checkbox_single">
-                            {{option.text}}
-                        </label>
+        <!-- <form class="px-2" text-align="left" action="">
+            <div class="form-group form-check" v-for="option in question.options" v-bind:key="option.id">
+                <label class="form-check-label" :for="option.id">{{option.text}}</label>
+                <input type="checkbox"  v-model="answer" :id="option.id" :key="option.id" :value="option.text" @input="input()" :name="name" >
             </div>
-        </form>
+            <div>Selected: {{answer}}</div>
+        </form> -->
+
+
+        <div class="form-group form-check" v-for="option in question.options" >
+            <label class="check-label" :for="option.text" >{{option.text}}</label>
+            <input type="checkbox"  v-model="answer"  :key="option.id" :value="option.text" @change="input()" :name="name" :true-value="option.text" />
+        </div>
+        <div>Selected: {{answer}}</div>
     </div>
 </template>
 
