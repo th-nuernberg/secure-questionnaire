@@ -21,21 +21,13 @@
                     </div>
                 </div>
 
-                <!-- <h4>{{ answersFromOneQue(que) }}</h4>
-                <h4>{{ fieldsForOneQue(que) }}</h4> -->
-<!--                 <table class="table" id="table"
-                         :items="answersFromOneQue(que)"
-                         :fields="fieldsForOneQue(que)"
-                         striped responsive>
-                </table> -->
+
                 <table-lite
                     :is-loading="table.isLoading"
                     :columns="fieldsForOneQue(que)"
                     :rows="answersFromOneQue(que)"
-                    :total="table.totalRecordCount"
-                    :sortable="table.sortable"
+                    :total="this.analyseObjects.length"
                     :messages="table.messages"
-                    @do-search="doSearch"
                     @is-finished="table.isLoading = false"
                 ></table-lite>
             </div>
@@ -79,65 +71,69 @@ export default {
         name: "AnalyseQuestionnaires",
 
         components: { TableLite },
-  setup() {
-    // Table config
-    const table = reactive({
-      isLoading: false,
-      columns: [
-        {
-          label: "ID",
-          field: "id",
-          width: "3%",
-          sortable: true,
-          isKey: true,
-        },
-        {
-          label: "Name",
-          field: "name",
-          width: "10%",
-          sortable: true,
-        },
-        {
-          label: "Email",
-          field: "email",
-          width: "15%",
-          sortable: true,
-        },
-      ],
-      rows: [],
-      totalRecordCount: 0,
+        setup() {
+            // Table config
+            const table = reactive({
+            isLoading: false,
+            columns: [
+                // {
+                // label: "ID",
+                // field: "id",
+                // width: "3%",
+                // sortable: true,
+                // isKey: true,
+                // },
+                // {
+                // label: "Name",
+                // field: "name",
+                // width: "10%",
+                // sortable: true,
+                // },
+                // {
+                // label: "Email",
+                // field: "email",
+                // width: "15%",
+                // sortable: true,
+                // },
+            ],
+            rows: [],
+            totalRecordCount: 0,
       sortable: {
         order: "patientName",
         sort: "asc",
       },
-    });
-    /**
-     * Search Event
-     */
-    const doSearch = (offset, limit, order, sort) => {
-      table.isLoading = true;
-      setTimeout(() => {
-        table.isReSearch = offset == undefined ? true : false;
-        if (offset >= 10 || limit >= 20) {
-          limit = 20;
-        }
-        if (sort == "asc") {
-          table.rows = sampleData1(offset, limit);
-        } else {
-          table.rows = sampleData2(offset, limit);
-        }
-        table.totalRecordCount = 20;
-        table.sortable.order = order;
-        table.sortable.sort = sort;
-      }, 600);
-    };
-    // First get data
-    doSearch(0, 10, 'id', 'asc');
-    return {
-      table,
-      //doSearch,
-    };
-  },
+            });
+            /**
+             * Search Event
+             */
+            const doSearch = (offset, limit, order, sort) => {
+            table.isLoading = true;
+            setTimeout(() => {
+                table.isReSearch = offset == undefined ? true : false;
+                if (offset >= 10 || limit >= 20) {
+                limit = 20;
+                }
+                // if (sort == "asc") {
+                // table.rows = sampleData1(offset, limit);
+                // } else {
+                // table.rows = sampleData2(offset, limit);
+                // }
+
+                
+                
+                //table.totalRecordCount = this.analyseObjects.length;
+                table.sortable.order = order;
+                table.sortable.sort = sort;
+                table.isLoading = false;
+            }, 600);
+            };
+            // First get data
+            // doSearch(0, 10, 'id', 'asc');
+            return {
+            table,
+            doSearch,
+            };
+        },
     data() {
             return {
                 answers: {},
@@ -147,8 +143,6 @@ export default {
                 componentKey: 0,
                 fields: {},
                 ques: {},
-                // headers: Header = fieldsForOneQue(queID),
-                // items: Item =  fieldsForOneQue(queID) ,
                 loading: true
             };
         },
@@ -236,7 +230,7 @@ export default {
                                             }
                                             
                                         })
-                                        rows.push(row);
+                                        rows.push(row);                                       
 
                                     })
                                 })
@@ -254,21 +248,21 @@ export default {
                             this.fields[queID] = [{
                                 field: "patientName",
                                 label: "Patientenname",
-                                sortable: true
+                                sortable: false
                             }];
 
                             if (this.ques[queID].repeatingType.includes("date")) {
                                 this.fields[queID].push({
                                     field: "date",
                                     label: "Datum",
-                                    sortable: true
+                                    sortable: trfasleue
                                 });
                             }
                             if (this.ques[queID].repeatingType == "dateTime") {
                                 this.fields[queID].push({
                                     field: "time",
                                     label: "Uhrzeit",
-                                    sortable: true
+                                    sortable: false
                                 });
                             }
 
