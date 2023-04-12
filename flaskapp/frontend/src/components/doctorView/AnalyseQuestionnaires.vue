@@ -16,7 +16,6 @@
                     <div class="col" cols="auto">
                         <button class="exportBtn" variant="primary" @click="exportCSV(que)" pill title="Download CSV">
                             <BootstrapIcon icon="download" size="2x" />
-                            <!-- <b-icon-download></b-icon-download> -->
                         </button>
                     </div>
                 </div>
@@ -76,25 +75,7 @@ export default {
             const table = reactive({
             isLoading: false,
             columns: [
-                // {
-                // label: "ID",
-                // field: "id",
-                // width: "3%",
-                // sortable: true,
-                // isKey: true,
-                // },
-                // {
-                // label: "Name",
-                // field: "name",
-                // width: "10%",
-                // sortable: true,
-                // },
-                // {
-                // label: "Email",
-                // field: "email",
-                // width: "15%",
-                // sortable: true,
-                // },
+
             ],
             rows: [],
             totalRecordCount: 0,
@@ -311,8 +292,8 @@ export default {
                 for (let i = 0; i < data.length; i++) {
                     let line = '';
                     for (let j = 0; j < fields.length; j++) {
-                        if (data[i][fields[j].label]) {
-                            str += data[i][fields[j].label].replace(";", ",");
+                        if (data[i][fields[j].field]) {
+                            str += data[i][fields[j].field].replace(";", ",");
                         }
                         else if (data[i][fields[j].key]) {
                             str += data[i][fields[j].key].replace(";", ",");
