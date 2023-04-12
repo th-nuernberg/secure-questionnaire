@@ -236,7 +236,7 @@ export default {
                                 this.fields[queID].push({
                                     field: "date",
                                     label: "Datum",
-                                    sortable: trfasleue
+                                    sortable: false
                                 });
                             }
                             if (this.ques[queID].repeatingType == "dateTime") {
