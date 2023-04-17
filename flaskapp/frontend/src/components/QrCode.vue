@@ -1,5 +1,5 @@
 <template>
-    <qrcode-vue :value="content" size="300" level="H" />
+    <qrcode-vue :value="content" size="280" level="H" />
 </template>
 <script>
     import QrcodeVue from 'qrcode.vue'
@@ -9,7 +9,7 @@
         },
         data() {
             return {
-                size: 300
+                size: 280
             }
         },
         components: {

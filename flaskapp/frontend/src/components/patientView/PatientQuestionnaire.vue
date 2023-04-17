@@ -10,7 +10,7 @@
     <div class="container" v-else-if="pageState === 'error'">
         <div class="text-center mt-5">
             <p>Fehler beim Laden</p>
-            <button variant="primary" to="/patient">Zur Startseite</button>
+            <button class="btn btn-secondary mt-5" variant="outline-primary" @click="this.$router.push('/patient')">Zur Startseite</button>
         </div>
     </div>
 
@@ -68,7 +68,7 @@
             </p>
 
 
-            <button class="btn btn-secondary mt-5" variant="outline-primary" @click="$router.push('/patient')">Zur Startseite</button>
+            <button class="btn btn-secondary mt-5" variant="outline-primary" @click="this.$router.push('/patient')">Zur Startseite</button>
 
 <!--            <vue3-html2pdf :show-layout="false"-->
 <!--                          :float-layout="true"-->
@@ -109,7 +109,7 @@
             <Questions-Container v-else class="boxStyling" date="" time=""></Questions-Container>
 
             <div class="text-center">
-                <button @click="save()" variant="success" type="button" class="btn btn-outline-primary" ><BootstrapIcon icon="download" size="2x" /></button>
+                <button @click="save()" variant="success" type="button" class="btn btn-outline-primary" >Fragebogen abschließen und herunterladen<BootstrapIcon icon="download" size="2x" /></button>
                 <div id="upload-error" style="display: none;">
                     <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
                     <p class="m-1 d-inline">Fehler beim Upload. Bitte versuchen Sie es erneut.</p>
@@ -316,6 +316,7 @@
 
             async downloadPdf() {
                // this.$refs.html2Pdf.generatePdf();
+               
                html2pdf(this.$refs.document, {
 					margin: 1,
 					filename: 'document.pdf',

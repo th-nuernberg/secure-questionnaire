@@ -94,6 +94,7 @@
 
     .scanner {
         position: relative;
+        width: 300px;
     }
 
 

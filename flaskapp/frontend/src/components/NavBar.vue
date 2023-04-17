@@ -18,7 +18,7 @@
         <a class="nav-link" href="/">Home </a>
       </li>
       <li v-if="doctorViewCreate" class="nav-item">
-        <a class="nav-link" href="/doctorView/create">Fragebogen analysieren</a>
+        <a class="nav-link" href="/doctorView">Fragebogen analysieren</a>
       </li>
       <li v-else-if="doctorView" class="nav-item">
         <a class="nav-link" href="/doctorView/create">Fragebogen erstellen</a>

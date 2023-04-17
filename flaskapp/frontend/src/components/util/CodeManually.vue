@@ -3,7 +3,7 @@
         <button @click="close" class="btn-close"><i class="bi bi-x-circle"></i></button>
         <br>
         <h5>Neuen Fragebogen ausfüllen</h5><br>
-        <input class="form-control" type="text" placeholder="Code" id="inputcode" :state="codeValidation" v-model="codeNew" @input="codeValidation = null"/>
+        <input class="form-control" type="text" placeholder="Code" id="inputcode" :state="codeValidation" v-model="codeNew" @input="codeValidation = null" @keydown.enter="submit()" />
         <br>
         <button  class="btn btn-secondary mt-5"  variant="primary" @click="submit()" >Bestätigen</button>
     </div>

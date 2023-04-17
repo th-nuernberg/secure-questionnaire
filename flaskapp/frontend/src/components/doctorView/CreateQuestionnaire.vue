@@ -80,6 +80,7 @@
                             <!--Skala-->
                             <span v-else-if="question.type == 'scale'">
                                 <input class="mt-2 mb-2" placeholder="Beschreibung der Skala (optional)" v-model="question.description">
+                                <br />
                                 <span v-for="(option, index) in question.options" :key="option.id">
                                     <input v-model="option.text" class="mc-option mb-2" :placeholder="'Option ' + (index + 1)">
                                     <button v-if="index >= 2"
@@ -90,8 +91,8 @@
                                     <br />
                                 </span>
 
-                                <button @click="addOption(question.id)">
-                                    <i class="fas fa-plus"></i>
+                                <button type="button" class="btn btn-outline-primary" @click="addOption(question.id)">
+                                    <BootstrapIcon icon="plus-circle" size="1x" />
                                 </button>
                             </span>
                         </div>
@@ -167,15 +168,15 @@
             <section class="user-details p-5" ref="document">
                 <div class="text-center">
                     <h1>Infoblatt zum Fragebogen</h1>
-                    <h1>{{questionnaire.title}}</h1>
+                    <h4>{{questionnaire.title}}</h4>
                     <qr-code :content=qrlink class="qr"></qr-code>
                 </div>
                 <h4>1. Fragebogen öffnen</h4>
                 <p>
                     Um den Fragebogen zu öffnen, scannen Sie den obigen QR-Code mit einem QR-Code-Scanner Ihrer Wahl.
                     Sie können dazu zum Beispiel Ihr Smartphone benutzen.
-                </p>
-                <p>Alternativ können Sie den QR-Code auch direkt auf www.website.de einscannen.</p>
+                <br/>
+                Alternativ können Sie den QR-Code auch direkt auf www.website.de einscannen.</p>
                 <p>Falls Sie keine Kamera zur Verfügung haben, können Sie auch folgenden Code unter www.website.de eingeben:</p>
                 <div class="text-center">
                     <p class="font-weight-bold p-2 d-inline code">{{ questionnaire.queID }}</p>
@@ -355,10 +356,10 @@
                 //this.$refs.html2Pdf.generatePdf();
                 html2pdf(this.$refs.document, {
 					margin: 1,
-					filename: 'document.pdf',
+                    filename: 'document.pdf',
 					image: { type: 'jpeg', quality: 0.98 },
-					html2canvas: { dpi: 250, letterRendering: false },
-					jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+					html2canvas: { dpi: 500, letterRendering: true },
+					jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', putOnlyUsedFonts:'true' }
 				})
             },
         },
@@ -428,7 +429,7 @@
     }
 
     h4 {
-        margin-top: 20px;
+        margin-top: 15px;
     }
 
     .saved {

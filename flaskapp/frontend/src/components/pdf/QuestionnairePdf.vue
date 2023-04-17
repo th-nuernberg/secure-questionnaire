@@ -44,12 +44,12 @@
 
 <style lang="scss" scoped>
     .qr {
-        width: 300px;
-        height: 300px;
+        width: 280px;
+        height: 280px;
         margin-right: auto;
         margin-left: auto;
-        margin-top: 50px;
-        margin-bottom: 50px;
+        margin-top: 30px;
+        margin-bottom: 30px;
     }
 
     .code {
@@ -58,6 +58,6 @@
     }
 
     h4 {
-        margin-top: 20px;
+        margin-top: 15px;
     }
 </style>
