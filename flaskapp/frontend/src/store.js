@@ -33,6 +33,7 @@ export default new Vuex.Store({
     },
     getters: {
         getQuestionnaire: (state) => state.questionnaire,
+        getAllQuestionnaire: (state) => state.questionnaire,
         getAllAnswers: (state) => state.answers,
         getQuestionTypes: (state) => state.questionTypes,
         getAnalyseObjects: (state) => state.analyseObj,

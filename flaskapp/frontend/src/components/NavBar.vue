@@ -14,14 +14,26 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li  class="nav-item active">
+      <li  v-if="doctorView" class="nav-item active">
+        <a  class="nav-link" href="/doctorView">Home </a>
+      </li>
+      <li  v-if="doctorViewCreate" class="nav-item active">
+        <a  class="nav-link" href="/doctorView">Home </a>
+      </li>
+      <li v-if="patientView" class="nav-item active">
         <a class="nav-link" href="/">Home </a>
+      </li>
+      <li v-if="questView" class="nav-item active">
+        <a class="nav-link" href="/doctorView">Home </a>
       </li>
       <li v-if="doctorViewCreate" class="nav-item">
         <a class="nav-link" href="/doctorView">Fragebogen analysieren</a>
       </li>
       <li v-else-if="doctorView" class="nav-item">
         <a class="nav-link" href="/doctorView/create">Fragebogen erstellen</a>
+      </li>
+      <li v-if="doctorView" class="nav-item">
+        <a class="nav-link" href="/doctorView/ViewQuestionaires">Fragebögen anzeigen</a>
       </li>
 
     </ul>
@@ -39,6 +51,12 @@
             },
             doctorViewCreate() {
                 return this.$route.path == '/doctorView/create';
+            },
+            patientView() {
+                return  this.$route.path == "/patient";
+            },
+            questView() {
+                return  this.$route.path == "/doctorView/ViewQuestionaires";
             }
         }
     }

@@ -15,6 +15,7 @@ import DoctorView from './components/DoctorView.vue';
 import PatientQuestionnaire from './components/patientView/PatientQuestionnaire.vue';
 import AnalyseQuestionnaires from './components/doctorView/AnalyseQuestionnaires.vue'
 import CreateQuestionnaire from './components/doctorView/CreateQuestionnaire.vue';
+import ViewQuestionnaires from './components/doctorView/ViewQuestionaires.vue';
 import "bootstrap/dist/css/bootstrap.css"
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import BootstrapIcon from '@dvuckovic/vue3-bootstrap-icons';
@@ -40,6 +41,11 @@ const router = createRouter(
                 path: '/doctorView/create',
                 name: 'CreateQuestionnaire',
                 component: CreateQuestionnaire
+            },
+            {
+                path: '/doctorView/ViewQuestionaires',
+                name: 'ViewQuestionnaires',
+                component: ViewQuestionnaires
             },
             {
                 path: '/doctorView/analyse',
