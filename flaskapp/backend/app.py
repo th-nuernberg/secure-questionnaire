@@ -112,6 +112,31 @@ def getQuestionnaire():
 
     return Response(response=json.dumps(data), status = 200, mimetype='application/json')
 
+@app.route('/api/questionnaire/all', methods=['GET'])
+def getAllQuestionnaire(): 
+    try:
+        db = get_db()
+    except Exception as e:
+        return Response(response=repr(e), status = 503, mimetype='application/json')
+
+    
+    dokumente = db.find()
+
+    s = "["
+    for dokument in dokumente:
+        if 'answers' not in dokument: 
+            s += str(dokument)
+            s += ','
+        
+    s+= "]"
+
+    data = s
+    if not data:
+        resp = {'msg':f'Error: nothing found'}
+        return Response(response=json.dumps(resp), status= 404, mimetype='application/json')
+
+    return Response(response=json.dumps(data), status = 200, mimetype='application/json')
+
 
 @app.route('/api/answers', methods=['GET'])
 def getAnswers(): 
