@@ -33,7 +33,7 @@
         <a class="nav-link" href="/doctorView/create">Fragebogen erstellen</a>
       </li>
       <li v-if="doctorView" class="nav-item">
-        <a class="nav-link" href="/doctorView/ViewQuestionaires">Fragebögen anzeigen</a>
+        <a class="nav-link" href="/doctorView/ViewQuestionnaires">Fragebögen anzeigen</a>
       </li>
 
     </ul>
@@ -56,7 +56,7 @@
                 return  this.$route.path == "/patient";
             },
             questView() {
-                return  this.$route.path == "/doctorView/ViewQuestionaires";
+                return  this.$route.path == "/doctorView/ViewQuestionnaires";
             }
         }
     }
