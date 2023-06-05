@@ -1,72 +1,55 @@
-<!--<template>-->
-<!--  <div class="home" >-->
-<!--    <h1>Home</h1>-->
-<!--  </div>-->
-<!--</template>-->
-
 <template>
-  <div id="wrapper" class="home">
-    <div class="text-center" id="h">
-      <p id="head">
-        Willkommen auf der Startseite. Wählen Sie einen Bereich aus:
-      </p>
-      <router-link to="patient"
-        ><span class="badge rounded-pill bg-dark">Patient</span></router-link
-      >
-      <br />
-      <router-link to="doctorView"
-        ><span class="badge rounded-pill bg-dark">Arzt</span></router-link
-      >
-      <br />
+  <div class=".container">
+    <h3 class="mt-5">QR-Code scannen:</h3> 
+    <div>
+      <code-scanner></code-scanner>
+      <form onsubmit="return validateUser()" method="POST">
+        <label for="pw">Passwort: </label>
+        <input type="password" id="pw" name="password" required>
+        <input type="checkbox" @click="togglePassword()">Passwort anzeigen
+        <input type="submit" value="Anmelden">
+    </form>
     </div>
   </div>
 </template>
 
 <script>
+import CodeScanner from "./util/CodeScanner.vue";
+
 export default {
-  name: "Home",
-};
+  name: "LoginView",
+  components: { CodeScanner },
+  //created() {
+    //this.$store.commit("resetAnswers");
+  //},
+
+  methods: { 
+    validateUser() {
+      const passwordInput = document.getElementById("pw");
+      const password = passwordInput.value;
+
+      //
+      //const button = document.createElement("button");
+      //button.innerText = pw;
+      //document.getElementById("test").appendChild(button);
+    }, 
+    togglePassword(){
+      var password = document.getElementById("pw");
+      if (password.type === "password") {
+        password.type = "text";
+      } else {
+        password.type = "password";
+      }
+    
+    }
+    
+  }
+}
 </script>
 
 <style scoped>
-#h {
-  width: 600px;
-  height: 200px;
-  margin: 0 auto;
-  margin-top: 200px;
-  border-style: solid;
-  border-radius: 30px;
-  border-color: grey;
-}
 
-#wrapper {
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-  padding: 0px 10px;
-  width: 100%;
-  height: 100%;
-}
-
-.btn {
-  margin: 10px;
-  height: auto;
-  padding: 20px;
-  width: 100px;
-}
-
-/*#text {*/
-/*    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;*/
-/*    overflow: hidden;*/
-/*    padding: 10px;*/
-/*    margin: 30px;*/
-/*    padding-top: 20px;*/
-/*}*/
-
-#head {
-  font-size: 25px;
-  margin: 10px 10px 15px;
-  padding-top: 20px;
+.container {
+  max-width: 800px;
 }
 </style>

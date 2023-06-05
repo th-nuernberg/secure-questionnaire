@@ -22,6 +22,9 @@ export default {
   },
   methods: {
     async onDecode(result) {
+      //TODO: jz: hier private Key des Arztes erkennen (falls im QR-Code) bei Login
+      //if ()
+
       if (result.includes("patient/questionnaire")) {
         //QR-Code vom Arzt mit kompletter URL
         this.alert = "alert-success";

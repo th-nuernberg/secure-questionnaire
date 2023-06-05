@@ -20,9 +20,6 @@
         <li v-if="doctorViewCreate" class="nav-item active">
           <a class="nav-link" href="/doctorView">Home </a>
         </li>
-        <li v-if="patientView" class="nav-item active">
-          <a class="nav-link" href="/">Home </a>
-        </li>
         <li v-if="questView" class="nav-item active">
           <a class="nav-link" href="/doctorView">Home </a>
         </li>
