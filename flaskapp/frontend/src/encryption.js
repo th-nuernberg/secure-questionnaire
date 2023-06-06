@@ -1,94 +1,3 @@
-// RSA Encryption and Decryption
-
-function importpublicRsaKey(pem) {
-  const pemHeader = "-----BEGIN PUBLIC KEY-----";
-  const pemFooter = "-----END PUBLIC KEY-----";
-  const pemContents = pem.substring(
-    pemHeader.length,
-    pem.length - pemFooter.length
-  );
-
-  const binaryDerString = window.atob(pemContents);
-
-  const binaryDer = str2ab(binaryDerString);
-
-  return window.crypto.subtle.importKey(
-    "spki",
-    binaryDer,
-    {
-      name: "RSA-OAEP",
-      hash: "SHA-256",
-    },
-    true,
-    ["encrypt"]
-  );
-}
-
-function str2ab(str) {
-  const buf = new ArrayBuffer(str.length);
-  const bufView = new Uint8Array(buf);
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i);
-  }
-  return buf;
-}
-
-function importprivateRSAKey(pem) {
-  // fetch the part of the PEM string between header and footer
-  const pemHeader = "-----BEGIN PRIVATE KEY-----";
-  const pemFooter = "-----END PRIVATE KEY-----";
-  const pemContents = pem.substring(
-    pemHeader.length,
-    pem.length - pemFooter.length
-  );
-  // base64 decode the string to get the binary data
-  const binaryDerString = window.atob(pemContents);
-  // convert from a binary string to an ArrayBuffer
-  const binaryDer = str2ab(binaryDerString);
-
-  return window.crypto.subtle.importKey(
-    "pkcs8",
-    binaryDer,
-    {
-      name: "RSA-OAEP",
-      hash: "SHA-256",
-    },
-    true,
-    ["decrypt"]
-  );
-}
-
-async function encryptRSA(rsa_pub_key, ciphertext) {
-  let encoded = getMessageEncoding(ciphertext);
-  return importpublicRsaKey(rsa_pub_key)
-    .then((keyobj) => {
-      return window.crypto.subtle.encrypt(
-        {
-          name: "RSA-OAEP",
-        },
-        keyobj,
-        encoded
-      );
-    })
-    .then((enc) => new Uint8Array(enc));
-}
-
-async function decryptRSA(rsa_priv_key, ciphertext) {
-  return importprivateRSAKey(rsa_priv_key)
-    .then((keyobj) => {
-      return window.crypto.subtle.decrypt(
-        {
-          name: "RSA-OAEP",
-        },
-        keyobj,
-        ciphertext
-      );
-    })
-    .then((encodedMSG) => {
-      return new TextDecoder().decode(encodedMSG);
-    });
-}
-
 // AES Encryption and Decryption
 
 async function encryptAES(message) {
@@ -153,4 +62,91 @@ function importAESKey(key) {
   ]);
 }
 
-export { encryptAES, decryptAES };
+// RSA encryption/decryption
+
+async function generateRSAKeyPair(passphrase) {
+  // TODO: CS: crypto web api does not allow passphrase input directely into key generation, so do a little extra work
+  // easer alternative: use external library dependency...
+
+  let keyPair = await window.crypto.subtle.generateKey(
+    {
+      name: "RSA-OAEP",
+      modulusLength: 4096,
+      publicExponent: new Uint8Array([1, 0, 1]),
+      hash: "SHA-256",
+    },
+    true,
+    ["encrypt", "decrypt"]
+  );  
+
+  // Convert keys to PEM format
+  let publicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
+  let privateKey = await window.crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
+
+  let body = window.btoa(String.fromCharCode(...new Uint8Array(privateKey)));
+  body = body.match(/.{1,64}/g).join('\n');
+
+  return {
+    publicKey: `-----BEGIN PUBLIC KEY-----\n${body}\n-----END PUBLIC KEY-----`,
+    privateKey: `-----BEGIN PRIVATE KEY-----\n${body}\n-----END PRIVATE KEY-----`,
+  };
+
+  // // Derive an encryption key from the passphrase
+  // let passphraseBuffer = new TextEncoder().encode(passphrase);
+  // let derivedKey = await window.crypto.subtle.importKey(
+  //   'raw',
+  //   passphraseBuffer,
+  //   'PBKDF2',
+  //   false,
+  //   ['deriveKey']
+  // );
+
+  // // Encrypt the private key with the derived key
+  // let encryptedPrivateKey = await window.crypto.subtle.encrypt(
+  //   {
+  //     name: 'AES-GCM',
+  //     iv: window.crypto.getRandomValues(new Uint8Array(12)),
+  //   },
+  //   derivedKey,
+  //   privateKey
+  // );
+
+  // TODO: CS: Save public key with id to MongoDB
+
+  // return {
+  //   encryptedPrivateKey: base64UrlEncode(encryptedPrivateKey),
+  // };
+}
+
+async function decryptRSA(id, stringEncryptedPrivateKey, passphrase) {
+  let binEncrtyptedPrivateKey = base64UrlDecode(stringEncryptedPrivateKey);
+
+  // ... decrypt private key
+  // TODO: CS: muss man ueberhaupt den public key holen?? eigl nein, da der ja implizit auf dem cipher text lieget
+}
+
+
+// Util:
+
+// Binary to base 64 encoded string
+function base64UrlEncode(arrayBuffer) {
+  const base64 = window.btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+// Base 64 encoded string to binary
+function base64UrlDecode(base64UrlString) {
+  const base64 = base64UrlString.replace(/-/g, '+').replace(/_/g, '/');
+  const paddingLength = 4 - (base64.length % 4);
+  const paddedBase64 = base64 + '==='.slice(0, paddingLength);
+  const binaryString = window.atob(paddedBase64);
+  const arrayBuffer = new Uint8Array(binaryString.length);
+
+  for (let i = 0; i < binaryString.length; i++) {
+    arrayBuffer[i] = binaryString.charCodeAt(i);
+  }
+
+  return arrayBuffer;
+}
+
+export { encryptAES, decryptAES, generateRSAKeyPair, decryptRSA };

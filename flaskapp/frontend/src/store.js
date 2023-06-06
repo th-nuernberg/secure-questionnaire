@@ -207,5 +207,31 @@ export default new Vuex.Store({
     },
 
     decrypt() {},
+
+    uploadPublicKey(_, info) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get("/pubKey", { params: { email: info.email }, data: info.publicKey })
+          .then((res) => {
+            resolve(res.data);
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    },
+
+    getPublicKey(_, email) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get("/pubKey", { params: { email: email } })
+          .then((res) => {
+            resolve(res.data);
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    }
   },
 });

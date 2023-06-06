@@ -3,27 +3,30 @@ import pymongo
 from flask_cors import CORS
 from flask import request, Flask, Response
 
+
 app = Flask(__name__)
 cors = CORS(app)
 
+# Create MongoDB on server start
+mongodb_URL = "mongodb://mongo:27017"
+client = pymongo.MongoClient(mongodb_URL, serverSelectionTimeoutMS=600)
+client.server_info()
+DB = client["SecureQuestionnaire"]
 
-def get_db():
-    try:
-        mongodb_Url = "mongodb://mongo:27017"
-        # mongodb_Url = 'localhost:27017'
-        client = pymongo.MongoClient(mongodb_Url, serverSelectionTimeoutMS=600)
-        client.server_info()
-        db = client.database.data
-    except Exception as e:
-        raise e
 
-    return db
+# TODO: CS: get_collection obsolete if working with global constant DB??
+def get_questionnaires():
+    return DB["questionnaires"]  # created on first access 
+
+
+def get_public_keys():
+    return DB["publicKeys"]  # created on first access 
 
 
 @app.route("/GET/<id>", methods=["GET"])
 def get(id):
     try:
-        fs = get_db()
+        fs = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -44,7 +47,7 @@ def get(id):
 @app.route("/POST/<id>", methods=["POST"])
 def post(id):
     try:
-        fs = get_db()
+        fs = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -66,7 +69,7 @@ def post(id):
 @app.route("/api/questionnaire", methods=["PUT"])
 def putQuestionnaire():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -90,7 +93,7 @@ def putQuestionnaire():
 @app.route("/api/questionnaire", methods=["GET"])
 def getQuestionnaire():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -109,7 +112,7 @@ def getQuestionnaire():
 @app.route("/api/questionnaire/all", methods=["GET"])
 def getAllQuestionnaire():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -136,7 +139,7 @@ def getAllQuestionnaire():
 @app.route("/api/answers", methods=["GET"])
 def getAnswers():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -155,7 +158,7 @@ def getAnswers():
 @app.route("/api/answers", methods=["PUT"])
 def putAnswers():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -175,11 +178,52 @@ def putAnswers():
 
     return Response(json.dumps(data), status=200, mimetype="application/json")
 
+@app.route("/api/pubKey", methods=["PUT"])
+def putPubKey():
+    data = request.get_json()
+    email = request.args.get("email")
+
+    if not isinstance(data, dict):
+        return Response(status=400)
+    
+    try:
+        db = get_public_keys()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    result = db.replace_one({"email": email}, data)
+
+    if result.matched_count == 0:
+        db.insert_one(data)
+        return Response(json.dumps(data), status=201, mimetype="application/json")
+
+    return Response(json.dumps(data), status=200, mimetype="application/json")
+
+
+@app.route("/api/pubKey", methods=["GET"])
+def getPubKey():
+    email = request.args.get("email")
+
+    try:
+        db = get_public_keys()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    data = db.find_one({"email": email})
+
+    if not data:
+        resp = {"msg": f"Error: key {email} not found"}
+        return Response(
+            response=json.dumps(resp), status=404, mimetype="application/json"
+        )
+
+    return Response(response=json.dumps(data), status=200, mimetype="application/json")
+
 
 @app.route("/api/questionnaire/idcheck", methods=["GET"])
 def checkID():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
