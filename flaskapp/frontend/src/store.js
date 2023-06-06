@@ -211,9 +211,9 @@ export default new Vuex.Store({
     uploadPublicKey(_, info) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/pubKey", { params: { email: info.email }, data: info.publicKey })
-          .then((res) => {
-            resolve(res.data);
+          .put("/pubKey", { params: { email: info.email }, data: info.publicKey })
+          .then(() => {
+            resolve();
           })
           .catch(() => {
             reject();
