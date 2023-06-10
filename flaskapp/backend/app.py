@@ -5,13 +5,15 @@ from flask import request, Flask, Response
 
 
 app = Flask(__name__)
-cors = CORS(app)
+
+# TODO: CS: this will be needed for CORS to allow requests outside from the app itself -> phone browser when scanning QR-code from camera app 
+# Enable CORS
+CORS(app, resources={r'/*': {'origins': '*'}})
 
 # Create MongoDB on server start
-mongodb_URL = "mongodb://mongo:27017"
-client = pymongo.MongoClient(mongodb_URL, serverSelectionTimeoutMS=600)
-client.server_info()
-DB = client["SecureQuestionnaire"]
+mongo = pymongo.MongoClient("localhost", 27017,serverSelectionTimeoutMS=600)
+#mongo.server_info()
+DB = mongo["SecureQuestionnaire"]
 
 
 # TODO: CS: get_collection obsolete if working with global constant DB??
@@ -22,6 +24,10 @@ def get_questionnaires():
 def get_public_keys():
     return DB["publicKeys"]  # created on first access 
 
+# sanity check route
+@app.route('/ping', methods=['GET'])
+def ping_pong():
+    return 'pong!'
 
 @app.route("/GET/<id>", methods=["GET"])
 def get(id):
@@ -239,5 +245,5 @@ def checkID():
         resp = {"status": False}
 
 
-if __name__ == "__main__":
+if __name__ == "uwsgi_file_app":
     app.run(host="0.0.0.0")

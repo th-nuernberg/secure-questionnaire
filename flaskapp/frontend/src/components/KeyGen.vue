@@ -33,6 +33,8 @@
             },
             getRSAKeyPair() {
                 generateRSAKeyPair(this.passphrase).then((keyPair) => {
+                    this.$store.dispatch("uploadQuestionnaire", {})
+                    return
                     this.privateKey = keyPair.privateKey,  // weiterverarbeiten zu download...
                     this.$store
                         .dispatch("uploadPublicKey", { email: this.email, publicKey: keyPair.publicKey})

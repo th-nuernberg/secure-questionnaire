@@ -208,10 +208,10 @@ export default new Vuex.Store({
 
     decrypt() {},
 
-    uploadPublicKey(_, info) {
+    uploadPublicKey(_, data) {
       return new Promise((resolve, reject) => {
         axios
-          .put("/pubKey", { params: { email: info.email }, data: info.publicKey })
+          .put("/pubKey", { params: { email: data.email }, data: data.publicKey })
           .then(() => {
             resolve();
           })
