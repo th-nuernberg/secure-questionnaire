@@ -195,5 +195,18 @@ def checkID():
         resp = {"status": False}
 
 
-if __name__ == "__main__":
+# Sanity check
+@app.route("/", methods=["GET"])
+def index():
+    return "Hello there."
+
+# Sanity check
+@app.route("/ping", methods=["GET"])
+def pong():
+    return "pong!"
+
+# TODO: CS
+# ohne diesen block laeuft die app nicht... was mach uwsgi??
+# definitiv bei vanilla flask pflicht; bei uwsgi eigl nicht...
+if __name__ == "uwsgi_file_app":
     app.run(host="0.0.0.0")
