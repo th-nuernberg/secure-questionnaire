@@ -62,6 +62,21 @@ function importAESKey(key) {
   ]);
 }
 
+function getWrappingKey(salt, keyMaterial) {
+  return window.crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt,
+      iterations: 100000,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["wrapKey", "unwrapKey"]
+  );
+}
+
 // RSA encryption/decryption
 
 async function generateRSAKeyPair(passphrase) {
@@ -79,17 +94,41 @@ async function generateRSAKeyPair(passphrase) {
     ["encrypt", "decrypt"]
   );  
 
+  const salt = window.crypto.getRandomValues(new Uint8Array(16))
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const wrappingKey = getWrappingKey(salt, passphrase)
+
+  wrappedPrivateKey = indow.crypto.subtle.wrapKey("pkcs8", keyPair.privateKey, wrappingKey, {
+    name: "AES-GCM",
+    iv,
+  });
+
+  return {
+    salt: salt,
+    iv: iv,
+    privateKey: wrappedPrivateKey,
+    publicKey: window.crypto.subtle.exportKey('spki', keyPair.publicKey)
+  }
+
+
   // Convert keys to PEM format
   let publicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
   let privateKey = await window.crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
 
-  let body = window.btoa(String.fromCharCode(...new Uint8Array(privateKey)));
-  body = body.match(/.{1,64}/g).join('\n');
+  
+  
+  // TODO: CS: Conversion to human readable format needed?? might be easer to let as is for (encryption) handling later
+  // let body = window.btoa(String.fromCharCode(...new Uint8Array(privateKey)));
+  // body = body.match(/.{1,64}/g).join('\n');
 
-  return {
-    publicKey: `-----BEGIN PUBLIC KEY-----\n${body}\n-----END PUBLIC KEY-----`,
-    privateKey: `-----BEGIN PRIVATE KEY-----\n${body}\n-----END PRIVATE KEY-----`,
-  };
+  // return {
+  //   publicKey: `-----BEGIN PUBLIC KEY-----\n${body}\n-----END PUBLIC KEY-----`,
+  //   privateKey: `-----BEGIN PRIVATE KEY-----\n${body}\n-----END PRIVATE KEY-----`,
+  // };
+
+
+
+
 
   // // Derive an encryption key from the passphrase
   // let passphraseBuffer = new TextEncoder().encode(passphrase);
@@ -120,6 +159,8 @@ async function generateRSAKeyPair(passphrase) {
 
 async function decryptRSA(id, stringEncryptedPrivateKey, passphrase) {
   let binEncrtyptedPrivateKey = base64UrlDecode(stringEncryptedPrivateKey);
+
+  const wrappingKey = getWrappingKey(salt, passphrase)  // salt muss dann in der anderen funktion mit zurueckgegeben werden
 
   // ... decrypt private key
   // TODO: CS: muss man ueberhaupt den public key holen?? eigl nein, da der ja implizit auf dem cipher text lieget

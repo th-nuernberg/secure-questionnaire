@@ -8,7 +8,9 @@ app = Flask(__name__)
 
 # TODO: CS: this will be needed for CORS to allow requests outside from the app itself -> phone browser when scanning QR-code from camera app 
 # Enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}})
+#CORS(app, resources={r'/*': {'origins': '*'}})
+
+CORS(app)
 
 # Create MongoDB on server start
 mongo = pymongo.MongoClient("localhost", 27017,serverSelectionTimeoutMS=600)
@@ -24,10 +26,6 @@ def get_questionnaires():
 def get_public_keys():
     return DB["publicKeys"]  # created on first access 
 
-# sanity check route
-@app.route('/ping', methods=['GET'])
-def ping_pong():
-    return 'pong!'
 
 @app.route("/GET/<id>", methods=["GET"])
 def get(id):
@@ -189,6 +187,9 @@ def putPubKey():
     data = request.get_json()
     email = request.args.get("email")
 
+    # Attach email to public key for identification
+    data["email"] = email
+
     if not isinstance(data, dict):
         return Response(status=400)
     
@@ -199,6 +200,7 @@ def putPubKey():
 
     result = db.replace_one({"email": email}, data)
 
+    # Entry doesn't exist yet
     if result.matched_count == 0:
         db.insert_one(data)
         return Response(json.dumps(data), status=201, mimetype="application/json")
@@ -245,5 +247,18 @@ def checkID():
         resp = {"status": False}
 
 
+# Sanity check
+@app.route("/", methods=["GET"])
+def index():
+    return "Hello there."
+
+# Sanity check
+@app.route("/ping", methods=["GET"])
+def pong():
+    return "pong!"
+
+# TODO: CS
+# ohne diesen block laeuft die app nicht... was mach uwsgi??
+# definitiv bei vanilla flask pflicht; bei uwsgi eigl nicht...
 if __name__ == "uwsgi_file_app":
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0")  # host needed to access page outside of container
