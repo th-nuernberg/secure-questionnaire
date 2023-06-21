@@ -377,6 +377,7 @@ export default {
       this.$store
         .dispatch("encryptAndUpload", {
           answers: this.answers,
+          owner: this.questionnaire.owner
         })
         .then((result) => {
           this.AESkey = result;

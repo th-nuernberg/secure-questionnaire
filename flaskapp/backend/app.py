@@ -71,7 +71,7 @@ def post(id):
 
 
 @app.route("/api/questionnaire", methods=["PUT"])
-def putQuestionnaire():
+def put_questionnaire():
     try:
         db = get_questionnaires()
     except Exception as e:
@@ -95,7 +95,7 @@ def putQuestionnaire():
 
 
 @app.route("/api/questionnaire", methods=["GET"])
-def getQuestionnaire():
+def get_questionnaire():
     try:
         db = get_questionnaires()
     except Exception as e:
@@ -114,7 +114,7 @@ def getQuestionnaire():
 
 
 @app.route("/api/questionnaire/all", methods=["GET"])
-def getAllQuestionnaire():
+def get_all_questionnaire():
     try:
         db = get_questionnaires()
     except Exception as e:
@@ -141,7 +141,7 @@ def getAllQuestionnaire():
 
 
 @app.route("/api/answers", methods=["GET"])
-def getAnswers():
+def get_answers():
     try:
         db = get_questionnaires()
     except Exception as e:
@@ -160,7 +160,7 @@ def getAnswers():
 
 
 @app.route("/api/answers", methods=["PUT"])
-def putAnswers():
+def put_answers():
     try:
         db = get_questionnaires()
     except Exception as e:
@@ -182,54 +182,43 @@ def putAnswers():
 
     return Response(json.dumps(data), status=200, mimetype="application/json")
 
-@app.route("/api/pubKey", methods=["PUT"])
-def putPubKey():
-    data = request.get_json()
+@app.route('/api/keys', methods=['GET'])
+def get_key():
     email = request.args.get("email")
 
-    # Attach email to public key for identification
-    data["email"] = email
+    try:
+        keys = get_public_keys()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    public_key = keys.find_one({"email": email})["public_key"]
+
+    if not public_key:
+        resp = {"msg": f"Error: No key for {email} found"}
+        return Response(response=json.dumps(resp), status=404, mimetype="application/json")
+
+    return Response(response=json.dumps(public_key), status=200, mimetype="application/json")
+
+
+@app.route("/api/keys", methods=["PUT"])
+def put_key():
+    key_info = request.get_json()["key_info"]
 
     if not isinstance(data, dict):
         return Response(status=400)
-    
+
     try:
-        db = get_public_keys()
+        keys = get_public_keys()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
-    result = db.replace_one({"email": email}, data)
+    keys.insert_one(key_info)
 
-    # Entry doesn't exist yet
-    if result.matched_count == 0:
-        db.insert_one(data)
-        return Response(json.dumps(data), status=201, mimetype="application/json")
-
-    return Response(json.dumps(data), status=200, mimetype="application/json")
-
-
-@app.route("/api/pubKey", methods=["GET"])
-def getPubKey():
-    email = request.args.get("email")
-
-    try:
-        db = get_public_keys()
-    except Exception as e:
-        return Response(response=repr(e), status=503, mimetype="application/json")
-
-    data = db.find_one({"email": email})
-
-    if not data:
-        resp = {"msg": f"Error: key {email} not found"}
-        return Response(
-            response=json.dumps(resp), status=404, mimetype="application/json"
-        )
-
-    return Response(response=json.dumps(data), status=200, mimetype="application/json")
+    return Response(json.dumps(key_info), status=200, mimetype="application/json")
 
 
 @app.route("/api/questionnaire/idcheck", methods=["GET"])
-def checkID():
+def check_id():
     try:
         db = get_questionnaires()
     except Exception as e:
@@ -258,7 +247,7 @@ def pong():
     return "pong!"
 
 # TODO: CS
-# ohne diesen block laeuft die app nicht... was mach uwsgi??
-# definitiv bei vanilla flask pflicht; bei uwsgi eigl nicht...
+# ohne diesen block laeuft die app nicht... was macht uwsgi??
+# definitiv bei vanilla flask pflicht; bei uwsgi eigl nicht... docker run command mit 0.0.0.0?
 if __name__ == "uwsgi_file_app":
     app.run(host="0.0.0.0")  # host needed to access page outside of container

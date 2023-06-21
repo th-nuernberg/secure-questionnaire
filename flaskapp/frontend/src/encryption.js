@@ -62,7 +62,15 @@ function importAESKey(key) {
   ]);
 }
 
-function getWrappingKey(salt, keyMaterial) {
+async function getWrappingKey(salt, passphrase) {
+  let keyMaterial = await window.crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(passphrase),
+    "PBKDF2",
+    false,
+    ["deriveKey"]
+  )
+
   return window.crypto.subtle.deriveKey(
     {
       name: "PBKDF2",
@@ -71,18 +79,47 @@ function getWrappingKey(salt, keyMaterial) {
       hash: "SHA-256",
     },
     keyMaterial,
-    { name: "AES-GCM", length: 256 },
+    { 
+      name: "AES-GCM", 
+      length: 256 
+    },
     true,
     ["wrapKey", "unwrapKey"]
-  );
+  )
 }
 
-// RSA encryption/decryption
+// function technically key type agnostic... but naming clash with api
+async function wrapRSAKey(iv, privateKey, wrappingKey) {
+  return window.crypto.subtle.wrapKey(
+    "pkcs8", 
+    privateKey, 
+    wrappingKey, 
+    {
+      name: "AES-GCM",
+      iv: iv,
+    }
+  )
+}
 
-async function generateRSAKeyPair(passphrase) {
-  // TODO: CS: crypto web api does not allow passphrase input directely into key generation, so do a little extra work
-  // easer alternative: use external library dependency...
+async function unwrapRSAKey(iv, wrappedPrivateKey, wrappingKey) {
+  return window.crypto.subtle.unwrapKey(
+    "pkcs8",
+    wrappedPrivateKey,
+    wrappingKey,
+    {
+      name: "AES-GCM",
+      iv: iv,
+    },
+    {
+      name: "RSA-OAEP",
+      hash: "SHA-256",
+    },
+    true,
+    ["decrypt"]
+  )
+}
 
+async function generateRSAKeyPair() {
   let keyPair = await window.crypto.subtle.generateKey(
     {
       name: "RSA-OAEP",
@@ -92,102 +129,74 @@ async function generateRSAKeyPair(passphrase) {
     },
     true,
     ["encrypt", "decrypt"]
-  );  
-
-  const salt = window.crypto.getRandomValues(new Uint8Array(16))
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
-  const wrappingKey = getWrappingKey(salt, passphrase)
-
-  wrappedPrivateKey = indow.crypto.subtle.wrapKey("pkcs8", keyPair.privateKey, wrappingKey, {
-    name: "AES-GCM",
-    iv,
-  });
+  );
 
   return {
-    salt: salt,
-    iv: iv,
-    privateKey: wrappedPrivateKey,
-    publicKey: window.crypto.subtle.exportKey('spki', keyPair.publicKey)
+    privateKey: keyPair.privateKey,
+    publicKey: keyPair.publicKey
   }
+}
 
+async function createRSAKeyPair(passphrase) {
+  const keyPair = await generateRSAKeyPair()
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const salt = window.crypto.getRandomValues(new Uint8Array(16))
+  const wrappingKey = await getWrappingKey(salt, iv, passphrase)
+  
+  let wrappedPrivateKey = await wrapRSAKey(iv, keyPair.privateKey, wrappingKey)
+  
+  // --- test -----
+  let plaintext = "General Kenobi"
+  let ciphertext = await encryptRSA(plaintext, keyPair.publicKey)
+  let privateKey = await unwrapRSAKey(iv, wrappedPrivateKey, wrappingKey)
+  let decryptedCiphertext = await decryptRSA(ciphertext, privateKey)
+  console.log(new TextDecoder().decode(decryptedCiphertext))
+  // --- test -----
+  
+
+  return {
+    salt: Buffer.from(salt).toString("base64"),
+    iv: Buffer.from(iv).toString("base64"),
+    wrappedPrivateKey: wrappedPrivateKey,
+    publicKey: keyPair.publicKey
+  }
 
   // Convert keys to PEM format
-  let publicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
-  let privateKey = await window.crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
-
-  
-  
-  // TODO: CS: Conversion to human readable format needed?? might be easer to let as is for (encryption) handling later
-  // let body = window.btoa(String.fromCharCode(...new Uint8Array(privateKey)));
-  // body = body.match(/.{1,64}/g).join('\n');
-
-  // return {
-  //   publicKey: `-----BEGIN PUBLIC KEY-----\n${body}\n-----END PUBLIC KEY-----`,
-  //   privateKey: `-----BEGIN PRIVATE KEY-----\n${body}\n-----END PRIVATE KEY-----`,
-  // };
-
-
-
-
-
-  // // Derive an encryption key from the passphrase
-  // let passphraseBuffer = new TextEncoder().encode(passphrase);
-  // let derivedKey = await window.crypto.subtle.importKey(
-  //   'raw',
-  //   passphraseBuffer,
-  //   'PBKDF2',
-  //   false,
-  //   ['deriveKey']
-  // );
-
-  // // Encrypt the private key with the derived key
-  // let encryptedPrivateKey = await window.crypto.subtle.encrypt(
-  //   {
-  //     name: 'AES-GCM',
-  //     iv: window.crypto.getRandomValues(new Uint8Array(12)),
-  //   },
-  //   derivedKey,
-  //   privateKey
-  // );
-
-  // TODO: CS: Save public key with id to MongoDB
-
-  // return {
-  //   encryptedPrivateKey: base64UrlEncode(encryptedPrivateKey),
-  // };
+  // let publicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
+  // let privateKey = await window.crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
 }
 
-async function decryptRSA(id, stringEncryptedPrivateKey, passphrase) {
-  let binEncrtyptedPrivateKey = base64UrlDecode(stringEncryptedPrivateKey);
+async function encryptRSA(plaintext, publicKey) {
+  let encodedplaintext = new TextEncoder().encode(plaintext)
+  let ciphertext = window.crypto.subtle.encrypt(
+    {
+      name: "RSA-OAEP"
+    },
+    publicKey,
+    encodedplaintext
+  )
 
-  const wrappingKey = getWrappingKey(salt, passphrase)  // salt muss dann in der anderen funktion mit zurueckgegeben werden
+  return Uint8Array(ciphertext)
+}
 
-  // ... decrypt private key
-  // TODO: CS: muss man ueberhaupt den public key holen?? eigl nein, da der ja implizit auf dem cipher text lieget
+async function decryptRSA(ciphertext, key_params, passphrase) {
+  let salt = Buffer.from(key_params.salt, "base64")
+  let iv = Buffer.from(key_params.iv, "base64")
+  let wrappedPrivateKey = key_params.wrappedPrivateKey
+  let wrappingKey = getWrappingKey(salt, passphrase)
+
+  // TODO: CS: Funktioniert zwar? aber lieber ueber import/export gehen als mit den rohen KeyObjects zu hantieren...
+
+  let privateKey = unwrapRSAKey(iv, wrappedPrivateKey, wrappingKey)
+
+  return window.crypto.subtle.decrypt(
+    { 
+      name: "RSA-OAEP" 
+    },
+    privateKey,
+    ciphertext
+  )
 }
 
 
-// Util:
-
-// Binary to base 64 encoded string
-function base64UrlEncode(arrayBuffer) {
-  const base64 = window.btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-// Base 64 encoded string to binary
-function base64UrlDecode(base64UrlString) {
-  const base64 = base64UrlString.replace(/-/g, '+').replace(/_/g, '/');
-  const paddingLength = 4 - (base64.length % 4);
-  const paddedBase64 = base64 + '==='.slice(0, paddingLength);
-  const binaryString = window.atob(paddedBase64);
-  const arrayBuffer = new Uint8Array(binaryString.length);
-
-  for (let i = 0; i < binaryString.length; i++) {
-    arrayBuffer[i] = binaryString.charCodeAt(i);
-  }
-
-  return arrayBuffer;
-}
-
-export { encryptAES, decryptAES, generateRSAKeyPair, decryptRSA };
+export { encryptAES, decryptAES, createRSAKeyPair, encryptRSA, decryptRSA };

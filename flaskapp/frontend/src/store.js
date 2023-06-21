@@ -1,7 +1,7 @@
 //import Vue from 'vue';
 import Vuex from "vuex";
 import axios from "../axios-auth";
-import { encryptAES, decryptAES } from "./encryption.js";
+import { encryptAES, decryptAES, encryptRSA, decryptRSA } from "./encryption.js";
 
 //Vue.use(Vuex);
 
@@ -119,7 +119,9 @@ export default new Vuex.Store({
       });
     },
 
-    encryptAndUpload({ dispatch }, answers) {
+    encryptAndUpload({ dispatch }, questionnaire) {
+      let answers = questionnaire.answers
+      let email = questionnaire.owner
       let data = {
         answers,
         id: answers.answers.UUID,
@@ -127,6 +129,16 @@ export default new Vuex.Store({
       };
 
       return new Promise((resolve, reject) => {
+        if (email) {
+          encryptRSA(JSON.stringify(data.answers))
+            .then((result) => {
+              data.anwers = result
+            })
+            .catch(() => {
+              reject();
+            });
+        }
+
         encryptAES(JSON.stringify(data.answers))
           .then((result) => {
             data.answers = Buffer.from(result.Cipher).toString("base64");
@@ -177,9 +189,25 @@ export default new Vuex.Store({
         axios
           .get("/answers", { params: { queID: infos.id } })
           .then((res) => {
+
+            let answersArray = Buffer.from(res.data.answers, "base64");
+
+            // TODO: CS: Muss ich beim decoden die mail noch rausziehen oder schon drin.?...
+            if (info.owner) {
+              keyParams = axios.get("/keys", { params: { email: email } })
+                .then((res) => {
+                  resolve(res.data)
+                })
+
+                
+              // TODO: CS: query passphrase???
+              decryptRSA(answersArray, keyParams, passphrase)
+            }
+
+
             let keyArray = Buffer.from(infos.key, "base64");
             let IVArray = Buffer.from(res.data.IV, "base64");
-            let answersArray = Buffer.from(res.data.answers, "base64");
+            answersArray = Buffer.from(answers, "base64");
 
             decryptAES(keyArray, answersArray, IVArray).then((result) => {
               let parsed = JSON.parse(result);
@@ -206,12 +234,14 @@ export default new Vuex.Store({
       });
     },
 
-    decrypt() {},
+    decrypt() {
+      // das decrypt muss doch in die answers rein oder ??
+    },
 
     uploadPublicKey(_, data) {
       return new Promise((resolve, reject) => {
         axios
-          .put("/pubKey", { params: { email: data.email }, data: data.publicKey })
+          .put("/keys", data)  // public key can later be retreived via email field included in data
           .then(() => {
             resolve();
           })
@@ -224,7 +254,7 @@ export default new Vuex.Store({
     getPublicKey(_, email) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/pubKey", { params: { email: email } })
+          .get("/keys", { params: { email: email } })
           .then((res) => {
             resolve(res.data);
           })
