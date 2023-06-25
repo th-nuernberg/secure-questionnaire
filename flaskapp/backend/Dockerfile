@@ -10,4 +10,5 @@ ADD . /backend
 # Install the python dependencies
 RUN pip install -r requirements.txt
 
+# start the uWSGI
 CMD ["uwsgi", "app.ini"]
