@@ -205,8 +205,6 @@ def index():
 def pong():
     return "pong!"
 
-# TODO: CS
-# ohne diesen block laeuft die app nicht... was mach uwsgi??
-# definitiv bei vanilla flask pflicht; bei uwsgi eigl nicht...
-if __name__ == "uwsgi_file_app":
-    app.run(host="0.0.0.0")
+
+if __name__ == "__main__":
+    app.run()
