@@ -9,13 +9,16 @@ import uuid from "vue-uuid";
 import { createRouter, createWebHistory } from "vue-router";
 import VueQrcodeReader from "vue3-qrcode-reader";
 import html2pdf from "html2pdf";
+
 import Home from "./components/Home.vue";
+import KeyGen from "./components/KeyGen.vue";
 import PatientView from "./components/PatientView.vue";
 import DoctorView from "./components/DoctorView.vue";
 import PatientQuestionnaire from "./components/patientView/PatientQuestionnaire.vue";
 import AnalyseQuestionnaires from "./components/doctorView/AnalyseQuestionnaires.vue";
 import CreateQuestionnaire from "./components/doctorView/CreateQuestionnaire.vue";
 import ViewQuestionnaires from "./components/doctorView/ViewQuestionnaires.vue";
+
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons";
@@ -33,6 +36,11 @@ const router = createRouter({
       path: "/patient",
       name: "PatientView",
       component: PatientView,
+    },
+    {
+      path: "/keyGen",
+      name: "KeyGen",
+      component: KeyGen,
     },
     {
       path: "/doctorView/create",

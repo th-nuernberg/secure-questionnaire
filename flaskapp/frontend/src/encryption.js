@@ -1,94 +1,3 @@
-// RSA Encryption and Decryption
-
-function importpublicRsaKey(pem) {
-  const pemHeader = "-----BEGIN PUBLIC KEY-----";
-  const pemFooter = "-----END PUBLIC KEY-----";
-  const pemContents = pem.substring(
-    pemHeader.length,
-    pem.length - pemFooter.length
-  );
-
-  const binaryDerString = window.atob(pemContents);
-
-  const binaryDer = str2ab(binaryDerString);
-
-  return window.crypto.subtle.importKey(
-    "spki",
-    binaryDer,
-    {
-      name: "RSA-OAEP",
-      hash: "SHA-256",
-    },
-    true,
-    ["encrypt"]
-  );
-}
-
-function str2ab(str) {
-  const buf = new ArrayBuffer(str.length);
-  const bufView = new Uint8Array(buf);
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i);
-  }
-  return buf;
-}
-
-function importprivateRSAKey(pem) {
-  // fetch the part of the PEM string between header and footer
-  const pemHeader = "-----BEGIN PRIVATE KEY-----";
-  const pemFooter = "-----END PRIVATE KEY-----";
-  const pemContents = pem.substring(
-    pemHeader.length,
-    pem.length - pemFooter.length
-  );
-  // base64 decode the string to get the binary data
-  const binaryDerString = window.atob(pemContents);
-  // convert from a binary string to an ArrayBuffer
-  const binaryDer = str2ab(binaryDerString);
-
-  return window.crypto.subtle.importKey(
-    "pkcs8",
-    binaryDer,
-    {
-      name: "RSA-OAEP",
-      hash: "SHA-256",
-    },
-    true,
-    ["decrypt"]
-  );
-}
-
-async function encryptRSA(rsa_pub_key, ciphertext) {
-  let encoded = getMessageEncoding(ciphertext);
-  return importpublicRsaKey(rsa_pub_key)
-    .then((keyobj) => {
-      return window.crypto.subtle.encrypt(
-        {
-          name: "RSA-OAEP",
-        },
-        keyobj,
-        encoded
-      );
-    })
-    .then((enc) => new Uint8Array(enc));
-}
-
-async function decryptRSA(rsa_priv_key, ciphertext) {
-  return importprivateRSAKey(rsa_priv_key)
-    .then((keyobj) => {
-      return window.crypto.subtle.decrypt(
-        {
-          name: "RSA-OAEP",
-        },
-        keyobj,
-        ciphertext
-      );
-    })
-    .then((encodedMSG) => {
-      return new TextDecoder().decode(encodedMSG);
-    });
-}
-
 // AES Encryption and Decryption
 
 async function encryptAES(message) {
@@ -153,4 +62,141 @@ function importAESKey(key) {
   ]);
 }
 
-export { encryptAES, decryptAES };
+async function getWrappingKey(salt, passphrase) {
+  let keyMaterial = await window.crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(passphrase),
+    "PBKDF2",
+    false,
+    ["deriveKey"]
+  )
+
+  return window.crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt,
+      iterations: 100000,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    { 
+      name: "AES-GCM", 
+      length: 256 
+    },
+    true,
+    ["wrapKey", "unwrapKey"]
+  )
+}
+
+// function technically key type agnostic... but naming clash with api
+async function wrapRSAKey(iv, privateKey, wrappingKey) {
+  return window.crypto.subtle.wrapKey(
+    "pkcs8", 
+    privateKey, 
+    wrappingKey, 
+    {
+      name: "AES-GCM",
+      iv: iv,
+    }
+  )
+}
+
+async function unwrapRSAKey(iv, wrappedPrivateKey, wrappingKey) {
+  return window.crypto.subtle.unwrapKey(
+    "pkcs8",
+    wrappedPrivateKey,
+    wrappingKey,
+    {
+      name: "AES-GCM",
+      iv: iv,
+    },
+    {
+      name: "RSA-OAEP",
+      hash: "SHA-256",
+    },
+    true,
+    ["decrypt"]
+  )
+}
+
+async function generateRSAKeyPair() {
+  let keyPair = await window.crypto.subtle.generateKey(
+    {
+      name: "RSA-OAEP",
+      modulusLength: 4096,
+      publicExponent: new Uint8Array([1, 0, 1]),
+      hash: "SHA-256",
+    },
+    true,
+    ["encrypt", "decrypt"]
+  );
+
+  return {
+    privateKey: keyPair.privateKey,
+    publicKey: keyPair.publicKey
+  }
+}
+
+async function createRSAKeyPair(passphrase) {
+  const keyPair = await generateRSAKeyPair()
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const salt = window.crypto.getRandomValues(new Uint8Array(16))
+  const wrappingKey = await getWrappingKey(salt, iv, passphrase)
+  
+  let wrappedPrivateKey = await wrapRSAKey(iv, keyPair.privateKey, wrappingKey)
+  
+  // --- test -----
+  let plaintext = "General Kenobi"
+  let ciphertext = await encryptRSA(plaintext, keyPair.publicKey)
+  let privateKey = await unwrapRSAKey(iv, wrappedPrivateKey, wrappingKey)
+  let decryptedCiphertext = await decryptRSA(ciphertext, privateKey)
+  console.log(new TextDecoder().decode(decryptedCiphertext))
+  // --- test -----
+  
+
+  return {
+    salt: Buffer.from(salt).toString("base64"),
+    iv: Buffer.from(iv).toString("base64"),
+    wrappedPrivateKey: wrappedPrivateKey,
+    publicKey: keyPair.publicKey
+  }
+
+  // Convert keys to PEM format
+  // let publicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
+  // let privateKey = await window.crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
+}
+
+async function encryptRSA(plaintext, publicKey) {
+  let encodedplaintext = new TextEncoder().encode(plaintext)
+  let ciphertext = window.crypto.subtle.encrypt(
+    {
+      name: "RSA-OAEP"
+    },
+    publicKey,
+    encodedplaintext
+  )
+
+  return Uint8Array(ciphertext)
+}
+
+async function decryptRSA(ciphertext, key_params, passphrase) {
+  let salt = Buffer.from(key_params.salt, "base64")
+  let iv = Buffer.from(key_params.iv, "base64")
+  let wrappedPrivateKey = key_params.wrappedPrivateKey
+  let wrappingKey = getWrappingKey(salt, passphrase)
+
+  // TODO: CS: Funktioniert zwar? aber lieber ueber import/export gehen als mit den rohen KeyObjects zu hantieren...
+
+  let privateKey = unwrapRSAKey(iv, wrappedPrivateKey, wrappingKey)
+
+  return window.crypto.subtle.decrypt(
+    { 
+      name: "RSA-OAEP" 
+    },
+    privateKey,
+    ciphertext
+  )
+}
+
+
+export { encryptAES, decryptAES, createRSAKeyPair, encryptRSA, decryptRSA };

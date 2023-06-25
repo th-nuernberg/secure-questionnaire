@@ -1,7 +1,13 @@
 <template>
+  
   <div class="container" :key="componentKey">
     <h2 class="mt-5">Ergebnisse</h2>
-    <div v-if="loading" class="d-flex justify-content-center mb-3">
+    <div v-if="loggedIn">
+      <!-- TODO: CS should not be queried if doctor already logged in with session -->
+      <input id="password" placeholder="Bitte Passwort eingeben">
+    </div>
+
+    <div v-else="loading" class="d-flex justify-content-center mb-3">
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
       </div>
@@ -123,6 +129,7 @@ export default {
       fields: {},
       ques: {},
       loading: true,
+      loggedIn: false
     };
   },
   created() {
@@ -148,6 +155,7 @@ export default {
       this.analyseObjects.forEach((obj) => {
         promises.push(
           this.$store
+            // TODO: CS: hier passphrase von oben in den Payload; Aber Achtung dispatch wird auch wo anders verwendet! Kompatibilitaet sicherstellen
             .dispatch("getAnswers", obj)
             .then((data) => {
               if (data.queID in this.answers) {

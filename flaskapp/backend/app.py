@@ -3,27 +3,34 @@ import pymongo
 from flask_cors import CORS
 from flask import request, Flask, Response
 
+
 app = Flask(__name__)
-cors = CORS(app)
+
+# TODO: CS: this will be needed for CORS to allow requests outside from the app itself -> phone browser when scanning QR-code from camera app 
+# Enable CORS
+#CORS(app, resources={r'/*': {'origins': '*'}})
+
+CORS(app)
+
+# Create MongoDB on server start
+mongo = pymongo.MongoClient("localhost", 27017,serverSelectionTimeoutMS=600)
+#mongo.server_info()
+DB = mongo["SecureQuestionnaire"]
 
 
-def get_db():
-    try:
-        mongodb_Url = "mongodb://mongo:27017"
-        # mongodb_Url = 'localhost:27017'
-        client = pymongo.MongoClient(mongodb_Url, serverSelectionTimeoutMS=600)
-        client.server_info()
-        db = client.database.data
-    except Exception as e:
-        raise e
+# TODO: CS: get_collection obsolete if working with global constant DB??
+def get_questionnaires():
+    return DB["questionnaires"]  # created on first access 
 
-    return db
+
+def get_public_keys():
+    return DB["publicKeys"]  # created on first access 
 
 
 @app.route("/GET/<id>", methods=["GET"])
 def get(id):
     try:
-        fs = get_db()
+        fs = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -44,7 +51,7 @@ def get(id):
 @app.route("/POST/<id>", methods=["POST"])
 def post(id):
     try:
-        fs = get_db()
+        fs = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -64,9 +71,9 @@ def post(id):
 
 
 @app.route("/api/questionnaire", methods=["PUT"])
-def putQuestionnaire():
+def put_questionnaire():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -88,9 +95,9 @@ def putQuestionnaire():
 
 
 @app.route("/api/questionnaire", methods=["GET"])
-def getQuestionnaire():
+def get_questionnaire():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -107,9 +114,9 @@ def getQuestionnaire():
 
 
 @app.route("/api/questionnaire/all", methods=["GET"])
-def getAllQuestionnaire():
+def get_all_questionnaire():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -134,9 +141,9 @@ def getAllQuestionnaire():
 
 
 @app.route("/api/answers", methods=["GET"])
-def getAnswers():
+def get_answers():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -153,9 +160,9 @@ def getAnswers():
 
 
 @app.route("/api/answers", methods=["PUT"])
-def putAnswers():
+def put_answers():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -175,11 +182,45 @@ def putAnswers():
 
     return Response(json.dumps(data), status=200, mimetype="application/json")
 
+@app.route('/api/keys', methods=['GET'])
+def get_key():
+    email = request.args.get("email")
+
+    try:
+        keys = get_public_keys()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    public_key = keys.find_one({"email": email})["public_key"]
+
+    if not public_key:
+        resp = {"msg": f"Error: No key for {email} found"}
+        return Response(response=json.dumps(resp), status=404, mimetype="application/json")
+
+    return Response(response=json.dumps(public_key), status=200, mimetype="application/json")
+
+
+@app.route("/api/keys", methods=["PUT"])
+def put_key():
+    key_info = request.get_json()["key_info"]
+
+    if not isinstance(data, dict):
+        return Response(status=400)
+
+    try:
+        keys = get_public_keys()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    keys.insert_one(key_info)
+
+    return Response(json.dumps(key_info), status=200, mimetype="application/json")
+
 
 @app.route("/api/questionnaire/idcheck", methods=["GET"])
-def checkID():
+def check_id():
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -205,6 +246,6 @@ def index():
 def pong():
     return "pong!"
 
-
+  
 if __name__ == "__main__":
     app.run()
