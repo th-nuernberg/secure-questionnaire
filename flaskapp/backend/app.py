@@ -246,8 +246,6 @@ def index():
 def pong():
     return "pong!"
 
-# TODO: CS
-# ohne diesen block laeuft die app nicht... was macht uwsgi??
-# definitiv bei vanilla flask pflicht; bei uwsgi eigl nicht... docker run command mit 0.0.0.0?
-if __name__ == "uwsgi_file_app":
-    app.run(host="0.0.0.0")  # host needed to access page outside of container
+  
+if __name__ == "__main__":
+    app.run()
