@@ -6,45 +6,51 @@ from flask import request, Flask, Response
 app = Flask(__name__)
 cors = CORS(app)
 
+mongo = pymongo.MongoClient("mongodb://mongo:27017" ,serverSelectionTimeoutMS=600)
+mongo.server_info()
+DB = mongo["SecureQuestionnaire"]
 
-def get_db():
-    try:
-        mongodb_Url = "mongodb://mongo:27017"
-        # mongodb_Url = 'localhost:27017'
-        client = pymongo.MongoClient(mongodb_Url, serverSelectionTimeoutMS=600)
-        client.server_info()
-        db = client.database.data
-    except Exception as e:
-        raise e
 
-    return db
+# TODO: CS: get_collection obsolete if working with global constant DB??
+def get_questionnaires():
+    return DB["questionnaires"]  # created on first access 
+
+
+def get_public_keys():
+    return DB["publicKeys"]  # created on first access 
 
 
 @app.route("/GET/<id>", methods=["GET"])
 def get(id):
+    status = 200
+    response = None
+
     try:
-        fs = get_db()
+        fs = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
     try:
         data = json.loads(fs.get(id).read().decode("utf-8"))
+        response = json.dumps(data)
     except Exception as e:
-        return Response(response=repr(e), status=404, mimetype="application/json")
+        response = repr(e)
+        status = 404
 
     if not data:
         resp = {"msg": f"Error: key {id} not found"}
-        return Response(
-            response=json.dumps(resp), status=404, mimetype="application/json"
-        )
+        status = 404
 
-    return Response(response=json.dumps(data), status=200, mimetype="application/json")
+    return Response(response=response, status=status, mimetype="application/json")
 
 
 @app.route("/POST/<id>", methods=["POST"])
 def post(id):
+    status = 200
+    response = None
+    
     try:
-        fs = get_db()
+        fs = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -56,143 +62,159 @@ def post(id):
 
     try:
         fs.put(json.dumps(data), _id=id, encoding="ascii")
+        response = json.dumps(data)
     except Exception as e:
-        print(e)
-        return Response(response=repr(e), status=409, mimetype="application/json")
+        response = repr(e)
+        status = 409
 
-    return Response(json.dumps(data), status=200, mimetype="application/json")
+    return Response(response=response, status=status, mimetype="application/json")
 
 
-@app.route("/api/questionnaire", methods=["PUT"])
-def putQuestionnaire():
+@app.route("/api/questionnaire", methods=["GET", "PUT"])
+def questionnaire():
+    status = 200
+
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
-    data = request.get_json()["questionnaire"]
-    if not isinstance(data, dict):
-        return Response(status=400)
+    if request.method == "GET":
+        queID = request.args.get("queID")
+        data = db.find_one({"_id": queID})
 
-    id = data["queID"]
+        if not data:
+            data = {"msg": f"Error: key {queID} not found"}
+            status = 404
 
-    data["_id"] = id
+    elif request.method == "PUT":
+        data = request.get_json()["questionnaire"]
 
-    result = db.replace_one({"_id": id}, data)
+        if not isinstance(data, dict):
+            return Response(status=400)
 
-    if result.matched_count == 0:
-        db.insert_one(data)
-        return Response(json.dumps(data), status=201, mimetype="application/json")
+        id = data["queID"]
+        data["_id"] = id
+        result = db.replace_one({"_id": id}, data)
 
-    return Response(json.dumps(data), status=200, mimetype="application/json")
-
-
-@app.route("/api/questionnaire", methods=["GET"])
-def getQuestionnaire():
-    try:
-        db = get_db()
-    except Exception as e:
-        return Response(response=repr(e), status=503, mimetype="application/json")
-
-    queID = request.args.get("queID")
-
-    data = db.find_one({"_id": queID})
-    if not data:
-        resp = {"msg": f"Error: key {queID} not found"}
-        return Response(
-            response=json.dumps(resp), status=404, mimetype="application/json"
-        )
-
-    return Response(response=json.dumps(data), status=200, mimetype="application/json")
+        if result.matched_count == 0:
+            db.insert_one(data)
+            status = 201
+    
+    return Response(response=json.dumps(data), status=status, mimetype="application/json")
 
 
 @app.route("/api/questionnaire/all", methods=["GET"])
-def getAllQuestionnaire():
+def all_questionnaires():
+    status = 200
+
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
     dokumente = db.find()
 
-    s = "["
+    data = "["
     for dokument in dokumente:
         if "answers" not in dokument:
-            s += str(dokument)
-            s += ","
+            data += str(dokument)
+            data += ","
 
-    s += "]"
+    data += "]"
 
-    data = s
     if not data:
-        resp = {"msg": f"Error: nothing found"}
-        return Response(
-            response=json.dumps(resp), status=404, mimetype="application/json"
-        )
+        data = {"msg": f"Error: nothing found"}
+        status = 404
 
-    return Response(response=json.dumps(data), status=200, mimetype="application/json")
+    return Response(response=json.dumps(data), status=status, mimetype="application/json")
 
 
-@app.route("/api/answers", methods=["GET"])
-def getAnswers():
+@app.route("/api/answers", methods=["GET", "PUT"])
+def answers():
+    status = 200
+
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
-    queID = request.args.get("queID")
+    # handle GET
+    if request.method == "GET":
+        queID = request.args.get("queID")
+        data = db.find_one({"_id": queID})
 
-    data = db.find_one({"_id": queID})
-    if not data:
-        resp = {"msg": f"Error: key {queID} not found"}
-        return Response(
-            response=json.dumps(resp), status=404, mimetype="application/json"
-        )
+        if not data:
+            data = {"msg": f"Error: key {queID} not found"}
+            status = 404
 
-    return Response(response=json.dumps(data), status=200, mimetype="application/json")
+    # handle PUT
+    elif request.method == "PUT":
+        data = request.get_json()
+        
+        if not isinstance(data, dict):
+            return Response(status=400)
 
+        id = data["id"]
+        data["_id"] = id
+        result = db.replace_one({"_id": id}, data)
 
-@app.route("/api/answers", methods=["PUT"])
-def putAnswers():
-    try:
-        db = get_db()
-    except Exception as e:
-        return Response(response=repr(e), status=503, mimetype="application/json")
+        if result.matched_count == 0:
+            db.insert_one(data)
+            status = 201
 
-    data = request.get_json()
-    if not isinstance(data, dict):
-        return Response(status=400)
-
-    id = data["id"]
-
-    data["_id"] = id
-
-    result = db.replace_one({"_id": id}, data)
-
-    if result.matched_count == 0:
-        db.insert_one(data)
-        return Response(json.dumps(data), status=201, mimetype="application/json")
-
-    return Response(json.dumps(data), status=200, mimetype="application/json")
+    return Response(response=json.dumps(data), status=status, mimetype="application/json")
 
 
 @app.route("/api/questionnaire/idcheck", methods=["GET"])
-def checkID():
+def check_id():
+    status = 200
+
     try:
-        db = get_db()
+        db = get_questionnaires()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
     queID = request.args.get("queID")
-
     data = db.find_one({"_id": queID})
+
     if not data:
         resp = {"status": True}
-        return Response(
-            response=json.dumps(resp), status=200, mimetype="application/json"
-        )
     else:
         resp = {"status": False}
+
+    return Response(response=json.dumps(resp), status=status, mimetype="application/json")
+
+
+@app.route("/api/keys", methods=["GET", "PUT"])
+def keys():
+    status = 200
+    
+    try:
+        keys = get_public_keys()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    if request.method == "GET":
+        email = request.args.get("email")
+        key_info = keys.find_one({"email": email})["public_key"]
+
+        if not key_info:
+            key_info = {"msg": f"Error: No key for {email} found"}
+            status=404
+        else:
+            status = 200
+
+    elif request.method == "PUT":
+        key_info = request.get_json()["key_info"]
+
+        if not isinstance(key_info, dict):
+            return Response(status=400)
+
+        keys.insert_one(key_info)
+
+
+    return Response(response=json.dumps(key_info), status=status, mimetype="application/json")
 
 
 if __name__ == "__main__":
