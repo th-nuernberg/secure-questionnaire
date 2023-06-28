@@ -6,8 +6,9 @@ from flask import request, Flask, Response
 app = Flask(__name__)
 cors = CORS(app)
 
-mongo = pymongo.MongoClient("mongodb://mongo:27017" ,serverSelectionTimeoutMS=600)
-mongo.server_info()
+mongo = pymongo.MongoClient("mongodb://mongo:27017", serverSelectionTimeoutMS=600)
+#mongo.server_info()
+mongo.drop_database("SecureQuestionnaire") # clear collection after server restart 
 DB = mongo["SecureQuestionnaire"]
 
 
@@ -113,8 +114,6 @@ def all_questionnaires():
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
-    dokumente = db.find()
-
     data = "["
     for dokument in dokumente:
         if "answers" not in dokument:
@@ -151,6 +150,12 @@ def answers():
     # handle PUT
     elif request.method == "PUT":
         data = request.get_json()
+
+        print("ajajjaajjaj")
+        print("ajajjaajjaj")
+        print(data)
+        print("ajajjaajjaj")
+        print("ajajjaajjaj")
         
         if not isinstance(data, dict):
             return Response(status=400)
@@ -162,6 +167,7 @@ def answers():
         if result.matched_count == 0:
             db.insert_one(data)
             status = 201
+    
 
     return Response(response=json.dumps(data), status=status, mimetype="application/json")
 
@@ -196,17 +202,30 @@ def keys():
         return Response(response=repr(e), status=503, mimetype="application/json")
 
     if request.method == "GET":
-        email = request.args.get("email")
-        key_info = keys.find_one({"email": email})["public_key"]
+        owner = request.args.get("owner")
 
-        if not key_info:
-            key_info = {"msg": f"Error: No key for {email} found"}
+        if owner == "":
+            # get all keys
+            key = []
+
+            for k in keys.find({}):
+                key.append({"owner": k.get("owner"), "publicKey": k.get("publicKey")})
+        else:
+            key = keys.find_one({"owner": owner})["publicKey"]
+
+        if not key:
+            key = {"msg": f"Error: No key for {owner} found"}
             status=404
         else:
             status = 200
 
+        return Response(response=json.dumps(key), status=status, mimetype="application/json")
+        
+
     elif request.method == "PUT":
-        key_info = request.get_json()["key_info"]
+        key_info = request.get_json()
+        key_info["publicKey"] = list(key_info["publicKey"].values())
+        print(key_info)
 
         if not isinstance(key_info, dict):
             return Response(status=400)
@@ -214,7 +233,7 @@ def keys():
         keys.insert_one(key_info)
 
 
-    return Response(response=json.dumps(key_info), status=status, mimetype="application/json")
+    return Response(status=status, mimetype="application/json")
 
 
 if __name__ == "__main__":

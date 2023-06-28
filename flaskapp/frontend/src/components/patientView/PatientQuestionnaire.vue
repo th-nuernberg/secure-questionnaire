@@ -160,6 +160,14 @@
       ></Questions-Container>
 
       <div class="text-center">
+        <label for="pet-select">Behandelnden Arzt auswaehlen:</label>
+        
+        <select name="owner" id="owner-select">
+            <!-- TODO: CS: loop over "key array" this.keys and display all email key pairs in db for selection -->
+            <option value="" >--Bitte waehlen sie eine Option--</option>
+            <option value="foo@bar.com">Dr. Foo Bar</option>
+        </select>
+
         <button
           @click="save()"
           variant="success"
@@ -204,6 +212,7 @@ export default {
       pageState: null,
       AESkey: [],
       patientName: "",
+      keys: null
     };
   },
 
@@ -238,6 +247,20 @@ export default {
       .catch(() => {
         this.pageState = "error";
       });
+    
+
+
+    // TODO: CS: get all keys....
+    this.$store
+      .dispatch("getPublicKey", "foo@bar.com")
+      .then((res) => {
+        this.keys = res.data
+      })
+    // this.$store
+    //   .dispatch("getPublicKey", "")
+    //   .then((res) => {
+    //     this.keys = res
+    //   })
   },
 
   beforeRouteLeave(to, from, next) {
@@ -367,16 +390,25 @@ export default {
 
     save() {
       document.getElementById("upload-error").style.display = "none";
-
       this.sortQuestionnaire();
-
       this.answers.queID = this.questionnaire.queID;
+
+      let selectedOwner = document.getElementById("owner-select").value
+      
       if (this.answers.UUID === undefined) {
         this.answers.UUID = uuid.v4();
       }
+
+      // get keys
+      console.log(this.keys)
+
+
       this.$store
         .dispatch("encryptAndUpload", {
           answers: this.answers,
+          owner: selectedOwner,
+          // TODO: CS: index "key array" with owner mail
+          key: this.keys
         })
         .then((result) => {
           this.AESkey = result;

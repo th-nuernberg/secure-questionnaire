@@ -196,6 +196,15 @@
           </div>
         </div>
 
+        <!-- TODO: CS: won't get rendered if wrapped in tooltip:/ -->
+        <!-- <div class="tooltip"> -->
+          <input type="checkbox" id="owner" @change="setOwner()">
+          <label>Mich als Owner des Fragebogens setzen.</label>
+          <!-- <span class="tooltiptext">
+            So kann nur ich den Bogen lesen. Auch nicht wenn der Patient mit seinem QR-Code zu einem anderen Arzt geht
+          </span>
+        </div> -->
+
         <button
           @click="save()"
           class="btn btn-secondary mt-5"
@@ -325,6 +334,7 @@ export default {
         queID: "",
         title: "",
         elements: [],
+        owner: null,
       },
       saved: false,
       qrlink: "localhost:8080/patient/questionnaire/",
@@ -404,6 +414,12 @@ export default {
         option.id = currentOptions.indexOf(option) + 1;
       });
     },
+    setOwner() {
+        let checked = document.getElementById("owner").checked
+        // TODO: CS: Login management in order to retreive the email of the currently logged in physician
+        // mock mail
+        this.questionnaire.owner = checked ? "foo@bar.com" : ""
+      },
     save() {
       document.getElementById("upload-error").style.display = "none";
 
@@ -452,6 +468,7 @@ export default {
         queID: "",
         title: "",
         elements: [],
+        owner: null
       };
       this.saved = false;
     },
@@ -544,5 +561,44 @@ h4 {
   margin-right: auto;
   margin-left: auto;
   margin-top: 40px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }
 </style>

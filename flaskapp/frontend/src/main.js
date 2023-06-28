@@ -16,6 +16,7 @@ import PatientQuestionnaire from "./components/patientView/PatientQuestionnaire.
 import AnalyseQuestionnaires from "./components/doctorView/AnalyseQuestionnaires.vue";
 import CreateQuestionnaire from "./components/doctorView/CreateQuestionnaire.vue";
 import ViewQuestionnaires from "./components/doctorView/ViewQuestionnaires.vue";
+import KeyGen from "./components/KeyGen.vue"
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons";
@@ -24,6 +25,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/", name: "Home", component: Home },
+    {
+      path: "/keyGen",
+      name: "KeyGen",
+      component: KeyGen
+    },
     {
       path: "/doctorView",
       name: "DoctorView",
