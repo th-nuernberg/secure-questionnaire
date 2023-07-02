@@ -53,14 +53,15 @@
                 // returns a public key, wrapped private key and salt+iv it has been wrapped with
                 let keyPairPlusParams = await createRSAKeyPair(passphrase)
 
-                this.keyParams = JSON.stringify({ 
+                this.keyParams = { 
                     salt: keyPairPlusParams.salt,
                     iv: keyPairPlusParams.iv,
-                    wrappedPrivateKey: keyPairPlusParams.wrappedPrivateKey,
-                })
+                    wrappedPrivateKey: Buffer.from(keyPairPlusParams.wrappedPrivateKey).toString("base64"),
+                }
 
-                window.localStorage.setItem(this.owner, this.keyParams)
-                console.log(keyPairPlusParams.publicKey)
+                window.localStorage.setItem(this.owner, 
+                    JSON.stringify(this.keyParams)
+                )
 
                 // TODO: CS: key creation must only be legal if email field set!
                 this.$store

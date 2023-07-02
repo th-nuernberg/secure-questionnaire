@@ -136,11 +136,27 @@ async function generateRSAKeyPair() {
 }
 
 async function createRSAKeyPair(passphrase) {
+  passphrase = "12345678"
   let keyPair = await generateRSAKeyPair()
   let iv = window.crypto.getRandomValues(new Uint8Array(12));
   let salt = window.crypto.getRandomValues(new Uint8Array(16))
   let wrappingKey = await getWrappingKey(salt, iv, passphrase)
   let wrappedPrivateKey = await wrapRSAKey(iv, keyPair.privateKey, wrappingKey)
+
+  let plaintext = "General Kenobi"
+  console.log(plaintext)
+  let ciphertext = await encryptRSA(plaintext, new Uint8Array(
+    await window.crypto.subtle.exportKey('spki', keyPair.publicKey)
+  ))
+  let decryptedCiphertext = await decryptRSA(
+    ciphertext, {
+      salt: Buffer.from(salt).toString("base64"),
+      iv: Buffer.from(iv).toString("base64"),
+      wrappedPrivateKey: new Uint8Array(wrappedPrivateKey),
+    }, 
+    passphrase
+  )
+  console.log(new TextDecoder().decode(decryptedCiphertext))
 
   return {
     salt: Buffer.from(salt).toString("base64"),
@@ -177,14 +193,20 @@ async function encryptRSA(plaintext, publicKey) {
       encodedplaintext
     )
   }).then((ciphertext) => {
-    return Uint8Array(ciphertext)
+    return new Uint8Array(ciphertext)
   }) 
 }
 
 async function decryptRSA(ciphertext, key_params, passphrase) {
   let salt = Buffer.from(key_params.salt, "base64")
   let iv = Buffer.from(key_params.iv, "base64")
-  let wrappedPrivateKey = await window.crypto.subtle.importKey("raw", key_params.wrappedPrivateKey, "AES-GCM", true, ["unwrapKey",]);
+  let wrappedPrivateKey = await window.crypto.subtle.importKey(
+    "raw", 
+    key_params.wrappedPrivateKey, 
+    "AES-GCM", 
+    true, 
+    ["unwrapKey",]
+  );
   let wrappingKey = getWrappingKey(salt, passphrase)
   let privateKey = unwrapRSAKey(iv, wrappedPrivateKey, wrappingKey)
 

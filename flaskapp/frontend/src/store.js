@@ -2,6 +2,7 @@
 import Vuex from "vuex";
 import axios from "../axios-auth";
 import { encryptAES, decryptAES, encryptRSA, decryptRSA } from "./encryption.js";
+// import { BSON, EJSON } from './lib/bson.mjs';
 
 //Vue.use(Vuex);
 
@@ -123,30 +124,17 @@ export default new Vuex.Store({
       let data = {
         answers: questionnaire.answers,
         id: questionnaire.answers.UUID,
-        IV: [],
         owner: questionnaire.owner
       };
 
       return new Promise((resolve, reject) => {
-        encryptAES(JSON.stringify(data.answers))
+        encryptRSA(JSON.stringify(data.answers), questionnaire.key)
         .then((result) => {
-          data.answers = Buffer.from(result.Cipher).toString("base64");
-          data.IV = Buffer.from(result.IV).toString("base64");
-          
-            // only encrypt asymmetric if somebody owns the questionnaire (owner)
-            if (data.owner) {
-              encryptRSA(JSON.stringify(data.answers), questionnaire.key)
-                .then((cipher) => {
-                  data.answers = Buffer.from(cipher).toString("base64")
-                })
-                .catch(() => {
-                  reject();
-                });
-              }
-            // wartet der hier auf die RSA verschluesselung???
+          data.answers = Buffer.from(result).toString("base64")
             dispatch("uploadAnswers", data)
               .then(() => {
-                resolve(result.Key);
+                console.log("abcdefg")
+                resolve()
               })
               .catch(() => {
                 reject();
@@ -156,6 +144,36 @@ export default new Vuex.Store({
             reject();
           });
       });
+
+      // return new Promise((resolve, reject) => {
+      //   encryptAES(JSON.stringify(data.answers))
+      //   .then((result) => {
+      //     data.answers = Buffer.from(result.Cipher).toString("base64");
+      //     data.IV = Buffer.from(result.IV).toString("base64");
+          
+      //       // only encrypt asymmetric if somebody owns the questionnaire (owner)
+      //       if (data.owner) {
+      //         encryptRSA(JSON.stringify(data.answers), questionnaire.key)
+      //           .then((cipher) => {
+      //             data.answers = Buffer.from(cipher).toString("base64")
+      //           })
+      //           .catch(() => {
+      //             reject();
+      //           });
+      //         }
+      //       // wartet der hier auf die RSA verschluesselung???
+      //       dispatch("uploadAnswers", data)
+      //         .then(() => {
+      //           resolve(result.Key);
+      //         })
+      //         .catch(() => {
+      //           reject();
+      //         });
+      //     })
+      //     .catch(() => {
+      //       reject();
+      //     });
+      // });
     },
 
     uploadAnswers(_, data) {
@@ -190,30 +208,42 @@ export default new Vuex.Store({
         axios
           .get("/answers", { params: { queID: infos.id } })
           .then((questionnaire) => {
-
             let answersArray = Buffer.from(questionnaire.data.answers, "base64");
+            let keyParams = JSON.parse(window.localStorage.getItem(questionnaire.data.owner))
+            keyParams.wrappedPrivateKey = Buffer.from(keyParams.wrappedPrivateKey, "base64")
             
-            //RSA 
-            if (questionnaire.owner) {
-              keyParams = window.localStorage.getItem(questionnaire.owner)
-
-              // TODO: get passphrase via input  
-              answersArray = decryptRSA(answersArray, keyParams, "1234567890")  
-            }
-
-            // AES
-            let keyArray = Buffer.from(infos.key, "base64");
-            let IVArray = Buffer.from(questionnaire.data.IV, "base64");
-
-            decryptAES(keyArray, answersArray, IVArray).then((result) => {
+            decryptRSA(answersArray, keyParams, "1234567890")
+            .then((result) => {
               let parsed = JSON.parse(result);
               commit("setAnswers", parsed.answers);
               resolve(state.answers);
+              })
             });
-          })
-          .catch(() => {
-            reject();
-          });
+
+            // let answersArray = Buffer.from(questionnaire.data.answers, "base64");
+            
+            // // AES
+            // let keyArray = Buffer.from(infos.key, "base64");
+            // let IVArray = Buffer.from(questionnaire.data.IV, "base64");
+
+            // decryptAES(keyArray, answersArray, IVArray).then((result) => {
+            //   //RSA 
+            //   if (questionnaire.data.owner) {
+            //     keyParams = JSON.parse(window.localStorage.getItem(questionnaire.owner))
+            //     keyParams.wrappedPrivateKey = Uint8Array.from(keyParams.wrappedPrivateKey)
+
+            //     // TODO: CS: get passphrase via input  
+            //     result = decryptRSA(result, keyParams, "1234567890")  
+            //   }
+
+            //   let parsed = JSON.parse(result);
+            //   commit("setAnswers", parsed.answers);
+            //   resolve(state.answers);
+            // });
+          // })
+          // .catch(() => {
+          //   reject();
+          // });
       });
     },
 
@@ -233,6 +263,8 @@ export default new Vuex.Store({
     uploadPublicKey(_, data) {
       return new Promise((resolve, reject) => {
         axios
+          // TODO: BSON stringify -> parse 
+          //.put("/keys", BSON.stringify(data))  // public key can later be retreived via email field included in data
           .put("/keys", data)  // public key can later be retreived via email field included in data
           .then(() => {
             resolve();

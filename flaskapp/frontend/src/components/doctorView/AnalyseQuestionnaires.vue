@@ -155,7 +155,6 @@ export default {
       this.analyseObjects.forEach((obj) => {
         promises.push(
           this.$store
-            // TODO: CS: hier passphrase von oben in den Payload; Aber Achtung dispatch wird auch wo anders verwendet! Kompatibilitaet sicherstellen
             .dispatch("getAnswers", obj)
             .then((data) => {
               if (data.queID in this.answers) {

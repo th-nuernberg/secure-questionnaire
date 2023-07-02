@@ -250,12 +250,7 @@ export default {
     
 
 
-    // TODO: CS: get all keys....
-    this.$store
-      .dispatch("getPublicKey", "foo@bar.com")
-      .then((res) => {
-        this.keys = res.data
-      })
+    // TODO: CS: get all keys.... to display for selection of docs
     // this.$store
     //   .dispatch("getPublicKey", "")
     //   .then((res) => {
@@ -388,33 +383,47 @@ export default {
       this.answers.dateEntries.sort(sort_by_date);
     },
 
-    save() {
+    getKeySelectedOwner() {
+      let selectedOwner = document.getElementById("owner-select").value
+
+      return this.$store
+      .dispatch("getPublicKey", selectedOwner)
+      .then((res) => {
+        return ({
+            owner: selectedOwner, 
+            key: Uint8Array.from(res.data)
+          })
+      })
+    },
+
+    async save() {
       document.getElementById("upload-error").style.display = "none";
       this.sortQuestionnaire();
       this.answers.queID = this.questionnaire.queID;
 
-      let selectedOwner = document.getElementById("owner-select").value
-      
       if (this.answers.UUID === undefined) {
         this.answers.UUID = uuid.v4();
       }
 
-      // get keys
-      console.log(this.keys)
-
-
+      let selectedOwner = await this.getKeySelectedOwner()
+      
       this.$store
         .dispatch("encryptAndUpload", {
           answers: this.answers,
-          owner: selectedOwner,
+          owner: selectedOwner.owner,
           // TODO: CS: index "key array" with owner mail
-          key: this.keys
+          // TODO: CS: implement multiple encryption for multiple institution/doctors, everyone should be able to decrypt individually
+          key: selectedOwner.key
         })
-        .then((result) => {
-          this.AESkey = result;
+        .then(() => {
           window.scrollTo(0, 0);
           this.pageState = "saved";
         })
+        // .then((result) => {
+        //   this.AESkey = result;
+        //   window.scrollTo(0, 0);
+        //   this.pageState = "saved";
+        // })
         .catch(() => {
           document.getElementById("upload-error").style.display = "block";
         });
