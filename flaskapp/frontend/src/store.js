@@ -219,6 +219,10 @@ export default new Vuex.Store({
             decryptRSA(answersArray, keyParams, "1234567890")
             .then((result) => {
               let parsed = JSON.parse(result);
+
+              // TODO: CS: weird TEMPORARY fix
+              parsed = { answers: parsed }
+
               commit("setAnswers", parsed.answers);
               resolve(state.answers);
               })
