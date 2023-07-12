@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import { createRSAKeyPair, encryptAES } from "../encryption.js"
+    import { createRSAKeyPair } from "../encryption.js"
     
     export default {
         components: {
@@ -53,20 +53,21 @@
                 // returns a public key, wrapped private key and salt+iv it has been wrapped with
                 let keyPairPlusParams = await createRSAKeyPair(passphrase)
 
-                this.keyParams = JSON.stringify({ 
-                    salt: keyPairPlusParams.salt,
-                    iv: keyPairPlusParams.iv,
-                    wrappedPrivateKey: keyPairPlusParams.wrappedPrivateKey,
-                })
+                this.keyParams = { 
+                    wrappedPrivateKey: Buffer.from(keyPairPlusParams.wrappedPrivateKey).toString("base64"),
+                    salt: Buffer.from(keyPairPlusParams.salt).toString("base64"),
+                    wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
+                }
 
-                window.localStorage.setItem(this.owner, this.keyParams)
-                console.log(keyPairPlusParams.publicKey)
+                window.localStorage.setItem(this.owner, 
+                    JSON.stringify(this.keyParams)
+                )
 
                 // TODO: CS: key creation must only be legal if email field set!
                 this.$store
                     .dispatch("uploadPublicKey", { 
                         owner: this.owner, 
-                        publicKey: keyPairPlusParams.publicKey
+                        publicKey: Buffer.from(keyPairPlusParams.publicKey).toString("base64")
                     })
                     .then(() => {
                         window.scrollTo(0, 0);
