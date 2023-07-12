@@ -151,12 +151,6 @@ def answers():
     elif request.method == "PUT":
         data = request.get_json()
 
-        print("ajajjaajjaj")
-        print("ajajjaajjaj")
-        print(data)
-        print("ajajjaajjaj")
-        print("ajajjaajjaj")
-        
         if not isinstance(data, dict):
             return Response(status=400)
 
@@ -167,7 +161,6 @@ def answers():
         if result.matched_count == 0:
             db.insert_one(data)
             status = 201
-    
 
     return Response(response=json.dumps(data), status=status, mimetype="application/json")
 
@@ -224,8 +217,7 @@ def keys():
 
     elif request.method == "PUT":
         key_info = request.get_json()
-        key_info["publicKey"] = list(key_info["publicKey"].values())
-        print(key_info)
+        # key_info["publicKey"] = list(key_info["publicKey"].values())
 
         if not isinstance(key_info, dict):
             return Response(status=400)

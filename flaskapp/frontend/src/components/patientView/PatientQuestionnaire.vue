@@ -391,7 +391,7 @@ export default {
       .then((res) => {
         return ({
             owner: selectedOwner, 
-            key: Uint8Array.from(res.data)
+            key: res.data
           })
       })
     },

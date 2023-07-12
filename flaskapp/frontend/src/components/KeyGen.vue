@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import { createRSAKeyPair, encryptAES } from "../encryption.js"
+    import { createRSAKeyPair } from "../encryption.js"
     
     export default {
         components: {
@@ -54,9 +54,9 @@
                 let keyPairPlusParams = await createRSAKeyPair(passphrase)
 
                 this.keyParams = { 
-                    salt: keyPairPlusParams.salt,
-                    iv: keyPairPlusParams.iv,
                     wrappedPrivateKey: Buffer.from(keyPairPlusParams.wrappedPrivateKey).toString("base64"),
+                    salt: Buffer.from(keyPairPlusParams.salt).toString("base64"),
+                    wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
                 }
 
                 window.localStorage.setItem(this.owner, 
@@ -67,7 +67,7 @@
                 this.$store
                     .dispatch("uploadPublicKey", { 
                         owner: this.owner, 
-                        publicKey: keyPairPlusParams.publicKey
+                        publicKey: Buffer.from(keyPairPlusParams.publicKey).toString("base64")
                     })
                     .then(() => {
                         window.scrollTo(0, 0);

@@ -128,7 +128,7 @@ export default new Vuex.Store({
       };
 
       return new Promise((resolve, reject) => {
-        encryptRSA(JSON.stringify(data.answers), questionnaire.key)
+        encryptRSA(JSON.stringify(data.answers), Buffer.from(questionnaire.key, "base64"))
         .then((result) => {
           data.answers = Buffer.from(result).toString("base64")
             dispatch("uploadAnswers", data)
@@ -210,6 +210,10 @@ export default new Vuex.Store({
           .then((questionnaire) => {
             let answersArray = Buffer.from(questionnaire.data.answers, "base64");
             let keyParams = JSON.parse(window.localStorage.getItem(questionnaire.data.owner))
+            
+            // convert to Uint8Array, for handling in decryption methods
+            keyParams.salt = Buffer.from(keyParams.salt, "base64")
+            keyParams.wrappingIv = Buffer.from(keyParams.wrappingIv, "base64")
             keyParams.wrappedPrivateKey = Buffer.from(keyParams.wrappedPrivateKey, "base64")
             
             decryptRSA(answersArray, keyParams, "1234567890")
@@ -218,7 +222,6 @@ export default new Vuex.Store({
               commit("setAnswers", parsed.answers);
               resolve(state.answers);
               })
-            });
 
             // let answersArray = Buffer.from(questionnaire.data.answers, "base64");
             
@@ -234,16 +237,15 @@ export default new Vuex.Store({
 
             //     // TODO: CS: get passphrase via input  
             //     result = decryptRSA(result, keyParams, "1234567890")  
-            //   }
-
+            //   } 
             //   let parsed = JSON.parse(result);
             //   commit("setAnswers", parsed.answers);
             //   resolve(state.answers);
             // });
-          // })
-          // .catch(() => {
-          //   reject();
-          // });
+          })
+          .catch(() => {
+            reject();
+          });
       });
     },
 
