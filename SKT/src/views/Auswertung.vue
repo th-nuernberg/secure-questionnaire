@@ -76,6 +76,9 @@ export default {
     async EncryptMessage(message) {
       this.error = false
       this.transfer = true;
+
+      console.log(message);
+
       message = JSON.stringify(message);
       let id = crypto.randomUUID();
 
@@ -98,16 +101,16 @@ export default {
 
       
       console.log(body)
-      let url = "http://localhost/POST/" + id
+      // let url = "http://localhost/POST/" + id
 
   
-      fetch(url, {
-        'method': "POST",
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "body": JSON.stringify(body)
-      }).then(this.handleResponse).catch(this.handleErrors)
+      // fetch(url, {
+      //   'method': "POST",
+      //   "headers": {
+      //     "Content-Type": "application/json"
+      //   },
+      //   "body": JSON.stringify(body)
+      // }).then(this.handleResponse).catch(this.handleErrors)
 
 
     },

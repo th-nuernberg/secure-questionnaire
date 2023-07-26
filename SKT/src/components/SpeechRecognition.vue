@@ -46,7 +46,7 @@ export default {
           .map((result) => result.transcript)
           .join("");
 
-        //console.log(text);
+        console.log(text);
         // console.log(this.checkSpeechforSim(text, this.words));
 
         this.emitText(this.checkSpeechforSim(text, this.words));
