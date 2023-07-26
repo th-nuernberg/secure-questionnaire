@@ -4,9 +4,7 @@
 
     <h4>Kurztest zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen</h4><br>
 
-
     <div class="Datenübermittlung" v-if="!this.transfer">
-      <br>
       <h5 class="txt-center">Datenübermittlung</h5>
       <p>Durch einen Klick auf den Button „Transfer starten“ wird ihr Testergebnis übermittelt. Sie erhalten im
         Anschluss einen QR-Code.</p>
@@ -20,14 +18,17 @@
       </div>
       <div v-if="!this.error">
         <div class="error">{{this.responseText}}</div>
-        <br>
         <h5 class="txt-center">Bitte bewahren Sie den ausgedruckten QR-Code an einem sicheren Ort auf!</h5>
         Wenn Sie den ausgedruckten QR Code entsorgen, achten Sie bitte auf eine sichere Zerstörung, damit niemand anderes
         diesen verwenden kann.<br><br>
         <button class="button"  v-on:click="downloadQRCode()">Download QR-Code</button>
         <qrcode-vue id="qrcode" class=qrcode v-if=showQR :value="this.valueQR" :size="this.sizeQR" level="H" />                
       </div>
-    </div><br>
+    </div>
+
+    <div v-if="task_data">
+      <pre>{{ task_data }}</pre>
+    </div>
   </body>
 </template>
 
@@ -101,9 +102,7 @@ export default {
 
       
       console.log(body)
-      // let url = "http://localhost/POST/" + id
-
-  
+      // let url = "http://localhost/POST/" + id  
       // fetch(url, {
       //   'method': "POST",
       //   "headers": {
@@ -139,7 +138,7 @@ export default {
     this.transfer = false;
     this.$root.stop();
     this.task_data = this.getData()
-    // Zeigt Ergebnis an: console.log(this.task_data)
+    console.log(this.task_data)
     this.rsa_pub_key =
       `-----BEGIN PUBLIC KEY-----
     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxMDhX3bxEgrA+9qb67KH

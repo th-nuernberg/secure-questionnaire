@@ -10,7 +10,7 @@ export default createRouter({
       component: Home,
     },
     {
-      path: "/SKT",
+      path: "/skt",
       name: "SKT",
       component: () => import("../views/SKT.vue"),
     },

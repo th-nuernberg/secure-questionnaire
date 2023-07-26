@@ -27,6 +27,7 @@ export default {
     },
 
     emitText(text) {
+      console.log(text);
       this.$emit("speeched", text);
     },
     startSpeechToTxt() {
