@@ -1,5 +1,5 @@
 <template>
-  <footer>2022 | IT Projekt Schlaf/Gedächtnis</footer>
+  <footer>2023 | Gedächtnissprechstunde Demo</footer>
 </template>
 
 <script>

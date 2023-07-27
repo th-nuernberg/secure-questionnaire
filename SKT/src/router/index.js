@@ -64,5 +64,25 @@ export default createRouter({
       name: "Auswertung",
       component: () => import("../views/Auswertung.vue"),
     },
+    {
+      path: "/vft",
+      name: "VFT",
+      component: () => import("../views/VFT.vue"),
+    },
+    {
+      path: "/vftintro",
+      name: "VFTIntro",
+      component: () => import("../views/task/vftintro.vue"),
+    },
+    {
+      path: "/bnt",
+      name: "BNT",
+      component: () => import("../views/BNT.vue"),
+    },
+    {
+      path: "/bntintro",
+      name: "BNTIntro",
+      component: () => import("../views/task/bntintro.vue"),
+    },
   ],
 });

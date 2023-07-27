@@ -2,22 +2,23 @@
 
   <body>
 
-    <h3>Kurztests zur Erfassung von Gedächtnis- und Aufmerksamkeitsstörungen</h3>
-    <p>
-      Der Syndrom-Kurztest (SKT) ist ein international anerkannter Test, um die Gedächtnis- und Aufmerksamkeitsleistung
-      zu erfassen.
-      Seit etwa 30 Jahren ist er, in nahezu unveränderter Form, vor allem im Bereich Alzheimer- und Demenzdiagnostik im
-      Einsatz.
-      Durchgeführt wird der SKT ganz klassisch mit Papier- und Bleistift – im Zeitalter von Tablets und Smartphones
-      nicht mehr zeitgemäß.
-      In einem interdisziplinären Forschungsprojekt wollen Wissenschaftler der FAU nun eine digitale Version des Tests
-      entwickeln.
+    <h3>Teilautomatisierte Demenztests</h3>
+      <p>
+        Die folgenden Tests sind Teilautomatisierte Demenztests, die in der Gedächtnissprechstunde des Nordklinikums in Nürnberg eingesetzt werden. <br />
+        Sie können die Tests hier ausprobieren und sich mit den Abläufen vertraut machen.<br />
+        Die Tests sind in dieser Form nicht validiert und nicht für die Diagnostik geeignet, anders als die Ihnen zugrunde liegenden Tests.<br />
+
+        <br />
       </p>
-      <router-link class="btn-router" to="/SKT">Legen Sie gleich los</router-link>
     <p>
-    Der VFT...
+      <router-link class="btn-router" to="/SKT">Hier geht's zum SKT</router-link>
+      </p>
+    <p>
+      <router-link class="btn-router" to="/VFT">Hier geht's zum VFT</router-link>
     </p>
-    <p>Der BNT...</p>
+    <p>
+      <router-link class="btn-router" to="/BNT">Hier geht's zum BNT</router-link>
+    </p>
     <br>
 
 
