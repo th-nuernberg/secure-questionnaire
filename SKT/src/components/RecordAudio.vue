@@ -35,7 +35,7 @@ export default {
               let data = { task: vue.taskNr, content: base64String };
               vue.$store.dispatch("addAudio", data);
             };
-     
+
           }
         };
         this.recorder.start();
