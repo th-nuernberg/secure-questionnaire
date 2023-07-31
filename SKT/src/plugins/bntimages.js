@@ -14,22 +14,41 @@ import haengematte from "../assets/images/BNT/image13.png";
 import trichter from "../assets/images/BNT/image14.png";
 import dominosteine from "../assets/images/BNT/image15.png";
 
-var bntimages = {
-    baum: baum,
-    bett: bett,
-    pfeife: pfeife,
-    blume: blume,
-    haus: haus,
-    kanu: kanu,
-    zahnbuerste: zahnbuerste,
-    vulkan: vulkan,
-    maske: maske,
-    kamel: kamel,
-    mundharmonika: mundharmonika,
-    eiszange: eiszange,
-    haengematte: haengematte,
-    trichter: trichter,
-    dominosteine: dominosteine,
+var imgs = {
+    bntimages: {
+        baum: baum,
+        bett: bett,
+        pfeife: pfeife,
+        blume: blume,
+        haus: haus,
+        kanu: kanu,
+        zahnbuerste: zahnbuerste,
+        vulkan: vulkan,
+        maske: maske,
+        kamel: kamel,
+        mundharmonika: mundharmonika,
+        eiszange: eiszange,
+        haengematte: haengematte,
+        trichter: trichter,
+        dominosteine: dominosteine,
+    },
+    alternatives: {
+        baum: ['baum', 'bäume'],
+        bett: ['bett', 'betten'],
+        pfeife: ['pfeife', 'pfeifen', 'trillerpfeife', 'trillerpfeifen'],
+        blume: ['blume', 'blumen'],
+        haus: ['haus', 'häuser'],
+        kanu: ['kanu', 'boot', 'boote', 'kanus'],
+        zahnbuerste: ['zahnbürste, zahnbürsten', 'bürste', 'bürsten'],
+        vulkan: ['vulkan', 'vulkane'],
+        maske: ['maske, masken'],
+        kamel: ['kamel, kamele'],
+        mundharmonika: ['mundharmonika, mundharmonikas', 'harmonika', 'harmonikas'],
+        eiszange: ['eiszange', 'zange', 'zangen', 'eiszangen', 'zuckerzange', 'zuckerzangen', 'servierzange', 'servierzangen'],
+        haengematte: ['hängematte', 'hängematten'],
+        trichter: ['trichter'],
+        dominosteine: ['domino', 'dominosteine', 'dominos'],
+    }
 };
 
-export default bntimages;
+export default imgs;
