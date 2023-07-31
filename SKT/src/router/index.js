@@ -80,11 +80,6 @@ export default createRouter({
       component: () => import("../views/task/vftrecord.vue"),
     },
     {
-      path: "/vftresults",
-      name: "VFTResults",
-      component: () => import("../views/task/vftresults.vue"),
-    },
-    {
       path: "/bnt",
       name: "BNT",
       component: () => import("../views/BNT.vue"),
