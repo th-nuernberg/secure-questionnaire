@@ -14,6 +14,6 @@
     </p>
     <br />
 
-    <router-link class="btn-router" to="/bntsequence">Los geht's</router-link>
+    <router-link class="btn-router" to="/bntperform">Los geht's</router-link>
   </body>
 </template>

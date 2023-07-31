@@ -66,7 +66,7 @@ export default {
 
       this.$store.dispatch("addData", {
         task: 1,
-        content: { 
+        content: {
           images: this.selectedImage, 
           time: this.$refs.timeBar.time },
       });
@@ -90,7 +90,7 @@ export default {
   },
   created() {
     while (this.selectedImage.length < 12) {
-      var img = this.randomItem(Object.entries(this.images["imgs"]));
+      var img = this.randomItem(Object.entries(this.images["imgs"])); // random samppling formall images 12x
       if (!this.selectedImage.map((x) => x["name"]).includes(img[0])) {
         this.selectedImage.push({
           url: img[1],

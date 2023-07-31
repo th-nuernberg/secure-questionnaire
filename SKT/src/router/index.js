@@ -94,5 +94,10 @@ export default createRouter({
       name: "BNTIntro",
       component: () => import("../views/task/bntintro.vue"),
     },
+    {
+      path: "/bntperform",
+      name: "BNTPerform",
+      component: () => import("../views/task/bntperform.vue"),
+    },
   ],
 });
