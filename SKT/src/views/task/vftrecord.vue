@@ -10,11 +10,8 @@
 
         </div>
 
-        <!-- <RecordAudio :task-nr="8"></RecordAudio> -->
-        <!-- <SpeechRecognition v-if="!this.hide" ref="speechRecogn" :record="hide" @speeched="emitedWord" /> -->
         <RecordAudio v-if="false" :taskNr="8"></RecordAudio>
         <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" />
-        <!-- <GenericSpeechRecognition v-if="!this.hide" ref="speechRecogn" :record="hide" @speeched="emitedWord" /> -->
         <div class="popup" v-if="this.done">
             <h4>Die Zeit ist abgelaufen!<br>Sie haben {{ unique_animals.length }} Tiere genannt!</h4><br>
             <h4>Diese waren: {{ unique_animals.map((x) => x.toLocaleUpperCase()).join(" ") }}</h4><br>
@@ -23,7 +20,6 @@
 
     </body>
 </template>
-<!-- this.localStorage-->
 
 <script>
 import GenericSpeechRecognition from "../../components/GenericSpeechRecognition.vue";
@@ -40,7 +36,7 @@ export default {
             animals,
             done: false,
             hide: Boolean,
-            countdown: 10, // Set your desired countdown duration here
+            countdown: 60, // Set your desired countdown duration here
             words: [],
             wordlist: [],
             unique_animals: [],
@@ -56,10 +52,11 @@ export default {
                 if (this.countdown > 0) {
                     this.countdown--;
                 } else {
-                    setTimeout(function () {console.log('timeout')
+                    setTimeout(function () {
+                        console.log('timeout')
                     }, 5000); //
-                        clearInterval(interval);
-                        this.done = true;
+                    clearInterval(interval);
+                    this.done = true;
                     this.$refs.speechRecogn.stop();
                 }
             }, 1000); // 1000ms = 1 second
@@ -87,12 +84,11 @@ export default {
     },
 
     created() {
-        // this.hide = false;
-        this.$root.record();
         this.animals = this.animals.map((x) => x.toLocaleLowerCase());
     },
     beforeUnmount() {
-    this.$refs.speechRecogn.stop();
+        this.$refs.speechRecogn.stop();
+        this.$root.stop();
     },
 };
 </script>

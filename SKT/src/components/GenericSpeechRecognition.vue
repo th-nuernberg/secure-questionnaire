@@ -25,9 +25,7 @@ export default {
             this.recognObj.stop();
         },
         emitText(text) {
-            //   console.log(text);
             this.$emit("speeched", text);
-            //   this.startSpeechToTxt();
         },
         setupSpeechToTxt() {
             // initialisation of speech recognition:
@@ -45,7 +43,7 @@ export default {
                     .map((result) => result[0])
                     .map((result) => result.transcript)
                     .join("");
-                console.log(text);
+                // console.log(text);
                 this.emitText(text.toLocaleLowerCase());
             });
 
@@ -61,7 +59,6 @@ export default {
             // end of transcription
             recognition.start();
             this.recognObj = recognition;
-            //   this.asr = this.recognObj;
         },
     },
     created() {
