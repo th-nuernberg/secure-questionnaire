@@ -7,7 +7,10 @@
             <h1 v-if="countdown < 45 && countdown > 35"> Ihnen fallen sicher noch mehr Tiere ein! Machen Sie weiter so!</h1>
             <h1 v-else-if="countdown < 15 && countdown > 0">Endspurt, ein paar fallen Ihnen sicher noch ein!</h1>
             <h1 v-else-if="countdown > 0">Nennen Sie so viele Tiere wie Ihnen möglich!</h1>
+            <h4 v-if="countdown > 0" >Erkannte Tiere: {{ unique_animals.join(" ") }}</h4>
 
+        </div>
+        <div>
         </div>
 
         <RecordAudio v-if="false" :taskNr="8"></RecordAudio>
