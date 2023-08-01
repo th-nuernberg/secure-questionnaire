@@ -3,7 +3,7 @@
 
         <!-- <RecordAudio v-if="false" :taskNr="8"></RecordAudio> -->
         <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" />
-        <BNTDisplayImages v-if="!this.done" ref="displayImg" :images="imageList" @nextimage="nextimage" @testfinished="testfinished"></BNTDisplayImages>
+        <BNTDisplayImages v-if="!this.done" ref="displayImg" :images="imageList" @nextimage="nextimage" @testfinished="testfinished" :recognized="recognized" ></BNTDisplayImages>
         <div class="popup" v-if="this.done">
             <h4>Das war das letzte Bild. Der Test ist nun beendet. <br>Sie haben {{ numCorrect }} von {{ imageList.length }} Bildern korrekt genannt!</h4><br>
             <router-link class="btn-router" to="/">Zurück zur Testübersicht</router-link>
@@ -37,7 +37,8 @@ export default {
             alternatives: imgs['alternatives'],
             imageList: [],
             imageNames: [],
-            word_to_recogniton: {}
+            word_to_recogniton: {},
+            recognized: false,
         };
     },
     // mounted() {
@@ -51,6 +52,7 @@ export default {
         nextimage() {
             this.$refs.speechRecogn.stop();
             this.$refs.speechRecogn.setupSpeechToTxt();
+            this.recognized = false;
             // console.log(this.$refs.displayImg.currentIndex);
             // console.log(this.imageNames[this.$refs.displayImg.currentIndex]);
             // this.$root.record();
@@ -68,20 +70,27 @@ export default {
             Object.entries(this.word_to_recogniton).forEach(entry => {
                 const [key, value] = entry;
                 console.log(key, value);
-                var test = value.join(" ").split(" ");
-                var words = [...new Set(test)];
-                console.log(words);
-                console.log(this.alternatives)
-                var score = words.filter((item) => this.alternatives[key].includes(item));
+                let score = this.checkResult(key, value);
                 console.log(score.length);
-                score.length > 0 ? this.numCorrect++ : this.numCorrect;
+                score > 0 ? this.numCorrect++ : this.numCorrect;
             });
  
         }, 
+        checkResult(target, recognition) {
+                var test = recognition.join(" ").split(" ");
+                var words = [...new Set(test)];
+                var score = words.filter((item) => this.alternatives[target].includes(item));
+                return score.length
+        },
+
         emitedWord(speechrec) {
             console.log(speechrec);
             this.word_to_recogniton[this.imageNames[this.$refs.displayImg.currentIndex]].push(speechrec);
             console.log(this.word_to_recogniton[this.imageNames[this.$refs.displayImg.currentIndex]]);
+            let score = this.checkResult(this.imageNames[this.$refs.displayImg.currentIndex], this.word_to_recogniton[this.imageNames[this.$refs.displayImg.currentIndex]])
+            console.log(score);
+            this.recognized = score > 0;
+            console.log(this.recognized);
         },
     },
 
