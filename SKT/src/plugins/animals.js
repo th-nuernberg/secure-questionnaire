@@ -3586,12 +3586,11 @@ var animals = ["Ei",
 "Jungbär",
 "Königskrabbe",
 "Leithund",
-"Leithund",
 "Pudeldame",
 "Mischlingshündin",
 "Schäferhundmischling",
 "Straßenkater",
 "Zuchteber",
-"Ukelei"]
+"Ukelei"];
 
 export default animals;

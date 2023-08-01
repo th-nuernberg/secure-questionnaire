@@ -39,7 +39,7 @@ var imgs = {
         blume: ['blume', 'blumen'],
         haus: ['haus', 'häuser'],
         kanu: ['kanu', 'boot', 'boote', 'kanus'],
-        zahnbuerste: ['zahnbürste, zahnbürsten', 'bürste', 'bürsten'],
+        zahnbuerste: ['zahnbürste', 'zahnbürsten', 'bürste', 'bürsten'],
         vulkan: ['vulkan', 'vulkane'],
         maske: ['maske', 'masken', 'faschingsmaske', 'faschingsmasken', 'karnevalsmaske', 'karnevalsmasken'],
         kamel: ['kamel', 'kamele'],

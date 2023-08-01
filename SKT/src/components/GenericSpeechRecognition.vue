@@ -9,6 +9,7 @@ export default {
     props: {
         record: Boolean,
         asr: Object,
+        // grammar: String,
     },
     data() {
         return {
@@ -30,13 +31,18 @@ export default {
         setupSpeechToTxt() {
             // initialisation of speech recognition:
 
-            window.SpeechRecognition =
-                window.SpeechRecognition || window.webkitSpeechRecognition;
+            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new window.SpeechRecognition();
 
             recognition.lang = this.lang_;
             recognition.interimResults = true;
-
+            /* if (this.grammar && this.grammar != "") { */
+            /*     console.log(this.grammar) */
+            /*     const grammar = new String("#JSGF V1.0; grammar animals; public <animal> = " + this.grammar + " ;"); // animal grammar is to large, supports only ~ 500 words, otherwise asr crashes w.o. error */
+            /*     const speechRecognitionList = new window.webkitSpeechGrammarList(); */
+            /*     speechRecognitionList.addFromString(grammar, 1); */
+            /*     recognition.grammars = speechRecognitionList; */
+            /* } */
             // add event listener for result 
             recognition.addEventListener("result", (event) => {
                 var text = Array.from(event.results)

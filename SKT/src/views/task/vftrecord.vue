@@ -14,7 +14,8 @@
         </div>
 
         <RecordAudio v-if="false" :taskNr="8"></RecordAudio>
-        <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" />
+        <!-- <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" :grammar="animals.sort().join(' | ')"/> -->
+        <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" /> 
         <div class="popup" v-if="this.done">
             <h4>Die Zeit ist abgelaufen!<br>Sie haben {{ unique_animals.length }} Tiere genannt!</h4><br>
             <h4>Diese waren: {{ unique_animals.map((x) => x.toLocaleUpperCase()).join(" ") }}</h4><br>
