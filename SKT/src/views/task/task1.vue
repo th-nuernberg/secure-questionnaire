@@ -2,7 +2,7 @@
   <body>
 
     <RecordAudio v-if="false" :taskNr="1"></RecordAudio>
-    <SpeechRecognition v-if="!this.hide" ref="speechRecogn" :record="hide" @speeched="emitedWord"
+    <SpeechRecognition v-if="!this.hide" ref="speechRecogn" :record="hide" @speeched="emitedWord" :grammar="grammar.join(' | ')" 
       :words="selectedImage.map(x => x['name'])" />
 
     <h3>Subtest I: Gegenstände benennen und einprägen</h3>
@@ -52,6 +52,9 @@ export default {
       selectedImage: [],
       hide: Boolean,
       Audio: null,
+      grammar: ["Ballon", "Banane", "Birne", "Block", "Blume", "Bonbon", "Brief", "Buch", "Büroklammer", "Drache", "Eis", "Erdbeere", "Fahrrad", "Federball", "Fisch", "Gans",
+                "Hammer", "Hund", "Kaktus", "Kirsche", "Kiste", "Knopf", "Koffer", "Nagel", "Paket", "Papagei", "Pfeife", "Pferd", "Pinguin", "Schaufel", "Schirm", "Schleife", 
+                "Schraubenzieher", "Schwein", "Stift", "Streichholz", "Stuhl", "Tasche", "Tasse", "Teddy", "Trichter", "Trommel", "Uhr", "Zaun"],
     };
   },
   methods: {

@@ -2,7 +2,7 @@
   <body>
     <RecordAudio :taskNr="2"></RecordAudio>
     <SpeechRecognition v-if="!this.hide" ref="speechRecogn" :record="hide" @speeched="emitedWord"
-      :words="selectedImages.map((x) => x['name'])" />
+      :words="selectedImages.map((x) => x['name'])" :grammar="grammar.join(' | ')" />
 
     <h3>Subtest II: Gegenstände unmittelbar reproduzieren</h3>
     <div>Aufgabe <strong>2</strong> von 7</div>
@@ -52,6 +52,9 @@ export default {
       selectedImages: [],
       missingImages: [],
       hide: Boolean,
+      grammar: ["Ballon", "Banane", "Birne", "Block", "Blume", "Bonbon", "Brief", "Buch", "Büroklammer", "Drache", "Eis", "Erdbeere", "Fahrrad", "Federball", "Fisch", "Gans",
+                "Hammer", "Hund", "Kaktus", "Kirsche", "Kiste", "Knopf", "Koffer", "Nagel", "Paket", "Papagei", "Pfeife", "Pferd", "Pinguin", "Schaufel", "Schirm", "Schleife", 
+                "Schraubenzieher", "Schwein", "Stift", "Streichholz", "Stuhl", "Tasche", "Tasse", "Teddy", "Trichter", "Trommel", "Uhr", "Zaun"],
     };
   },
   methods: {

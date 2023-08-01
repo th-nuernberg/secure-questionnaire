@@ -6,7 +6,7 @@
     <div>Aufgabe <strong>6</strong> von 7</div>
 
     <SpeechRecognition v-if="!this.hide" ref="speechRecogn" :record="hide" @speeched="emitedWord"
-      :words="selectedImages.map(x => x['name'])" />
+      :words="selectedImages.map(x => x['name'])" :grammar="grammar.join(' | ')"/>
 
     <div v-if="!this.hide">
       <TimeBar :duration=60 @timeout="this.finishedTask" ref="timeBar"/><br />
@@ -53,6 +53,10 @@ export default {
       selectedImages: [],
       missingImages: [],
       hide: Boolean,
+      grammar: ["Ballon", "Banane", "Birne", "Block", "Blume", "Bonbon", "Brief", "Buch", "Büroklammer", "Drache", "Eis", "Erdbeere", "Fahrrad", "Federball", "Fisch", "Gans",
+                "Hammer", "Hund", "Kaktus", "Kirsche", "Kiste", "Knopf", "Koffer", "Nagel", "Paket", "Papagei", "Pfeife", "Pferd", "Pinguin", "Schaufel", "Schirm", "Schleife", 
+                "Schraubenzieher", "Schwein", "Stift", "Streichholz", "Stuhl", "Tasche", "Tasse", "Teddy", "Trichter", "Trommel", "Uhr", "Zaun"],
+
     };
   },
   methods: {

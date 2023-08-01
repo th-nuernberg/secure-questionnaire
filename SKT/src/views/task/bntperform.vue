@@ -2,7 +2,7 @@
     <body>
 
         <!-- <RecordAudio v-if="false" :taskNr="8"></RecordAudio> -->
-        <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" />
+        <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" :grammar="''" />
         <BNTDisplayImages v-if="!this.done" ref="displayImg" :images="imageList" @nextimage="nextimage" @testfinished="testfinished" :recognized="recognized" ></BNTDisplayImages>
         <div class="popup" v-if="this.done">
             <h4>Das war das letzte Bild. Der Test ist nun beendet. <br>Sie haben {{ numCorrect }} von {{ imageList.length }} Bildern korrekt genannt!</h4><br>
