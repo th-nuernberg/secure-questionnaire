@@ -1,4 +1,5 @@
 .DS_Store
 **/*.pem
 **/__pycache__
-**/mongo-volume
+# Ignore mounted database container directory
+./flaskapp/database
