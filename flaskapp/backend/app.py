@@ -13,12 +13,36 @@ DB = mongo["SecureQuestionnaire"]
 
 
 # TODO: CS: get_collection obsolete if working with global constant DB??
+# All collections created on first access
 def get_questionnaires():
-    return DB["questionnaires"]  # created on first access 
+    return DB["questionnaires"]   
 
 
-def get_public_keys():
-    return DB["publicKeys"]  # created on first access 
+def get_RSA_public_keys():
+    """
+        Collection Structure
+
+        RSAPublicKeys = {
+            "owner1@email.com": "publicKey",
+            ...
+        }
+    """
+    return DB["RSAPublicKeys"] 
+
+
+def get_encrypted_AES_keys():
+    """
+        Collection Structure
+
+        encryptedAESKeys = {
+            "questionnaireID1": {
+                "owner1@email.com": "publicKey",
+                ...
+            },
+            ...
+        }
+    """
+    return DB["encryptedAESKeys"] 
 
 
 @app.route("/GET/<id>", methods=["GET"])
@@ -185,29 +209,78 @@ def check_id():
     return Response(response=json.dumps(resp), status=status, mimetype="application/json")
 
 
-@app.route("/api/keys", methods=["GET", "PUT"])
-def keys():
+@app.route("/api/AESkeys", methods=["GET", "PUT"])
+def AESkeys():
     status = 200
-    
+
     try:
-        keys = get_public_keys()
+        keys = get_encrypted_AES_keys()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
+    
 
     if request.method == "GET":
-        owner = request.args.get("owner")
+        owner_mail = request.args.get("owner_mail")
+        queID = request.args.get("queID")
+        
+        # match for nested document
+        key = keys.find_one({
+            str(queID): {
+                "owner": owner
+                }
+            } 
+        )[str(queID)]["key"]
 
-        if owner == "":
+        if not key:
+            key = {"msg": f"Error: No key for {owner_mail} found"}
+            status=404
+        else:
+            status = 200
+
+        return Response(response=json.dumps(key), status=status, mimetype="application/json")
+        
+
+    elif request.method == "PUT":
+
+        # TODO: CS: Was wenn es die owner_mail bzw. den hinterlegten Fragebogen schon gibt???
+        # z.b. bei wiederholtem Ausfuellen? dann .replace_one()?
+
+        key_info = request.get_json()
+        # key_info["publicKey"] = list(key_info["publicKey"].values())
+
+        if not isinstance(key_info, dict):
+            return Response(status=400)
+
+        keys.insert_one(key_info)
+
+
+    return Response(status=status, mimetype="application/json")
+
+
+@app.route("/api/RSAkeys", methods=["GET", "PUT"])
+def RSAkeys():
+    status = 200
+
+    try:
+        keys = get_RSA_public_keys()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+    
+
+    if request.method == "GET":
+        owner_mail = request.args.get("owner_mail")
+        
+        if owner_mail == "":
             # get all keys
             key = []
 
             for k in keys.find({}):
-                key.append({"owner": k.get("owner"), "publicKey": k.get("publicKey")})
+                key.append({"owner_mail": k.get("owner_mail"), "owner_name": k.get("owner_name"), "key": k.get("key")})
         else:
-            key = keys.find_one({"owner": owner})["publicKey"]
+            key = keys.find_one({"owner_mail": owner_mail})
 
         if not key:
-            key = {"msg": f"Error: No key for {owner} found"}
+            key = {"msg": f"Error: No key for {owner_mail} found"}
             status=404
         else:
             status = 200

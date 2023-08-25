@@ -17,23 +17,23 @@
               ausgefüllt werden soll.
             </p>
             <!-- <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" value="single" v-model="questionnaire.repeatingType"/>
-                      <label class="form-check-label" margin-left="20px" for="checkbox_single">
-                        Einmalig
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_date" value="date" v-model="questionnaire.repeatingType"/>
-                      <label class="form-check-label" margin-left="20px" for="checkbox_date">
-                        Wiederholend (Datum)
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_dateTime" value="dateTime" v-model="questionnaire.repeatingType"/>
-                      <label class="form-check-label" margin-left="20px" for="checkbox_dateTime">
-                        Wiederholend (Datum und Uhrzeit)
-                      </label>
-                    </div> -->
+                <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" value="single" v-model="questionnaire.repeatingType"/>
+                <label class="form-check-label" margin-left="20px" for="checkbox_single">
+                  Einmalig
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_date" value="date" v-model="questionnaire.repeatingType"/>
+                <label class="form-check-label" margin-left="20px" for="checkbox_date">
+                  Wiederholend (Datum)
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_dateTime" value="dateTime" v-model="questionnaire.repeatingType"/>
+                <label class="form-check-label" margin-left="20px" for="checkbox_dateTime">
+                  Wiederholend (Datum und Uhrzeit)
+                </label>
+              </div> -->
 
             <div>
               <select v-model="questionnaire.repeatingType">
@@ -162,14 +162,14 @@
         </div>
 
         <!-- <div class="dropdown" >
+            <select @click="addQuestion(question.type)" >
+                <option disabled value="">Bitte wählen!</option>
+                <option   v-for="question in questionTypes" :key="question.text" > {{question.text}} </option>
 
-                    <select @click="addQuestion(question.type)" >
-                        <option disabled value="">Bitte wählen!</option>
-                        <option   v-for="question in questionTypes" :key="question.text" > {{question.text}} </option>
+            </select>
+            <h5>{{ questionnaire.repeatingType }}</h5> 
+        </div> -->
 
-                    </select>
-                   <h5>{{ questionnaire.repeatingType }}</h5> 
-                </div> -->
         <div class="dropdown">
           <button
             class="btn btn-secondary dropdown-toggle"
@@ -195,15 +195,20 @@
             </button>
           </div>
         </div>
-
+        
         <!-- TODO: CS: won't get rendered if wrapped in tooltip:/ -->
-        <!-- <div class="tooltip"> -->
-          <input type="checkbox" id="owner" @change="setOwner()">
+        <!-- <div class="tooltip">
           <label>Mich als Owner des Fragebogens setzen.</label>
-          <!-- <span class="tooltiptext">
+          <span class="tooltiptext">
             So kann nur ich den Bogen lesen. Auch nicht wenn der Patient mit seinem QR-Code zu einem anderen Arzt geht
           </span>
         </div> -->
+
+        <div id="owner-selection" class="dropdown-check-list" tabindex="100">
+          <span class="anchor">Select Fruits</span>
+          <ul id="owner-list" class="items">
+          </ul>
+        </div>
 
         <button
           @click="save()"
@@ -334,7 +339,7 @@ export default {
         queID: "",
         title: "",
         elements: [],
-        owner: null,
+        owners: [],
       },
       saved: false,
       qrlink: "localhost:8080/patient/questionnaire/",
@@ -415,11 +420,12 @@ export default {
       });
     },
     setOwner() {
-        let checked = document.getElementById("owner").checked
-        // TODO: CS: Login management in order to retreive the email of the currently logged in physician
-        // mock mail
-        this.questionnaire.owner = checked ? "foo@bar.com" : ""
-      },
+      let checked = document.getElementById("owner").checked
+      // TODO: CS: Login management in order to retreive the email of the currently logged in physician
+      // as first entry of check box
+      // mock mail
+      this.questionnaire.owner = checked ? "foo@bar.com" : ""
+    },
     save() {
       document.getElementById("upload-error").style.display = "none";
 
@@ -438,6 +444,14 @@ export default {
       }
 
       let id = generateString(5);
+      let checkedBoxes = getCheckedBoxes();
+
+      // collect emails of selected owners in dropdown list in this.owner field
+      for (var i=0; i<checkedBoxes.length; i++) {
+        this.owner.push(
+          checkedBoxes[i].getElementsByClassName("owner_mail")[0]
+        );
+      }
 
       this.$store
         .dispatch("checkID", id)
@@ -462,13 +476,13 @@ export default {
         })
         .catch(() => {});
     },
-
     restart() {
       this.questionnaire = {
         queID: "",
         title: "",
         elements: [],
-        owner: null
+        // OUTCOMMENT
+        // owner: []
       };
       this.saved = false;
     },
@@ -487,7 +501,47 @@ export default {
         },
       });
     },
+    getCheckedBoxes() {
+      var checkboxes = document.querySelectorAll('input[type=checkbox]')
+      var checkboxesChecked = [];
+
+      for (var i=0; i<checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+            checkboxesChecked.push(checkboxes[i]);
+        }
+      }
+
+      return checkboxesChecked;
+    },
+    getOwners() {
+      this.$store.dispatch("getPublicKey", "")
+        .then((res) => {
+          res.forEach(element => {
+          let li = document.createElement('li')
+          let input = document.createElement('input')
+
+          owner_name = document.createElement("label")
+          owner_name.innerHTML = element[owner_name]
+
+          owner_mail = document.createElement("label")
+          owner_mail.innerHTML = element[owner_mail]
+          owner_mail.class = "owner_mail"
+
+          li.appendChild(owner_name)
+          li.appendChild(document.createElement("br"))
+          li.appendChild(owner_mail)
+
+
+          input.type = "checkbox"
+
+          document.getElementById("owner-list").appendChild(li)
+        });
+      })
+    }
   },
+  beforeMount() {
+    this.getOwners()
+  }
 };
 </script>
 
@@ -562,7 +616,7 @@ h4 {
   margin-left: auto;
   margin-top: 40px;
 }
-
+/* OUTCOMMENT
 .tooltip {
   position: relative;
   display: inline-block;
@@ -600,5 +654,60 @@ h4 {
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+} */
+
+
+
+.dropdown-check-list {
+  display: inline-block;
 }
+
+.dropdown-check-list .anchor {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  padding: 5px 50px 5px 10px;
+  border: 1px solid #ccc;
+}
+
+.dropdown-check-list .anchor:after {
+  position: absolute;
+  content: "";
+  border-left: 2px solid black;
+  border-top: 2px solid black;
+  padding: 5px;
+  right: 10px;
+  top: 20%;
+  -moz-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
+  -o-transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+}
+
+.dropdown-check-list .anchor:active:after {
+  right: 8px;
+  top: 21%;
+}
+
+.dropdown-check-list ul.items {
+  padding: 2px;
+  display: none;
+  margin: 0;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.dropdown-check-list ul.items li {
+  list-style: none;
+}
+
+.dropdown-check-list.visible .anchor {
+  color: #0094ff;
+}
+
+.dropdown-check-list.visible .items {
+  display: block;
+}
+
 </style>

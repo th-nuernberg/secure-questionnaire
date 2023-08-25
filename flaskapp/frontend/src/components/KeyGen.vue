@@ -2,7 +2,9 @@
     <div v-if="!saved"> 
         <!-- Can be beautified with CSS -->
         <!-- https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/ -->
-        <input v-model="owner" placeholder="Bitte Email eingeben" />
+        <input v-model="owner_mail" placeholder="Bitte Email eingeben" />
+        <br>
+        <input v-model="owner_name" placeholder="Bitte Namen eingeben" />
         <br>
         <input v-model="passphrase" placeholder="Bitte Kennwort eingeben" :type="passwordFieldType" />
         <button @click="switchVisibility()" type="password">show / hide</button>
@@ -20,13 +22,6 @@
             <h3 class="text-center mb-3">Schuesselpaar erfolgreich erstellt!</h3>
         </div>
     </div>
-    <!-- For testing purposes... -->
-
-    <input id="myInput" placeholder="abcemailtest">
-    <textarea id="myText1"></textarea>
-    <textarea id="myText2"></textarea>
-    <button @click="onMyClick">test key retreival</button>
-    
 </template>
 
 <script>
@@ -38,7 +33,8 @@
         data() {
             return {
                 passphrase: "",
-                owner: "", 
+                owner_mail: "", 
+                owner_name: "", 
                 privateKey: "",
                 passwordFieldType: "password",
                 keyParams: null,
@@ -59,14 +55,16 @@
                     wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
                 }
 
-                window.localStorage.setItem(this.owner, 
+                window.localStorage.setItem(
+                    this.owner_mail, 
                     JSON.stringify(this.keyParams)
                 )
 
                 // TODO: CS: key creation must only be legal if email field set!
                 this.$store
                     .dispatch("uploadPublicKey", { 
-                        owner: this.owner, 
+                        owner_mail: this.owner_mail, 
+                        owner_name: this.owner_name, 
                         publicKey: Buffer.from(keyPairPlusParams.publicKey).toString("base64")
                     })
                     .then(() => {
@@ -77,16 +75,6 @@
                         document.getElementById("upload-error").style.display = "block";
                     });
             },
-            
-            onMyClick() {
-                this.$store
-                    .dispatch("getPublicKey", document.getElementById("myInput").value)
-                    .then((res) => {
-                        document.getElementById("myText1").placeholder = res.data
-                        document.getElementById("myText2").placeholder = window.localStorage.getItem(this.owner)
-                    })
-                    .catch(() => {});
-            }
         }
     }
 </script>
