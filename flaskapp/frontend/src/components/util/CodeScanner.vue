@@ -1,7 +1,7 @@
 <template>
   <div class="col">
     <div class="scanner">
-      <qrcode-stream @decode="onDecode" @init="onInit" class="camera" />
+      <qrcode-stream @decode="onDecode" @init="onInit" :camera="selectedCamera" class="camera" />
       <div class="statusMsg" :class="alert" role="alert">
         {{ status }}
       </div>
@@ -67,7 +67,7 @@ export default {
     },
     async onInit(promise) {
       try {
-        await promise;
+        await promise
       } catch (error) {
         if (error.name === "NotAllowedError") {
           this.alert = "alert-danger";
@@ -89,7 +89,38 @@ export default {
           this.status = "ERROR: Stream API is not supported in this browser";
         }
       }
+    }, 
+    
+    async getDevices () {
+      // get the list of devices
+      const devices = await navigator.mediaDevices.enumerateDevices()
+      // filter only the video devices
+      const cameras = devices.filter(device => device.kind === 'videoinput')
+      // store the cameras in your data or state
+      this.cameras = cameras
     },
+
+    async getStream () {
+      // get the selected camera id from your data or state
+      const cameraId = this.selectedCamera
+      // request the stream from the camera
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          deviceId: myPreferredCameraDeviceId//this.cameras[0] ?
+        }
+      })
+      // store the stream in your data or state
+      this.stream = stream
+    },
+
+    mounted () {
+      // get the video or qrcode element from refs
+      const video = this.$refs.video || this.$refs.qrcode.$el
+      // set the srcObject to the stream
+      video.srcObject = this.stream
+}
+
+
   },
 };
 </script>
