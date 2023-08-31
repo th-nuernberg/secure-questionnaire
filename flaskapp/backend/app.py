@@ -23,7 +23,7 @@ def get_RSA_public_keys():
         Collection Structure
 
         RSAPublicKeys = {
-            "owner1@email.com": "publicKey",
+            owner1@email.com: publicKey,
             ...
         }
     """
@@ -34,13 +34,13 @@ def get_encrypted_AES_keys():
     """
         Collection Structure
 
-        encryptedAESKeys = {
-            "questionnaireID1": {
-                "owner1@email.com": "publicKey",
-                ...
+        encryptedAESKeys = [
+            {
+                keyID: CONCAT(queID, owner_mail),
+                encryptedAESKey: someEncryptedAESKey
             },
             ...
-        }
+        ]
     """
     return DB["encryptedAESKeys"] 
 
@@ -224,35 +224,43 @@ def AESkeys():
         queID = request.args.get("queID")
         
         # match for nested document
-        key = keys.find_one({
-            str(queID): {
-                "owner": owner
-                }
-            } 
-        )[str(queID)]["key"]
-
-        if not key:
+        doc = keys.find_one({ "keyID": (queID + owner_mail) })
+        del doc["_id"]  # remove non JSON serializable ObjectID value, not needed
+        
+        if not doc:
             key = {"msg": f"Error: No key for {owner_mail} found"}
             status=404
         else:
+            key = doc["encryptedAESKey"]
             status = 200
 
         return Response(response=json.dumps(key), status=status, mimetype="application/json")
         
 
     elif request.method == "PUT":
-
-        # TODO: CS: Was wenn es die owner_mail bzw. den hinterlegten Fragebogen schon gibt???
-        # z.b. bei wiederholtem Ausfuellen? dann .replace_one()?
-
         key_info = request.get_json()
-        # key_info["publicKey"] = list(key_info["publicKey"].values())
 
         if not isinstance(key_info, dict):
             return Response(status=400)
 
-        keys.insert_one(key_info)
+        # Concat queID with email to create uniqe identifier for given questionnaire
+        que = keys.find_one({ "keyID": (key_info["queID"] + key_info["owner_mail"]) })
 
+        keys.insert_one(
+            {
+                "keyID": (key_info["queID"] + key_info["owner_mail"]),
+                "encryptedAESKey": key_info["encryptedAESKey"]
+            }
+        )
+        
+        # Alternative structure with nested documents; prettiert but queries get much more complicated...
+        # keys.insert_one({
+        #     "queID": key_info.queID,
+        #     "keys": [{
+        #         "encryptedAESKey": key_info.encryptedAESKey,
+        #         "owner_mail": key_info.owner_mail
+        #     }]
+        # })
 
     return Response(status=status, mimetype="application/json")
 
@@ -275,9 +283,10 @@ def RSAkeys():
             key = []
 
             for k in keys.find({}):
-                key.append({"owner_mail": k.get("owner_mail"), "owner_name": k.get("owner_name"), "key": k.get("key")})
+                del k['_id']  # remove non JSON serializable ObjectID value, not needed
+                key.append(k)
         else:
-            key = keys.find_one({"owner_mail": owner_mail})
+            key = keys.find_one({"owner_mail": owner_mail})["publicKey"]
 
         if not key:
             key = {"msg": f"Error: No key for {owner_mail} found"}
@@ -285,18 +294,21 @@ def RSAkeys():
         else:
             status = 200
 
+        print(key)
+
         return Response(response=json.dumps(key), status=status, mimetype="application/json")
         
 
     elif request.method == "PUT":
+        # TODO: CS: Was wenn es die owner_mail bzw. den hinterlegten Fragebogen schon gibt???
+        # z.b. bei wiederholtem Ausfuellen? dann .replace_one()?
+
         key_info = request.get_json()
-        # key_info["publicKey"] = list(key_info["publicKey"].values())
 
         if not isinstance(key_info, dict):
             return Response(status=400)
 
         keys.insert_one(key_info)
-
 
     return Response(status=status, mimetype="application/json")
 
