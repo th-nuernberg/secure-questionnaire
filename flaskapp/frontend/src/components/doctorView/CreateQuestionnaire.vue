@@ -204,11 +204,11 @@
           </span>
         </div> -->
 
-        <div id="owner-selection" class="dropdown-check-list" tabindex="100">
-          <span class="anchor">Select Fruits</span>
-          <ul id="owner-list" class="items">
-          </ul>
-        </div>
+        <p id="owner-selection" class="dropdown-owner" tabindex="100">
+          <span>Behandelnde Aerzte auswaehlen</span>
+          <div id="owner-list" class="dropdown-owner-content">
+          </div>
+        </p> 
 
         <button
           @click="save()"
@@ -444,12 +444,26 @@ export default {
       }
 
       let id = generateString(5);
+
+      function getCheckedBoxes() {
+        var checkboxes = document.querySelectorAll('input[type=checkbox]')
+        var checkboxesChecked = [];
+
+        for (var i=0; i<checkboxes.length; i++) {
+          if (checkboxes[i].checked) {
+              checkboxesChecked.push(checkboxes[i]);
+          }
+        }
+
+        return checkboxesChecked;
+      }
+
       let checkedBoxes = getCheckedBoxes();
 
       // collect emails of selected owners in dropdown list in this.owner field
       for (var i=0; i<checkedBoxes.length; i++) {
-        this.owner.push(
-          checkedBoxes[i].getElementsByClassName("owner_mail")[0]
+        this.questionnaire.owners.push(
+          checkedBoxes[i].parentElement.getElementsByClassName("owner_mail")[0].textContent
         );
       }
 
@@ -481,8 +495,7 @@ export default {
         queID: "",
         title: "",
         elements: [],
-        // OUTCOMMENT
-        // owner: []
+        owners: []
       };
       this.saved = false;
     },
@@ -501,41 +514,33 @@ export default {
         },
       });
     },
-    getCheckedBoxes() {
-      var checkboxes = document.querySelectorAll('input[type=checkbox]')
-      var checkboxesChecked = [];
-
-      for (var i=0; i<checkboxes.length; i++) {
-        if (checkboxes[i].checked) {
-            checkboxesChecked.push(checkboxes[i]);
-        }
-      }
-
-      return checkboxesChecked;
-    },
     getOwners() {
       this.$store.dispatch("getPublicKey", "")
         .then((res) => {
-          res.forEach(element => {
-          let li = document.createElement('li')
-          let input = document.createElement('input')
+          res.data.forEach(element => {
+            let owner = document.createElement('p')
 
-          owner_name = document.createElement("label")
-          owner_name.innerHTML = element[owner_name]
+            let input = document.createElement('input')
+            let label = document.createElement('label')
+            
+            let owner_name = document.createElement("p")
+            let owner_mail = document.createElement("p")
+            
+            input.type = "checkbox"
 
-          owner_mail = document.createElement("label")
-          owner_mail.innerHTML = element[owner_mail]
-          owner_mail.class = "owner_mail"
+            owner_name.innerHTML = element.owner_name
 
-          li.appendChild(owner_name)
-          li.appendChild(document.createElement("br"))
-          li.appendChild(owner_mail)
+            owner_mail.innerHTML = element.owner_mail
+            owner_mail.classList.add("owner_mail")
 
+            label.appendChild(owner_name)
+            label.appendChild(owner_mail)
 
-          input.type = "checkbox"
+            owner.appendChild(input)
+            owner.appendChild(label)
 
-          document.getElementById("owner-list").appendChild(li)
-        });
+            document.getElementById("owner-list").appendChild(owner)
+          });
       })
     }
   },
@@ -658,56 +663,30 @@ h4 {
 
 
 
-.dropdown-check-list {
-  display: inline-block;
+.dropdown-owner {
+    position: relative;
+  }
+  
+  .dropdown-owner-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
-.dropdown-check-list .anchor {
-  position: relative;
-  cursor: pointer;
-  display: inline-block;
-  padding: 5px 50px 5px 10px;
-  border: 1px solid #ccc;
+.dropdown-owner-content label {
+    display: block;
+    padding: 8px;
 }
 
-.dropdown-check-list .anchor:after {
-  position: absolute;
-  content: "";
-  border-left: 2px solid black;
-  border-top: 2px solid black;
-  padding: 5px;
-  right: 10px;
-  top: 20%;
-  -moz-transform: rotate(-135deg);
-  -ms-transform: rotate(-135deg);
-  -o-transform: rotate(-135deg);
-  -webkit-transform: rotate(-135deg);
-  transform: rotate(-135deg);
+.dropdown-owner-content label:hover {
+    background-color: #e0e0e0;
 }
 
-.dropdown-check-list .anchor:active:after {
-  right: 8px;
-  top: 21%;
-}
-
-.dropdown-check-list ul.items {
-  padding: 2px;
-  display: none;
-  margin: 0;
-  border: 1px solid #ccc;
-  border-top: none;
-}
-
-.dropdown-check-list ul.items li {
-  list-style: none;
-}
-
-.dropdown-check-list.visible .anchor {
-  color: #0094ff;
-}
-
-.dropdown-check-list.visible .items {
-  display: block;
+.dropdown-owner:hover .dropdown-owner-content {
+    display: block;
 }
 
 </style>

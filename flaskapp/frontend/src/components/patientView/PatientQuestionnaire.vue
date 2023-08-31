@@ -377,28 +377,7 @@ export default {
       
       this.$store.dispatch("encryptAndUpload", {
           answers: this.answers,
-
-
-
-
-
-
-
-
-
-          // Die owners hier EINFACH vom questionnaire UEBERNEHMEN, NIX berechnen....
-
-
-
-
-
-
-
-
-
-
-
-          owners: ownerInfo.key
+          owners: this.questionnaire.owners  // ..............................................!!!!!!!!!!
         })
         .then(() => {
         //.then((result) => {
