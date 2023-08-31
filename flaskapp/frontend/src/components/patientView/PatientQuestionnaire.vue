@@ -160,14 +160,6 @@
       ></Questions-Container>
 
       <div class="text-center">
-        <label for="pet-select">Behandelnden Arzt auswaehlen:</label>
-        
-        <select name="owner" id="owner-select">
-            <!-- TODO: CS: loop over "key array" this.keys and display all email key pairs in db for selection -->
-            <option value="" >--Bitte waehlen sie eine Option--</option>
-            <option value="foo@bar.com">Dr. Foo Bar</option>
-        </select>
-
         <button
           @click="save()"
           variant="success"
@@ -212,7 +204,6 @@ export default {
       pageState: null,
       AESkey: [],
       patientName: "",
-      keys: null
     };
   },
 
@@ -247,15 +238,6 @@ export default {
       .catch(() => {
         this.pageState = "error";
       });
-    
-
-
-    // TODO: CS: get all keys.... to display for selection of docs
-    // this.$store
-    //   .dispatch("getPublicKey", "")
-    //   .then((res) => {
-    //     this.keys = res
-    //   })
   },
 
   beforeRouteLeave(to, from, next) {
@@ -382,48 +364,27 @@ export default {
       }
       this.answers.dateEntries.sort(sort_by_date);
     },
-
-    getKeySelectedOwner() {
-      let selectedOwner = document.getElementById("owner-select").value
-
-      return this.$store
-      .dispatch("getPublicKey", selectedOwner)
-      .then((res) => {
-        return ({
-            owner: selectedOwner, 
-            key: res.data
-          })
-      })
-    },
-
-    async save() {
+    
+    save() {
       document.getElementById("upload-error").style.display = "none";
+
       this.sortQuestionnaire();
       this.answers.queID = this.questionnaire.queID;
 
       if (this.answers.UUID === undefined) {
         this.answers.UUID = uuid.v4();
       }
-
-      let selectedOwner = await this.getKeySelectedOwner()
       
-      this.$store
-        .dispatch("encryptAndUpload", {
+      this.$store.dispatch("encryptAndUpload", {
           answers: this.answers,
-          owner: selectedOwner.owner,
-          // TODO: CS: index "key array" with owner mail
-          // TODO: CS: implement multiple encryption for multiple institution/doctors, everyone should be able to decrypt individually
-          key: selectedOwner.key
+          owners: this.questionnaire.owners  // ..............................................!!!!!!!!!!
         })
         .then(() => {
+        //.then((result) => {
+          //this.AESkey = result;
           window.scrollTo(0, 0);
           this.pageState = "saved";
         })
-        // .then((result) => {
-        //   this.AESkey = result;
-        //   window.scrollTo(0, 0);
-        //   this.pageState = "saved";
-        // })
         .catch(() => {
           document.getElementById("upload-error").style.display = "block";
         });

@@ -2,9 +2,7 @@
 import Vuex from "vuex";
 import axios from "../axios-auth";
 import { encryptAES, decryptAES, encryptRSA, decryptRSA } from "./encryption.js";
-// import { BSON, EJSON } from './lib/bson.mjs';
 
-//Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -120,21 +118,50 @@ export default new Vuex.Store({
       });
     },
 
-    encryptAndUpload({ dispatch }, questionnaire) {
+    encryptAndUpload({ dispatch }, info) {
       let data = {
-        answers: questionnaire.answers,
-        id: questionnaire.answers.UUID,
-        owner: questionnaire.owner
+        answers: info.answers,
+        id: info.answers.UUID,
+        IV: [],
+        owners: info.owners
       };
 
       return new Promise((resolve, reject) => {
-        encryptRSA(JSON.stringify(data.answers), Buffer.from(questionnaire.key, "base64"))
-        .then((result) => {
-          data.answers = Buffer.from(result).toString("base64")
+        encryptAES(JSON.stringify(data.answers))
+          .then((result) => {
+            data.answers = Buffer.from(result.Cipher).toString("base64");
+            data.IV = Buffer.from(result.IV).toString("base64");
+
+            // Encrypt single AES key with every public key of given owners each
+            // https://stackoverflow.com/questions/49497489/encrypt-to-multiple-public-keys-with-rsa-using-webcrypto
+            info.owners.forEach((owner) => {
+              dispatch("getPublicKey", owner)
+              .then((publicKey) => {
+                // TODO: CS: string encoding eigl unnoetig, encryption umbauen, funktioniert im moment nur auf strings... 
+                encryptRSA(Buffer.from(result.Key).toString("base64"), Buffer.from(publicKey.data, "base64"))
+                .then((encryptedAESKey) => {
+                  return new Promise((resolve, reject) => {
+                    axios.put("/AESkeys", 
+                      {
+                        encryptedAESKey: Buffer.from(encryptedAESKey).toString("base64"),
+                        owner_mail: owner,
+                        queID: data.id
+                      } 
+                    ) 
+                    .then(() => {
+                      resolve();
+                    })
+                    .catch(() => {
+                      reject();
+                    });
+                  });
+                })
+              })
+            })
+            
             dispatch("uploadAnswers", data)
               .then(() => {
-                console.log("abcdefg")
-                resolve()
+                resolve();
               })
               .catch(() => {
                 reject();
@@ -143,37 +170,7 @@ export default new Vuex.Store({
           .catch(() => {
             reject();
           });
-      });
-
-      // return new Promise((resolve, reject) => {
-      //   encryptAES(JSON.stringify(data.answers))
-      //   .then((result) => {
-      //     data.answers = Buffer.from(result.Cipher).toString("base64");
-      //     data.IV = Buffer.from(result.IV).toString("base64");
-          
-      //       // only encrypt asymmetric if somebody owns the questionnaire (owner)
-      //       if (data.owner) {
-      //         encryptRSA(JSON.stringify(data.answers), questionnaire.key)
-      //           .then((cipher) => {
-      //             data.answers = Buffer.from(cipher).toString("base64")
-      //           })
-      //           .catch(() => {
-      //             reject();
-      //           });
-      //         }
-      //       // wartet der hier auf die RSA verschluesselung???
-      //       dispatch("uploadAnswers", data)
-      //         .then(() => {
-      //           resolve(result.Key);
-      //         })
-      //         .catch(() => {
-      //           reject();
-      //         });
-      //     })
-      //     .catch(() => {
-      //       reject();
-      //     });
-      // });
+        })
     },
 
     uploadAnswers(_, data) {
@@ -203,45 +200,46 @@ export default new Vuex.Store({
       });
     },
 
-    getAnswers({ commit, state }, infos) {
+    getAnswers({ commit, state }, info) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/answers", { params: { queID: infos.id } })
-          .then((questionnaire) => {
-            let answersArray = Buffer.from(questionnaire.data.answers, "base64");
-            let keyParams = JSON.parse(window.localStorage.getItem(questionnaire.data.owner))
+          .get("/answers", { params: { queID: info.id } })
+          .then((res) => {
+            // TODO: CS: temporaer als proof of concept email und password aus local storage...
+            // natuerlich null sicher...
+            // -> eigl dann per Session erkennen welcher Nutzer und passenden Key aus DB holen
+
+            let user_details = JSON.parse(window.localStorage.getItem("user_details"))
             
-            // convert to Uint8Array, for handling in decryption methods
-            keyParams.salt = Buffer.from(keyParams.salt, "base64")
-            keyParams.wrappingIv = Buffer.from(keyParams.wrappingIv, "base64")
-            keyParams.wrappedPrivateKey = Buffer.from(keyParams.wrappedPrivateKey, "base64")
-            
-            decryptRSA(answersArray, keyParams, "1234567890")
-            .then((result) => {
-              let parsed = JSON.parse(result);
-              commit("setAnswers", parsed.answers);
-              resolve(state.answers);
+            axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.user_mail } }) 
+              .then((encryptedAESKeyObject) => {
+                let keyParams = JSON.parse(window.localStorage.getItem(user_details.user_mail))
+                
+                // convert to Uint8Array, for handling in decryption methods
+                let encryptedAESKey = Buffer.from(encryptedAESKeyObject.data, 'base64');
+                keyParams.salt = Buffer.from(keyParams.salt, "base64")
+                keyParams.wrappingIv = Buffer.from(keyParams.wrappingIv, "base64")
+                keyParams.wrappedPrivateKey = Buffer.from(keyParams.wrappedPrivateKey, "base64").buffer
+                
+                return decryptRSA(encryptedAESKey, keyParams, user_details.user_password)
+                .then((decryptedAESKey) => {
+                  // let decryptedAESKey = new TextEncoder().encode(result)
+                  
+                  // TODO: CS: string encoding eigl unnoetig, decryption umbauen, gitb im moment strings aus...
+                  let keyArray = Buffer.from(decryptedAESKey, 'base64')
+                  let IVArray = Buffer.from(res.data.IV, 'base64')
+                  let answersArray = Buffer.from(res.data.answers, 'base64')
+                  
+                  return decryptAES(keyArray, answersArray, IVArray)
+                  .then((result) => {
+                    return JSON.parse(result)
+                  })
+                })
               })
-
-            // let answersArray = Buffer.from(questionnaire.data.answers, "base64");
-            
-            // // AES
-            // let keyArray = Buffer.from(infos.key, "base64");
-            // let IVArray = Buffer.from(questionnaire.data.IV, "base64");
-
-            // decryptAES(keyArray, answersArray, IVArray).then((result) => {
-            //   //RSA 
-            //   if (questionnaire.data.owner) {
-            //     keyParams = JSON.parse(window.localStorage.getItem(questionnaire.owner))
-            //     keyParams.wrappedPrivateKey = Uint8Array.from(keyParams.wrappedPrivateKey)
-
-            //     // TODO: CS: get passphrase via input  
-            //     result = decryptRSA(result, keyParams, "1234567890")  
-            //   } 
-            //   let parsed = JSON.parse(result);
-            //   commit("setAnswers", parsed.answers);
-            //   resolve(state.answers);
-            // });
+              .then((parsed) => {
+                commit("setAnswers", parsed)
+                resolve(state.answers)
+              })
           })
           .catch(() => {
             reject();
@@ -265,9 +263,7 @@ export default new Vuex.Store({
     uploadPublicKey(_, data) {
       return new Promise((resolve, reject) => {
         axios
-          // TODO: BSON stringify -> parse 
-          //.put("/keys", BSON.stringify(data))  // public key can later be retreived via email field included in data
-          .put("/keys", data)  // public key can later be retreived via email field included in data
+          .put("/RSAkeys", data) 
           .then(() => {
             resolve();
           })
@@ -277,10 +273,10 @@ export default new Vuex.Store({
       });
     },
 
-    getPublicKey(_, owner) {
+    getPublicKey(_, owner_mail) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/keys", { params: { owner: owner } })
+          .get("/RSAkeys", { params: { owner_mail: owner_mail } })
           .then((res) => {
             resolve(res);
           })
