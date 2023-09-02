@@ -18,7 +18,7 @@ services:
     expose:
       - 8080
     depends_on:
-      - mong
+      - mongo
 
   frontend:
     build: frontend
