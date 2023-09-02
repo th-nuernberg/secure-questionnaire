@@ -6,6 +6,8 @@ services:
     volumes:
       - ./database:/data/db
     restart: always
+    ports:
+      - "27017:27017"
 
   backend:
     build: ./backend
@@ -15,6 +17,8 @@ services:
       - APP_NAME=MyFlaskApp
     expose:
       - 8080
+    depends_on:
+      - mong
 
   frontend:
     build: frontend
