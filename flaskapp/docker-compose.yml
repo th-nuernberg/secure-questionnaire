@@ -37,7 +37,7 @@ services:
       - "5000:5000"
 
   nginx:
-    build: ./nginx
+    image: "nginx"
     container_name: nginx
     restart: always
     ports:
@@ -45,3 +45,7 @@ services:
     depends_on:
       - backend
       - frontend
+    volumes:
+      - ./nginx/auth/:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      
