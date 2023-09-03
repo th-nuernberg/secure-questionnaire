@@ -4,4 +4,4 @@
 # Ignore mounted database container directory
 ./flaskapp/database
 
-./flaskapp/nginx/auth
+./flaskapp/nginx/auth/*
