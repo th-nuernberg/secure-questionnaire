@@ -1,45 +1,64 @@
 <template>
-  <!--    <navbar style="background-color: #2A2A2A;" toggleable="lg" type="dark" variant="dark">-->
-  <!--        <navbar-brand class="brand" :to="{ path: '/' }">Schlafambulanz</navbar-brand>-->
-  <!--        <router-link to="/"> Home</router-link>-->
-  <!--        <navbar-nav v-if="doctorViewCreate">-->
-  <!--            <b-nav-item to="/doctorView">Antworten analysieren</b-nav-item>-->
-  <!--        </navbar-nav>-->
-  <!--        <navbar-nav v-else-if="doctorView">-->
-  <!--            <b-nav-item to="/doctorView/create">Fragebogen erstellen</b-nav-item>-->
-  <!--        </navbar-nav>-->
-  <!--    </navbar>-->
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="#">Patientenfragebogen</a>
+  <div>
+    <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
+      <div class="container">
+        <a href="#" class="navbar-brand mb-o h1">Patientenfragebogen</a>
+        <button 
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        class="navbar-toggler"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li v-if="doctorView" class="nav-item active">
-          <a class="nav-link" href="/doctorView">Home </a>
-        </li>
-        <li v-if="doctorViewCreate" class="nav-item active">
-          <a class="nav-link" href="/doctorView">Home </a>
-        </li>
-        <li v-if="patientView" class="nav-item active">
-          <a class="nav-link" href="/">Home </a>
-        </li>
-        <li v-if="questView" class="nav-item active">
-          <a class="nav-link" href="/doctorView">Home </a>
-        </li>
-        <li v-if="doctorViewCreate" class="nav-item">
-          <a class="nav-link" href="/doctorView">Fragebogen analysieren</a>
-        </li>
-        <li v-else-if="doctorView" class="nav-item">
-          <a class="nav-link" href="/doctorView/create">Fragebogen erstellen</a>
-        </li>
-        <li v-if="doctorView" class="nav-item">
-          <a class="nav-link" href="/doctorView/ViewQuestionnaires"
-            >Fragebögen anzeigen</a
-          >
-        </li>
-      </ul>
-    </div>
-  </nav>
+        <span class="navbar-toggler-icon"></span>
+      
+      </button>
+        <div 
+        class="collapse navbar-collapse" 
+        id="navbarNav">
+          <ul class="navbar-nav">
+            <li v-if="doctorView" class="nav-item active">
+              <a href="/doctorView" class="nav-link active">
+                Home
+              </a>
+            </li>
+            <li v-if="doctorViewCreate" class="nav-item active">
+              <a href="/doctorView" class="nav-link active">
+                Home
+              </a>
+            </li>
+            <li v-if="patientView" class="nav-item active">
+              <a href="/" class="nav-link active">
+                Home
+              </a>
+            </li>
+            <li v-if="questView" class="nav-item active">
+              <a href="/doctorView" class="nav-link active">
+                Home
+              </a>
+            </li>
+            <li v-if="doctorViewCreate" class="nav-item active">
+              <a href="/doctorView" class="nav-link active">
+                Fragebogen analysieren
+              </a>
+            </li>
+            <li v-else-if="doctorView" class="nav-item active">
+              <a href="/doctorView/create" class="nav-link active">
+                Fragebogen erstellen
+              </a>
+            </li>
+            <li v-if="doctorView" class="nav-item active">
+              <a href="/doctorView/ViewQuestionnaires" class="nav-link active">
+                Fragebögen anzeigen
+              </a>
+            </li>  
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -62,17 +81,9 @@ export default {
 };
 </script>
 
-<style scoped>
-.navbar {
-  background-color: lightgray;
-  margin-bottom: 30px;
-}
-.ms-auto {
-  margin-right: 20px;
-}
 
-.navbar-brand {
-  margin-left: 20px;
-  margin-right: 20px;
-}
+<style>
+  #navbarNav{
+    justify-content: flex-end;
+  }
 </style>
