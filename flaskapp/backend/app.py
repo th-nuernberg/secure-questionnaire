@@ -1,7 +1,13 @@
 import json
+
 import pymongo
+import jwt
+
 from flask_cors import CORS
 from flask import request, Flask, Response
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime, timedelta
+
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -17,6 +23,10 @@ DB = mongo["SecureQuestionnaire"]
 # All collections created on first access
 def get_questionnaires():
     return DB["questionnaires"]   
+
+
+def get_user():
+    return DB["user"]   
 
 
 def get_RSA_public_keys():
@@ -47,6 +57,7 @@ def get_encrypted_AES_keys():
 
 
 @app.route("/GET/<id>", methods=["GET"])
+@token_required
 def get(id):
     status = 200
     response = None
@@ -71,6 +82,7 @@ def get(id):
 
 
 @app.route("/POST/<id>", methods=["POST"])
+@token_required
 def post(id):
     status = 200
     response = None
@@ -96,7 +108,106 @@ def post(id):
     return Response(response=response, status=status, mimetype="application/json")
 
 
+def token_required(f):
+    @wraps(f)
+    def _verify(*args, **kwargs):
+        auth_headers = request.headers.get('Authorization', '').split()
+
+        invalid_msg = {
+            'message': 'Invalid token. Registeration and / or authentication required',
+            'authenticated': False
+        }
+        expired_msg = {
+            'message': 'Expired token. Reauthentication required.',
+            'authenticated': False
+        }
+
+        if len(auth_headers) != 2:
+            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+
+        try:
+            token = auth_headers[1]
+            data = jwt.decode(token, current_app.config['SECRET_KEY'])
+            user = get_user().find_one({"email": data["sub"]})
+
+            if not user:
+                raise RuntimeError('User not found')
+
+            return f(user, *args, **kwargs)
+
+        except jwt.ExpiredSignatureError:
+            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+
+        except (jwt.InvalidTokenError, Exception) as e:
+            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+
+    return _verify
+
+
+
+def authenticate(email, password):
+    users = get_user()
+
+    hashed_password = generate_password_hash(
+        password, 
+        method="sha256"
+    )
+
+    if not email or not password:
+        return None
+    
+    user = users.find_one({"email": email})
+
+    # user not existent yet or password hash not matching
+    if not user or not check_password_hash(user["password"], password):
+        return None
+
+    return user
+
+
+@app.route("/api/register", methods=["PUT"])
+def register():
+    try:
+        users = get_user()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    users.insert_one({
+        "email": request.args.get("email"),
+        "password": generate_password_hash(
+            request.args.get("password"), 
+            method="sha256"
+        )
+    })
+    
+    return Response(status=201, mimetype="application/json")
+
+
+@app.route("/api/login", methods=["PUT"])
+def login():
+    status = 200
+    data = request.get_json()
+    user = authenticate(data["email"], data["password"])
+
+    if not user:
+        response = {"msg": f"Error: Invalid credentials"}
+        status = 400
+    else:
+        response = jwt.encode(
+            {
+                'sub': user["email"],
+                'iat':datetime.utcnow(),
+                'exp': datetime.utcnow() + timedelta(minutes=30)
+            },
+            current_app.config['SECRET_KEY']
+        ).decode("UTF-8")
+
+    return Response(response=json.dumps(response), status=status, mimetype="application/json")
+    
+
+
 @app.route("/api/questionnaire", methods=["GET", "PUT"])
+@token_required
 def questionnaire():
     status = 200
 
@@ -131,6 +242,7 @@ def questionnaire():
 
 
 @app.route("/api/questionnaire/all", methods=["GET"])
+@token_required
 def all_questionnaires():
     status = 200
 
@@ -155,6 +267,7 @@ def all_questionnaires():
 
 
 @app.route("/api/answers", methods=["GET", "PUT"])
+@token_required
 def answers():
     status = 200
 
@@ -191,6 +304,7 @@ def answers():
 
 
 @app.route("/api/questionnaire/idcheck", methods=["GET"])
+@token_required
 def check_id():
     status = 200
 
@@ -211,6 +325,7 @@ def check_id():
 
 
 @app.route("/api/AESkeys", methods=["GET", "PUT"])
+@token_required
 def AESkeys():
     status = 200
 
@@ -267,6 +382,7 @@ def AESkeys():
 
 
 @app.route("/api/RSAkeys", methods=["GET", "PUT"])
+@token_required
 def RSAkeys():
     status = 200
 

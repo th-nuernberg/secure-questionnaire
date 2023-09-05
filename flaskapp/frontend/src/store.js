@@ -2,6 +2,7 @@
 import Vuex from "vuex";
 import axios from "../axios-auth";
 import { encryptAES, decryptAES, encryptRSA, decryptRSA } from "./encryption.js";
+import { isValidJwt, EventBus } from "./utils";
 
 
 export default new Vuex.Store({
@@ -31,6 +32,8 @@ export default new Vuex.Store({
       { text: "Skala", type: "scale" },
     ],
     analyseObj: [],
+    user: {},
+    jwt: ""
   },
   getters: {
     getQuestionnaire: (state) => state.questionnaire,
@@ -104,11 +107,11 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    uploadQuestionnaire(_, questionnaire) {
+    uploadQuestionnaire(_, questionnaire, jwt) {
       //send Questionnaire to backend
       return new Promise((resolve, reject) => {
         axios
-          .put("/questionnaire", questionnaire)
+          .put("/questionnaire", questionnaire, { headers: { Authorization: `Bearer: ${jwt}` } })
           .then(() => {
             resolve();
           })
@@ -118,7 +121,7 @@ export default new Vuex.Store({
       });
     },
 
-    encryptAndUpload({ dispatch }, info) {
+    encryptAndUpload({ dispatch }, info, jwt) {
       let data = {
         answers: info.answers,
         id: info.answers.UUID,
@@ -146,7 +149,8 @@ export default new Vuex.Store({
                         encryptedAESKey: Buffer.from(encryptedAESKey).toString("base64"),
                         owner_mail: owner,
                         queID: data.id
-                      } 
+                      }, 
+                      { headers: { Authorization: `Bearer: ${jwt}` } }
                     ) 
                     .then(() => {
                       resolve();
@@ -173,11 +177,11 @@ export default new Vuex.Store({
         })
     },
 
-    uploadAnswers(_, data) {
+    uploadAnswers(_, data, jwt) {
       //send Answers to backend
       return new Promise((resolve, reject) => {
         axios
-          .put("/answers", data)
+          .put("/answers", data, { headers: { Authorization: `Bearer: ${jwt}` } })
           .then(() => {
             resolve();
           })
@@ -187,10 +191,10 @@ export default new Vuex.Store({
       });
     },
 
-    getPatientQuestionnaire(_, id) {
+    getPatientQuestionnaire(_, id, jwt) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/questionnaire", { params: { queID: id } })
+          .get("/questionnaire", { params: { queID: id }, headers: { Authorization: `Bearer: ${jwt}` } })
           .then((res) => {
             resolve(res.data);
           })
@@ -200,10 +204,10 @@ export default new Vuex.Store({
       });
     },
 
-    getAnswers({ commit, state }, info) {
+    getAnswers({ commit, state }, info, jwt) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/answers", { params: { queID: info.id } })
+          .get("/answers", { params: { queID: info.id }, headers: { Authorization: `Bearer: ${jwt}` } })
           .then((res) => {
             // TODO: CS: temporaer als proof of concept email und password aus local storage...
             // natuerlich null sicher...
@@ -211,7 +215,7 @@ export default new Vuex.Store({
 
             let user_details = JSON.parse(window.localStorage.getItem("user_details"))
             
-            axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.user_mail } }) 
+            axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.user_mail }, headers: { Authorization: `Bearer: ${jwt}` } }) 
               .then((encryptedAESKeyObject) => {
                 let keyParams = JSON.parse(window.localStorage.getItem(user_details.user_mail))
                 
@@ -247,10 +251,10 @@ export default new Vuex.Store({
       });
     },
 
-    checkID(_, id) {
+    checkID(_, id, jwt) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/questionnaire/idcheck", { params: { queID: id } })
+          .get("/questionnaire/idcheck", { params: { queID: id, headers: { Authorization: `Bearer: ${jwt}` } } })
           .then((res) => {
             resolve(res.data);
           })
@@ -260,10 +264,10 @@ export default new Vuex.Store({
       });
     },
 
-    uploadPublicKey(_, data) {
+    uploadPublicKey(_, data, jwt) {
       return new Promise((resolve, reject) => {
         axios
-          .put("/RSAkeys", data) 
+          .put("/RSAkeys", data, { headers: { Authorization: `Bearer: ${jwt}` } }) 
           .then(() => {
             resolve();
           })
@@ -273,10 +277,10 @@ export default new Vuex.Store({
       });
     },
 
-    getPublicKey(_, owner_mail) {
+    getPublicKey(_, owner_mail, jwt) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/RSAkeys", { params: { owner_mail: owner_mail } })
+          .get("/RSAkeys", { params: { owner_mail: owner_mail, headers: { Authorization: `Bearer: ${jwt}` } } })
           .then((res) => {
             resolve(res);
           })
@@ -284,6 +288,14 @@ export default new Vuex.Store({
             reject();
           });
       });
+    },
+
+    authenticate (userData) {
+      return axios.post("/login", userData)
+    },
+    
+    register (userData) {
+      return axios.post("/register", userData)
     }
   },
 });
