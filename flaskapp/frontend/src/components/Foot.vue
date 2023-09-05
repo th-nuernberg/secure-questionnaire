@@ -1,35 +1,21 @@
 <template>
-  <div class="foot">
-    <div class="container p-3">
-      <hr class="mt-3 text-secondary" />
-      <div class="container-fuiled">
-        <!-- row -->
-        <div class="row">
-          <!-- copyright column -->
-          <div class="col-sm">
-            <div class="p-3 text-black text-center">
-              © Copyright: Patientenfragebogen
-            </div>
-          </div>
-          <!-- Privacy Policy link and Terms Condition link column -->
-          <div class="col-sm p-3 text-white text-center">
-            <div class="col">
-              <a
-                href="javascript:void(0)"
-                class="text-decoration-none text-black pe-3"
-                >Privacy Policy
-              </a>
-              <a
-                href="javascript:void(0)"
-                class="text-decoration-none text-black ps-3"
-              >
-                Terms Condition</a
-              >
-            </div>
-          </div>
+  <div>
+    <footer class="bg-dark pt-3 fixed-bottom">
+      <div class="container text-light text-center">
+        <!-- <p class="h5 mb-3">Patientenfragebogen</p> -->
+        <small class="text-white-35">&copy; Copyright</small>
+        <div>
+          <ul class="list-unstyled list-inline">
+            <li class="list-inline-item">
+              <a href="avascript:void(0)" class="text-light footer-link">Privacy Policy</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="avascript:void(0)" class="text-light footer-link">Terms Condition</a>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </footer>
   </div>
 </template>
 
@@ -47,10 +33,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.foot {
-  background-color: lightgray;
-  margin-top: 300px;
-  color: black;
-}
+<style>
+  .footer-link{
+    text-decoration: none;
+  }
 </style>
