@@ -6,6 +6,8 @@ services:
     volumes:
       - ./database:/data/db
     restart: always
+    ports:
+      - "27017:27017"
 
   backend:
     build: ./backend
@@ -15,6 +17,8 @@ services:
       - APP_NAME=MyFlaskApp
     expose:
       - 8080
+    depends_on:
+      - mongo
 
   frontend:
     build: frontend
@@ -33,7 +37,7 @@ services:
       - "5000:5000"
 
   nginx:
-    build: ./nginx
+    image: "nginx"
     container_name: nginx
     restart: always
     ports:
@@ -41,3 +45,7 @@ services:
     depends_on:
       - backend
       - frontend
+    volumes:
+      - ./nginx/auth/:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      
