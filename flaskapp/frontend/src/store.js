@@ -31,6 +31,7 @@ export default new Vuex.Store({
       { text: "Skala", type: "scale" },
     ],
     analyseObj: [],
+    privateKeyParams: [],
   },
   getters: {
     getQuestionnaire: (state) => state.questionnaire,
@@ -101,6 +102,9 @@ export default new Vuex.Store({
     },
     setAnalyseObjects(state, obj) {
       state.analyseObj = obj;
+    },
+    setPrivateKeyParams(state, privateKeyParams) {
+      state.privateKeyParams = privateKeyParams
     },
   },
   actions: {
@@ -213,8 +217,9 @@ export default new Vuex.Store({
             
             axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.user_mail } }) 
               .then((encryptedAESKeyObject) => {
-                let keyParams = JSON.parse(window.localStorage.getItem(user_details.user_mail))
-                
+                // let keyParams = JSON.parse(window.localStorage.getItem(user_details.user_mail))
+                let keyParams = this.$store.state.privateKeyParams
+
                 // convert to Uint8Array, for handling in decryption methods
                 let encryptedAESKey = Buffer.from(encryptedAESKeyObject.data, 'base64');
                 keyParams.salt = Buffer.from(keyParams.salt, "base64")

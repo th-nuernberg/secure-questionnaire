@@ -74,7 +74,6 @@ export default {
       addedCountDown: 0,
     };
   },
-
   methods: {
     deleteID(index) {
       this.idsKeys.splice(index, 1);

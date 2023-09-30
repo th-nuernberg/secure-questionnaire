@@ -45,6 +45,23 @@
             switchVisibility() {
                 this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
             },
+            saveKeyParamsAsFile(filename, dataObjToWrite) {
+                const blob = new Blob([JSON.stringify(dataObjToWrite)], { type: "text/json" });
+                const link = document.createElement("a");
+
+                link.download = filename;
+                link.href = window.URL.createObjectURL(blob);
+                link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
+
+                const evt = new MouseEvent("click", {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true,
+                });
+
+                link.dispatchEvent(evt);
+                link.remove()
+            },
             async createRSAKeyPair(passphrase) { 
                 // returns a public key, wrapped private key and salt+iv it has been wrapped with
                 let keyPairPlusParams = await createRSAKeyPair(passphrase)
@@ -55,10 +72,12 @@
                     wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
                 }
 
-                window.localStorage.setItem(
-                    this.owner_mail, 
-                    JSON.stringify(this.keyParams)
-                )
+                // window.localStorage.setItem(
+                //     this.owner_mail, 
+                //     JSON.stringify(this.keyParams)
+                // )
+
+                this.saveKeyParamsAsFile("Schluessel.json", this.keyParams)
 
                 // TODO: CS: key creation must only be legal if email field set!
                 this.$store
