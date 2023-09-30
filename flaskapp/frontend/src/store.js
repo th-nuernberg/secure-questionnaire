@@ -218,7 +218,7 @@ export default new Vuex.Store({
             axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.user_mail } }) 
               .then((encryptedAESKeyObject) => {
                 // let keyParams = JSON.parse(window.localStorage.getItem(user_details.user_mail))
-                let keyParams = this.$store.state.privateKeyParams
+                let keyParams = state.privateKeyParams
 
                 // convert to Uint8Array, for handling in decryption methods
                 let encryptedAESKey = Buffer.from(encryptedAESKeyObject.data, 'base64');
