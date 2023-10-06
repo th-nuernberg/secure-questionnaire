@@ -72,11 +72,6 @@
                     wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
                 }
 
-                // window.localStorage.setItem(
-                //     this.owner_mail, 
-                //     JSON.stringify(this.keyParams)
-                // )
-
                 this.saveKeyParamsAsFile("Schluessel.json", this.keyParams)
 
                 // TODO: CS: key creation must only be legal if email field set!
