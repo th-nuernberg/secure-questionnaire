@@ -1,9 +1,3 @@
-// import Vue from 'vue'
-// import vue from "@vitejs/plugin-vue";
-import App from "./App.vue"
-
-export const EventBus = new App()
-
 export function isValidJwt (jwt) {
   if (!jwt || jwt.split('.').length < 3) {
     return false

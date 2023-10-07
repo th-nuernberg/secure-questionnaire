@@ -16,8 +16,7 @@ import PatientQuestionnaire from "./components/patientView/PatientQuestionnaire.
 import AnalyseQuestionnaires from "./components/doctorView/AnalyseQuestionnaires.vue";
 import CreateQuestionnaire from "./components/doctorView/CreateQuestionnaire.vue";
 import ViewQuestionnaires from "./components/doctorView/ViewQuestionnaires.vue";
-import KeyGen from "./components/KeyGen.vue";
-import LogIn from "./components/LogIn.vue";
+import Login from "./components/Login.vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons";
@@ -27,19 +26,21 @@ const router = createRouter({
   routes: [
     { path: "/", name: "Home", component: Home },
     {
-      path: "/LogIn",
-      name: "LogIn",
-      component: LogIn
-    },
-    {
-      path: "/keyGen",
-      name: "KeyGen",
-      component: KeyGen
+      path: "/login",
+      name: "Login",
+      component: Login
     },
     {
       path: "/doctorView",
       name: "DoctorView",
       component: DoctorView,
+      beforeEnter (to, from, next) {
+        if (!store.getters.isAuthenticated) {
+          next('/login')
+        } else {
+          next()
+        }
+      }
     },
     {
       path: "/patient",
@@ -50,16 +51,38 @@ const router = createRouter({
       path: "/doctorView/create",
       name: "CreateQuestionnaire",
       component: CreateQuestionnaire,
+      // TODO: CS: Welche Routen muessen alles sinvollerweise geschuetzt werden ??
+      beforeEnter (to, from, next) {
+        if (!store.getters.isAuthenticated) {
+          next('/login')
+        } else {
+          next()
+        }
+      }
     },
     {
       path: "/doctorView/ViewQuestionnaires",
       name: "ViewQuestionnaires",
       component: ViewQuestionnaires,
+      beforeEnter (to, from, next) {
+        if (!store.getters.isAuthenticated) {
+          next('/login')
+        } else {
+          next()
+        }
+      }
     },
     {
       path: "/doctorView/analyse",
       name: "AnalyseQuestionnaires",
       component: AnalyseQuestionnaires,
+      beforeEnter (to, from, next) {
+        if (!store.getters.isAuthenticated) {
+          next('/login')
+        } else {
+          next()
+        }
+      }
     },
     {
       path: "/patient/questionnaire/:id",

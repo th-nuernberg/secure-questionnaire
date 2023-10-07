@@ -1,16 +1,20 @@
 import json
+from datetime import datetime, timedelta
+from functools import wraps
 
-import pymongo
+
 import jwt
-
+import pymongo
 from flask_cors import CORS
 from flask import request, Flask, Response
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
 
 
 app = Flask(__name__)
 cors = CORS(app)
+
+with open('config.json') as config_file:
+    SECRET_KEY = json.load(config_file)['SECRET_KEY']
 
 # serverSelectionTimeoutMS defaults to 30 seconds
 mongo = pymongo.MongoClient("mongodb://mongo:27017")
@@ -54,6 +58,42 @@ def get_encrypted_AES_keys():
         ]
     """
     return DB["encryptedAESKeys"] 
+
+
+def token_required(f):
+    @wraps(f)
+    def _verify(*args, **kwargs):
+        auth_headers = request.headers.get('Authorization', '').split()
+
+        invalid_msg = {
+            'message': 'Invalid token. Registeration and / or authentication required',
+            'authenticated': False
+        }
+        expired_msg = {
+            'message': 'Expired token. Reauthentication required.',
+            'authenticated': False
+        }
+
+        if len(auth_headers) != 2:
+            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+
+        try:
+            token = auth_headers[1]
+            data = jwt.decode(token, SECRET_KEY)
+            user = get_user().find_one({ "email": data["sub"] })
+
+            if not user:
+                raise RuntimeError('User not found')
+
+            return f(user, *args, **kwargs)
+
+        except jwt.ExpiredSignatureError:
+            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+
+        except (jwt.InvalidTokenError, Exception) as e:
+            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+
+    return _verify
 
 
 @app.route("/GET/<id>", methods=["GET"])
@@ -108,43 +148,6 @@ def post(id):
     return Response(response=response, status=status, mimetype="application/json")
 
 
-def token_required(f):
-    @wraps(f)
-    def _verify(*args, **kwargs):
-        auth_headers = request.headers.get('Authorization', '').split()
-
-        invalid_msg = {
-            'message': 'Invalid token. Registeration and / or authentication required',
-            'authenticated': False
-        }
-        expired_msg = {
-            'message': 'Expired token. Reauthentication required.',
-            'authenticated': False
-        }
-
-        if len(auth_headers) != 2:
-            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
-
-        try:
-            token = auth_headers[1]
-            data = jwt.decode(token, current_app.config['SECRET_KEY'])
-            user = get_user().find_one({"email": data["sub"]})
-
-            if not user:
-                raise RuntimeError('User not found')
-
-            return f(user, *args, **kwargs)
-
-        except jwt.ExpiredSignatureError:
-            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
-
-        except (jwt.InvalidTokenError, Exception) as e:
-            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
-
-    return _verify
-
-
-
 def authenticate(email, password):
     users = get_user()
 
@@ -156,7 +159,7 @@ def authenticate(email, password):
     if not email or not password:
         return None
     
-    user = users.find_one({"email": email})
+    user = users.find_one({"owner_mail": email})
 
     # user not existent yet or password hash not matching
     if not user or not check_password_hash(user["password"], password):
@@ -165,7 +168,7 @@ def authenticate(email, password):
     return user
 
 
-@app.route("/api/register", methods=["PUT"])
+@app.route("/api/register", methods=["POST"])
 def register():
     try:
         users = get_user()
@@ -173,7 +176,8 @@ def register():
         return Response(response=repr(e), status=503, mimetype="application/json")
 
     users.insert_one({
-        "email": request.args.get("email"),
+        "owner_mail": request.args.get("owner_mail"),
+        "owner_name": request.args.get("owner_name"),
         "password": generate_password_hash(
             request.args.get("password"), 
             method="sha256"
@@ -183,11 +187,11 @@ def register():
     return Response(status=201, mimetype="application/json")
 
 
-@app.route("/api/login", methods=["PUT"])
+@app.route("/api/login", methods=["POST"])
 def login():
     status = 200
     data = request.get_json()
-    user = authenticate(data["email"], data["password"])
+    user = authenticate(data["owner_mail"], data["password"])
 
     if not user:
         response = {"msg": f"Error: Invalid credentials"}
@@ -195,11 +199,11 @@ def login():
     else:
         response = jwt.encode(
             {
-                'sub': user["email"],
-                'iat':datetime.utcnow(),
+                'sub': user["owner_mail"],
+                'iat': datetime.utcnow(),
                 'exp': datetime.utcnow() + timedelta(minutes=30)
             },
-            current_app.config['SECRET_KEY']
+            SECRET_KEY
         ).decode("UTF-8")
 
     return Response(response=json.dumps(response), status=status, mimetype="application/json")
