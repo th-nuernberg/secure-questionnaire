@@ -17,7 +17,7 @@
       @keydown.enter="submit()"
     />
     <br />
-    <button class="btn btn-secondary mt-5" variant="primary" @click="submit()">
+    <button class="btn btn-dark mt-2" variant="primary" @click="submit()">
       Bestätigen
     </button>
   </div>
