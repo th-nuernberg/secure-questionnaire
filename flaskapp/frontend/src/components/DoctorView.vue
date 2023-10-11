@@ -4,23 +4,23 @@
       <div class="col-12">
         <div class="wrapper">
           <code-scanner @addAnalyseID="addAnalyseID"></code-scanner>
-          <!-- <div class="info">
-                        <div :show="existsCountDown" class="alert alert-primary" role="alert"
-                                 variant="warning"
-                                 @dismissed="existsCountDown=0"
-                                 @dismiss-count-down="existsCountDownChanged">
-                            <p class="m-0">Dieser Code wurde bereits erfasst.</p>
-                        </div>
-                        <div :show="addedCountDown" class="alert alert-primary" role="alert"
-                             variant="success"
-                             @dismissed="addedCountDown=0"
-                             @dismiss-count-down="addedCountDownChanged">
-                            <h1 class="m-0">+</h1>
-                        </div>
-                    </div> -->
+                                <!-- <div class="info">
+                                              <div :show="existsCountDown" class="alert alert-primary" role="alert"
+                                                      variant="warning"
+                                                      @dismissed="existsCountDown=0"
+                                                      @dismiss-count-down="existsCountDownChanged">
+                                                  <p class="m-0">Dieser Code wurde bereits erfasst.</p>
+                                              </div>
+                                              <div :show="addedCountDown" class="alert alert-primary" role="alert"
+                                                  variant="success"
+                                                  @dismissed="addedCountDown=0"
+                                                  @dismiss-count-down="addedCountDownChanged">
+                                                  <h1 class="m-0">+</h1>
+                                              </div>
+                                          </div> -->
         </div>
       </div>
-      <div class="col">
+      <div class="mt-5 col">
         <h4>Folgende Bögen wurden erfasst:</h4>
         <div v-if="idsKeys.length > 0">
           <div class="ids">
@@ -40,8 +40,8 @@
                   variant="danger"
                   size="sm"
                 >
-                  <!-- <i class="fas fa-trash"></i> -->
-                  delete
+                                      <!-- <i class="fas fa-trash"></i> -->
+                  <!-- delete -->
                 </button>
               </div>
             </div>
@@ -103,7 +103,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<!-- <style scoped> -->
+<style>
+
+
+
 .wrapper {
   position: relative;
 }
