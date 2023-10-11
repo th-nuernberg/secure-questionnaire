@@ -1,61 +1,51 @@
 <template>
   <div v-if="!saved">
     <div class="container">
-      <h1>Fragebogen erstellen</h1>
-      <div>
-        <div class="mb-2">
-          <label>Titel: </label>
-          <input type="text" v-model="questionnaire.title" />
-        </div>
-        <div class="row g-5">
-          <h4 class="fw-bold"></h4>
-          <form class="px-2" text-align="left" action="">
-            <p class="fw-bold">
-              Geben Sie an, ob der Patient den Fragebogen einmalig oder mehrmals
-              ausfüllen soll. Falls es sich um einen wiederholenden Fragebogen
-              handelt, müssen Sie angeben, in welchem Intervall der Fragebogen
-              ausgefüllt werden soll.
-            </p>
-            <!-- <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_single" value="single" v-model="questionnaire.repeatingType"/>
-                <label class="form-check-label" margin-left="20px" for="checkbox_single">
-                  Einmalig
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_date" value="date" v-model="questionnaire.repeatingType"/>
-                <label class="form-check-label" margin-left="20px" for="checkbox_date">
-                  Wiederholend (Datum)
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="exampleForm" id="checkbox_dateTime" value="dateTime" v-model="questionnaire.repeatingType"/>
-                <label class="form-check-label" margin-left="20px" for="checkbox_dateTime">
-                  Wiederholend (Datum und Uhrzeit)
-                </label>
-              </div> -->
+      <h3>Fragebogen erstellen</h3>
 
-            <div>
-              <select v-model="questionnaire.repeatingType">
-                <option disabled value="">Bitte wählen!</option>
-                <option value="single">Einmalig</option>
-                <option value="date">Wiederholend (Datum)</option>
-                <option value="dateTime">
-                  Wiederholend (Datum und Uhrzeit)
-                </option>
-              </select>
-              <!-- <h5>{{ questionnaire.repeatingType }}</h5> -->
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="py-3">
+            <label for="titel" class="form-label">Titel</label>
+            <input id="titel" type="text" class="form-control ml-0" placeholder="Fragebogen#1" required>
+            <div class="invalid-feedback">
+              Valid Titel is required.
             </div>
-          </form>
+          </div>
         </div>
+      </div>
 
-        <div
+      <hr class="my-3">
+
+      <p class="text-muted mb-0">
+        Geben Sie an, ob der Patient den Fragebogen einmalig oder mehrmals
+        ausfüllen soll. Falls es sich um einen wiederholenden Fragebogen
+        handelt, müssen Sie angeben, in welchem Intervall der Fragebogen
+        ausgefüllt werden soll.
+      </p>
+
+      <form>
+        <div div class="form-group col-md-4 py-3">
+          <label for="interval" class="form-label">Testintervall</label>
+          <select v-model="questionnaire.repeatingType" id="interval" class="form-control">
+            <option selected disabled value="">Bitte wählen...</option>
+            <option value="single">Einmalig</option>
+            <option value="date">Wiederholend (Datum)</option>
+            <option value="dateTime">Wiederholend (Datum und Uhrzeit)</option>
+          </select>
+          <small class="text-muted">Bitte wählen!</small>
+        </div>
+      </form>
+
+      <hr class="my-3">
+
+      <div
           v-for="question in questionnaire.elements"
           :key="question.id"
-          :class="[question.id % 2 == 0 ? 'background-color' : '', 'mb-3 p-3']"
+          :class="['mb-3 p-3']"
         >
           <div class="row center">
-            <div class="col">
+            <div class="col-2">
               <create-question-control
                 @deleteQuestion="deleteQuestion(question)"
                 @upwards="questionUpwards(question)"
@@ -63,7 +53,7 @@
               >
               </create-question-control>
             </div>
-            <div class="col">
+            <div class="col-md-10">
               <label
                 >{{ question.id }}. Frage:
                 {{ questionText(question.type) }}</label
@@ -86,46 +76,52 @@
                 />
               </div>
 
-              <!--Multiple Choice / Single Choice-->
+              <!-- Multiple Choice / Single Choice -->
               <span v-if="choiceQuestion(question.type)">
                 <span class="d-block mt-2">Optionen: </span>
                 <span
                   v-for="(option, index) in question.options"
                   :key="option.id"
                 >
-                  <input
-                    type="text"
-                    class="form-control"
-                    v-model="option.text"
-                    :key="option.id"
-                    :placeholder="'Option ' + (index + 1)"
-                  />
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary"
-                    v-if="index !== 0 && index !== 1"
-                    @click="deleteOption(question, option)"
-                    variant="danger"
-                  >
-                    <BootstrapIcon icon="trash" size="1x" />
-                  </button>
-                  <br />
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="option.text"
+                      :key="option.id"
+                      :placeholder="'Option ' + (index + 1)"
+                    />
+                    <div class="input-group-append">
+                      <button 
+                      type="button"
+                      class="btn btn-outline-dark"
+                      v-if="index !== 0 && index !== 1"
+                      @click="deleteOption(question, option)"
+                      variant="danger"
+                      >
+                        <BootstrapIcon icon="trash" size="1x" />
+                      </button>
+                    </div>
+                  </div>
+                <br />
                 </span>
 
                 <button
                   type="button"
-                  class="btn btn-outline-primary"
+                  class="btn btn-outline-dark"
                   @click="addOption(question.id)"
                 >
                   <BootstrapIcon icon="plus-circle" size="1x" />
                 </button>
+                <small class="text-muted ms-2">weitere Option hinzufügen</small>
               </span>
 
-              <!--Skala-->
+              <!-- Skala -->
               <span v-else-if="question.type == 'scale'">
+                <span class="d-block mt-2">Beschreibung der Skala: </span>
                 <input
-                  class="mt-2 mb-2"
-                  placeholder="Beschreibung der Skala (optional)"
+                  class="form-control"
+                  placeholder="(optional)"
                   v-model="question.description"
                 />
                 <br />
@@ -133,55 +129,54 @@
                   v-for="(option, index) in question.options"
                   :key="option.id"
                 >
-                  <input
-                    v-model="option.text"
-                    class="mc-option mb-2"
-                    :placeholder="'Option ' + (index + 1)"
-                  />
-                  <button
-                    v-if="index >= 2"
-                    @click="deleteOption(question, option)"
-                    variant="danger"
-                    size="sm"
-                  >
-                    <BootstrapIcon icon="trash" size="1x" />
-                  </button>
-                  <br />
+                  <div class="input-group">
+                    <input
+                      v-model="option.text"
+                      class="form-control"
+                      :placeholder="'Option ' + (index + 1)"
+                    />
+                    <div class="input-group-append">
+                      <button
+                      type="button"
+                      class="btn btn-outline-dark"
+                      v-if="index >=2"
+                      @click="deleteOption(question, option)"
+                      variant="danger"
+                      >
+                        <BootstrapIcon icon="trash" size="1x" />
+                      </button>
+                    </div>
+                  </div> 
+                <br />
                 </span>
 
                 <button
                   type="button"
-                  class="btn btn-outline-primary"
+                  class="btn btn-outline-dark"
                   @click="addOption(question.id)"
                 >
                   <BootstrapIcon icon="plus-circle" size="1x" />
                 </button>
+                <small class="text-muted ms-2">weitere Option hinzufügen</small>
               </span>
             </div>
           </div>
         </div>
 
-        <!-- <div class="dropdown" >
-            <select @click="addQuestion(question.type)" >
-                <option disabled value="">Bitte wählen!</option>
-                <option   v-for="question in questionTypes" :key="question.text" > {{question.text}} </option>
+        
 
-            </select>
-            <h5>{{ questionnaire.repeatingType }}</h5> 
-        </div> -->
-
-        <div class="dropdown">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            @click="toggle"
-            id="dropdownMenu2"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <BootstrapIcon icon="question-circle-fill" size="1x" /><br />
-            Fragenmenue
+<div class="dropdown">
+  <button
+    class="btn btn-dark dropdown-toggle"
+    type="button"
+    @click="toggle"
+    id="dropdownMenu2"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <BootstrapIcon icon="question-circle-fill" size="1x" /><br />
+    Fragenmenue
           </button>
           <div v-if="active">
             <button
@@ -195,125 +190,22 @@
             </button>
           </div>
         </div>
-        
-        <!-- TODO: CS: won't get rendered if wrapped in tooltip:/ -->
-        <!-- <div class="tooltip">
-          <label>Mich als Owner des Fragebogens setzen.</label>
-          <span class="tooltiptext">
-            So kann nur ich den Bogen lesen. Auch nicht wenn der Patient mit seinem QR-Code zu einem anderen Arzt geht
-          </span>
-        </div> -->
 
-        <p id="owner-selection" class="dropdown-owner" tabindex="100">
-          <span>Behandelnde Aerzte auswaehlen</span>
-          <div id="owner-list" class="dropdown-owner-content">
-          </div>
-        </p> 
+      <hr class="my-3">
 
-        <button
+      <button
           @click="save()"
-          class="btn btn-secondary mt-5"
-          variant="success"
-        >
-          <BootstrapIcon icon="save2" size="2x" /><br />
-          Fragebogen speichern
-        </button>
-        <div id="upload-error" style="display: none">
-          <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
-          <p class="m-1 d-inline">
-            Fehler beim Upload. Bitte versuchen Sie es erneut.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div v-else class="saved">
-    <div class="boxStyling mb-5">
-      <h3 class="text-center mb-3">Erfolgreich gespeichert!</h3>
-      <div class="row">
-        <div class="col center">
-          <button
-            type="button"
-            class="btn btn-outline-primary"
-            @click="downloadPdf()"
-            variant="primary"
-          >
-            <BootstrapIcon icon="download" size="2x" />
-            Infoblatt
-          </button>
-          <button
-            @click="restart()"
-            type="button"
-            class="btn btn-outline-primary"
-            variant="outline-primary"
-          >
-            <BootstrapIcon icon="menu-down" size="2x" />
-            Neuer Fragebogen
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- <html2pdf :show-layout="false"
-                     :float-layout="true"
-                     :enable-download="false"
-                     :preview-modal="true"
-                     :paginate-elements-by-height="1400"
-                     filename="QR-Code für Fragebogen"
-                     :pdf-quality="2"
-                     :manual-pagination="false"
-                     pdf-format="a4"
-                     pdf-orientation="portrait"
-                     pdf-content-width="800px"
-                     @hasStartedGeneration="hasStartedGeneration()"
-                     @hasGenerated="hasGenerated($event)"
-                     ref="html2Pdf"> -->
-    <!-- <questionnaire-pdf  slot="pdf-content" :content="qrlink" :queID="questionnaire.queID" :title="questionnaire.title"></questionnaire-pdf> -->
-    <!--  </html2pdf> -->
-
-    <div class="boxStyling">
-      <section class="user-details p-5" ref="document">
-        <div class="text-center">
-          <h1>Infoblatt zum Fragebogen</h1>
-          <h4>{{ questionnaire.title }}</h4>
-          <qr-code :content="qrlink" class="qr"></qr-code>
-        </div>
-        <h4>1. Fragebogen öffnen</h4>
-        <p>
-          Um den Fragebogen zu öffnen, scannen Sie den obigen QR-Code mit einem
-          QR-Code-Scanner Ihrer Wahl. Sie können dazu zum Beispiel Ihr
-          Smartphone benutzen.
-          <br />
-          Alternativ können Sie den QR-Code auch direkt auf www.website.de
-          einscannen.
-        </p>
-        <p>
-          Falls Sie keine Kamera zur Verfügung haben, können Sie auch folgenden
-          Code unter www.website.de eingeben:
-        </p>
-        <div class="text-center">
-          <p class="font-weight-bold p-2 d-inline code">
-            {{ questionnaire.queID }}
-          </p>
-        </div>
-        <h4>2. Fragebogen ausfüllen</h4>
-        <p>
-          Füllen Sie den Fragebogen nach Anweisungen des Arztes aus und
-          speichern Sie ihn anschließend.
-          <br />Nach dem Speichern erhalten Sie eine weitere Datei mit einem
-          neuen QR-Code, der genutzt werden kann, um Ihre verschlüsselten
-          Antworten zu entschlüsseln. <br />Mit diesem können Sie Ihre Antworten
-          im Nachhinein bearbeiten und ergänzen. <br />
-          Beachten Sie, dass bei einer Änderung Ihrer Antworten aus
-          Sicherheitsgründen immer ein neuer QR-Code erstellt wird und somit der
-          alte QR-Code an Gültigkeit verliert.
-        </p>
-        <h4>3. Fragebogen auswerten</h4>
-        <p>
-          Bringen Sie den aktuellen QR-Code beim nächsten Termin mit, damit der
-          Arzt Ihre Antworten auswerten kann.
-        </p>
-      </section>
+          class="btn btn-dark btn-lg mt-3"
+          variant="success">
+            <div class="d-flex">
+              <div class="p-2">
+                <BootstrapIcon class="mb-0" icon="box-arrow-down" size="2x" />
+              </div>
+              <div class="p-2">
+                Fragebogen speichern
+              </div>
+            </div>            
+      </button>
     </div>
   </div>
 </template>
@@ -449,9 +341,9 @@ export default {
         var checkboxes = document.querySelectorAll('input[type=checkbox]')
         var checkboxesChecked = [];
 
-        for (var i=0; i<checkboxes.length; i++) {
+        for (var i = 0; i < checkboxes.length; i++) {
           if (checkboxes[i].checked) {
-              checkboxesChecked.push(checkboxes[i]);
+            checkboxesChecked.push(checkboxes[i]);
           }
         }
 
@@ -461,7 +353,7 @@ export default {
       let checkedBoxes = getCheckedBoxes();
 
       // collect emails of selected owners in dropdown list in this.owner field
-      for (var i=0; i<checkedBoxes.length; i++) {
+      for (var i = 0; i < checkedBoxes.length; i++) {
         this.questionnaire.owners.push(
           checkedBoxes[i].parentElement.getElementsByClassName("owner_mail")[0].textContent
         );
@@ -488,7 +380,7 @@ export default {
             this.save();
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     restart() {
       this.questionnaire = {
@@ -522,10 +414,10 @@ export default {
 
             let input = document.createElement('input')
             let label = document.createElement('label')
-            
+
             let owner_name = document.createElement("p")
             let owner_mail = document.createElement("p")
-            
+
             input.type = "checkbox"
 
             owner_name.innerHTML = element.owner_name
@@ -541,7 +433,7 @@ export default {
 
             document.getElementById("owner-list").appendChild(owner)
           });
-      })
+        })
     }
   },
   beforeMount() {
@@ -550,9 +442,12 @@ export default {
 };
 </script>
 
-<style scoped>
-label {
-  font-weight: bold;
+<style>
+.ml-0 {
+  margin-left: 0 !important;
+}
+.mb-0 {
+  margin-bottom: 0 !important;
 }
 
 .mc-option {
@@ -561,20 +456,13 @@ label {
   margin-right: 10px;
 }
 
-input[type="text"],
-textarea {
-  background-color: #11111111;
-  margin-left: 10px;
-  color: black;
-}
-
 form[class="px-2"] {
   text-align: left;
 }
 
-.background-color {
+/* .background-color {
   background: #11111111;
-}
+} */
 
 .skala {
   display: flex;
@@ -621,47 +509,6 @@ h4 {
   margin-left: auto;
   margin-top: 40px;
 }
-/* OUTCOMMENT
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -60px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-} */
-
-
 
 .dropdown-owner {
     position: relative;
@@ -688,5 +535,4 @@ h4 {
 .dropdown-owner:hover .dropdown-owner-content {
     display: block;
 }
-
 </style>
