@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <!-- <div class="content text-center"> -->
+  <div class="content">
+
+  <!-- <div id="app"> -->
     <div>
       <!-- navbar -->
       <NavBar />
@@ -9,6 +12,7 @@
       <!-- footer -->
       <Foot />
     </div>
+  <!-- </div> -->
   </div>
 </template>
 
@@ -42,70 +46,94 @@ export default {
 <style lang="scss">
 @import "custom.scss";
 
-.router-container {
-  margin: 0 50px;
+*{
+  margin: 0;
+  padding: 0;
+}
+html{
+  height: 100%;
 }
 
-#app {
-  background-color: $background;
+body{
+  background-color: rgba(0,0,0,0.05);
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+.content{
+  margin-top: 100px;
+  margin-bottom: 120px;
 }
 
-.boxStyling {
-  border-radius: 20px;
-  box-shadow: 0px 0px 5px #aaaaaa;
-  padding: 15px;
-  margin: 20px 0;
-  background-color: white;
-}
+// .router-container {
+//   margin: 0 50px;
+// }
 
-.btn-big {
-  padding: 10px 20px !important;
-}
+// #app {
+//   background-color: $background;
+// }
 
-.btn-primary {
-  background-color: $primary !important;
-  border-color: $primary !important;
-}
+// .boxStyling {
+//   border-radius: 20px;
+//   box-shadow: 0px 0px 5px #aaaaaa;
+//   padding: 15px;
+//   margin: 20px 0;
+//   background-color: white;
+// }
 
-.btn-primary:hover {
-  background-color: $primary-dark !important;
-}
+// .btn-big {
+//   padding: 10px 20px !important;
+// }
 
-.btn-outline-primary {
-  color: $primary !important;
-  border-color: $primary !important;
-}
+// .btn-primary {
+//   background-color: $primary !important;
+//   border-color: $primary !important;
+// }
 
-.btn-outline-primary:hover {
-  background-color: $primary-dark !important;
-  color: white !important;
-}
+// .btn-primary:hover {
+//   background-color: $primary-dark !important;
+// }
 
-.btn-accent {
-  background-color: $accent !important;
-  color: black !important;
-  border: none !important;
-}
+// .btn-outline-primary {
+//   color: $primary !important;
+//   border-color: $primary !important;
+// }
 
-.btn-accent:hover {
-  background-color: $accent-dark !important;
-}
+// .btn-outline-primary:hover {
+//   background-color: $primary-dark !important;
+//   color: white !important;
+// }
 
-.dropdown-item.active,
-.dropdown-item:active {
-  background-color: $primary !important;
-}
+// .btn-accent {
+//   background-color: $accent !important;
+//   color: black !important;
+//   border: none !important;
+// }
 
-.btn-white {
-  color: black !important;
-  background-color: none !important;
-}
+// .btn-accent:hover {
+//   background-color: $accent-dark !important;
+// }
 
-.btn-white:hover {
-  background-color: $background !important;
-}
+// .dropdown-item.active,
+// .dropdown-item:active {
+//   background-color: $primary !important;
+// }
 
-.text-primary {
-  color: $primary !important;
-}
+// .btn-white {
+//   color: black !important;
+//   background-color: none !important;
+// }
+
+// .btn-white:hover {
+//   background-color: $background !important;
+// }
+
+// .text-primary {
+//   color: $primary !important;
+// }
 </style>
