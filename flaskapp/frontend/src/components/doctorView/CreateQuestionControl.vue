@@ -2,7 +2,7 @@
   <div class="d-inline">
     <button
       type="button"
-      class="btn btn-outline-primary"
+      class="btn btn-outline-dark"
       @click="upwards()"
       variant="primary"
     >
@@ -11,7 +11,7 @@
 
     <button
       type="button"
-      class="btn btn-outline-primary"
+      class="btn btn-outline-dark"
       @click="deleteQuestion()"
       variant="danger"
     >
@@ -20,7 +20,7 @@
 
     <button
       type="button"
-      class="btn btn-outline-primary"
+      class="btn btn-outline-dark"
       @click="downwards()"
       variant="primary"
     >
