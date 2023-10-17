@@ -43,10 +43,10 @@ export default {
             if (this.grammar && this.grammar != "") {
                 console.log('--------------------------')
                 console.log(this.grammar)
-                const grammar = new String("#JSGF V1.0; grammar animals; public <animal> = " + this.grammar + " ;"); // animal grammar is to large, supports only ~ 500 words, otherwise asr crashes w.o. error
-                const speechRecognitionList = new window.webkitSpeechGrammarList();
-                speechRecognitionList.addFromString(grammar, 1);
-                recognition.grammars = speechRecognitionList;
+                // const grammar = new String("#JSGF V1.0; grammar animals; public <animal> = " + this.grammar + " ;"); // animal grammar is to large, supports only ~ 500 words, otherwise asr crashes w.o. error
+                // const speechRecognitionList = new window.webkitSpeechGrammarList();
+                // speechRecognitionList.addFromString(grammar, 1);
+                // recognition.grammars = speechRecognitionList;
             }
 
             // event current voice reco word
