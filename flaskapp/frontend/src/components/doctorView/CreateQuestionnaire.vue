@@ -161,51 +161,143 @@
               </span>
             </div>
           </div>
-        </div>
+        </div>       
 
-        
+        <div class="dropdown">
+          <button
+            class="btn btn-dark dropdown-toggle"
+            type="button"
+            @click="toggle"
+            id="dropdownMenu2"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <BootstrapIcon icon="question-circle-fill" size="1x" /><br />
+            Fragenmenue
+                  </button>
+                  <div v-if="active">
+                    <button
+                      class="dropdown-item"
+                      @click="addQuestion(question.type)"
+                      v-for="question in questionTypes"
+                      :key="question.text"
+                      type="button"
+                    >
+                      {{ question.text }}
+                    </button>
+                  </div>
+                </div>
 
-<div class="dropdown">
-  <button
-    class="btn btn-dark dropdown-toggle"
-    type="button"
-    @click="toggle"
-    id="dropdownMenu2"
-    data-toggle="dropdown"
-    aria-haspopup="true"
-    aria-expanded="false"
-  >
-    <BootstrapIcon icon="question-circle-fill" size="1x" /><br />
-    Fragenmenue
-          </button>
-          <div v-if="active">
-            <button
-              class="dropdown-item"
-              @click="addQuestion(question.type)"
-              v-for="question in questionTypes"
-              :key="question.text"
-              type="button"
-            >
-              {{ question.text }}
-            </button>
+              <hr class="my-3">
+
+              <button
+                  @click="save()"
+                  class="btn btn-dark btn-lg mt-3"
+                  variant="success">
+                    <div class="d-flex">
+                      <div class="p-2">
+                        <BootstrapIcon class="mb-0" icon="box-arrow-down" size="2x" />
+                      </div>
+                      <div class="p-2">
+                        Fragebogen speichern
+                      </div>
+                    </div>            
+              </button>
+
+              <div id="upload-error" style="display: none">
+                <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
+                <p class="m-1 d-inline">
+                  Fehler beim Upload. Bitte versuchen Sie es erneut.
+                </p>
+              </div> 
+    </div>
+  </div>
+
+  <div v-else class="saved">
+
+    <div class="my-5">
+      <h3 class="text-center mb-3">Erfolgreich gespeichert!</h3>
+
+    <div class="d-grid gap-3 col-3 mx-auto mt-4">
+        <button
+          type="button"
+          class="btn btn-outline-dark"
+          @click="downloadPdf()"
+          variant="primary"
+        >
+        <div class="d-flex">
+          <div>
+            <BootstrapIcon icon="download" size="2x" />
+          </div>
+          <div class="mx-auto align-self-center">
+            Infoblatt
           </div>
         </div>
+             
+        </button>
+        <button
+          @click="restart()"
+          type="button"
+          class="btn btn-outline-dark"
+          variant="outline-primary"
+        >
+          <div class="d-flex">
+            <div>
+              <BootstrapIcon icon="menu-down" size="2x" />
+            </div>
+            <div class="mx-auto align-self-center">
+              Neuer Fragebogen
+            </div>
+          </div>
+        </button>
+    </div>
+    </div>
+      
 
-      <hr class="my-3">
-
-      <button
-          @click="save()"
-          class="btn btn-dark btn-lg mt-3"
-          variant="success">
-            <div class="d-flex">
-              <div class="p-2">
-                <BootstrapIcon class="mb-0" icon="box-arrow-down" size="2x" />
-              </div>
-              <div class="p-2">
-                Fragebogen speichern
-              </div>
-            </div>            
-      </button>
+    <div class="my-5">
+      <section class="user-details p-5" ref="document">
+        <div class="text-center">
+          <h1>Infoblatt zum Fragebogen</h1>
+          <h4>{{ questionnaire.title }}</h4>
+          <qr-code :content="qrlink" class="qr"></qr-code>
+        </div>
+        <h4>1. Fragebogen öffnen</h4>
+        <p>
+          Um den Fragebogen zu öffnen, scannen Sie den obigen QR-Code mit einem
+          QR-Code-Scanner Ihrer Wahl. Sie können dazu zum Beispiel Ihr
+          Smartphone benutzen.
+          <br />
+          Alternativ können Sie den QR-Code auch direkt auf www.website.de
+          einscannen.
+        </p>
+        <p>
+          Falls Sie keine Kamera zur Verfügung haben, können Sie auch folgenden
+          Code unter www.website.de eingeben:
+        </p>
+        <div class="text-center">
+          <p class="font-weight-bold p-2 d-inline code">
+            {{ questionnaire.queID }}
+          </p>
+        </div>
+        <h4>2. Fragebogen ausfüllen</h4>
+        <p>
+          Füllen Sie den Fragebogen nach Anweisungen des Arztes aus und
+          speichern Sie ihn anschließend.
+          <br />Nach dem Speichern erhalten Sie eine weitere Datei mit einem
+          neuen QR-Code, der genutzt werden kann, um Ihre verschlüsselten
+          Antworten zu entschlüsseln. <br />Mit diesem können Sie Ihre Antworten
+          im Nachhinein bearbeiten und ergänzen. <br />
+          Beachten Sie, dass bei einer Änderung Ihrer Antworten aus
+          Sicherheitsgründen immer ein neuer QR-Code erstellt wird und somit der
+          alte QR-Code an Gültigkeit verliert.
+        </p>
+        <h4>3. Fragebogen auswerten</h4>
+        <p>
+          Bringen Sie den aktuellen QR-Code beim nächsten Termin mit, damit der
+          Arzt Ihre Antworten auswerten kann.
+        </p>
+      </section>
     </div>
   </div>
 </template>
