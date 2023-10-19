@@ -6,10 +6,10 @@
       <div class="row">
         <div class="col-sm-6">
           <div class="py-3">
-            <label for="titel" class="form-label">Titel</label>
-            <input id="titel" type="text" class="form-control ml-0" placeholder="Fragebogen#1" required>
+            <label for="title" class="form-label">Titel</label>
+            <input v-model="questionnaire.title" id="title" type="text" class="form-control ml-0" placeholder="Fragebogen#1" required>
             <div class="invalid-feedback">
-              Valid Titel is required.
+              Valid title is required.
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@
 
         <div class="dropdown">
           <button
-            class="btn btn-dark dropdown-toggle"
+            class="btn btn-outline-dark dropdown-toggle"
             type="button"
             @click="toggle"
             id="dropdownMenu2"
@@ -193,7 +193,7 @@
 
               <button
                   @click="save()"
-                  class="btn btn-dark btn-lg mt-3"
+                  class="btn btn-outline-dark btn-lg mt-3"
                   variant="success">
                     <div class="d-flex">
                       <div class="p-2">
