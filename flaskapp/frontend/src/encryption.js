@@ -88,7 +88,6 @@ async function getWrappingKey(passphrase, salt) {
 
 async function createRSAKeyPair(passphrase) {
   const wrappingIv = crypto.getRandomValues(new Uint8Array(12))
-
   let salt = window.crypto.getRandomValues(new Uint8Array(16))
 
   let keyPair = await crypto.subtle.generateKey(

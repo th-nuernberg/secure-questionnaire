@@ -66,7 +66,7 @@ def token_required(f):
         auth_headers = request.headers.get('Authorization', '').split()
 
         invalid_msg = {
-            'message': 'Invalid token. Registeration and / or authentication required',
+            'message': 'Invalid token. Registration and / or authentication required',
             'authenticated': False
         }
         expired_msg = {
@@ -75,26 +75,100 @@ def token_required(f):
         }
 
         if len(auth_headers) != 2:
-            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+            return Response(response=json.dumps(invalid_msg), status=401, mimetype="application/json")
 
         try:
             token = auth_headers[1]
-            data = jwt.decode(token, SECRET_KEY)
-            user = get_user().find_one({ "email": data["sub"] })
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            user = get_user().find_one({ "owner_mail": data["sub"] })
 
             if not user:
                 raise RuntimeError('User not found')
 
-            return f(user, *args, **kwargs)
+            return f(*args, **kwargs)
 
         except jwt.ExpiredSignatureError:
-            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+            return Response(response=json.dumps(invalid_msg), status=401, mimetype="application/json")
 
         except (jwt.InvalidTokenError, Exception) as e:
-            return Response(response=JSON.dumps(invalid_msg), status=401, mimetype="application/json")
+            return Response(response=json.dumps(invalid_msg), status=401, mimetype="application/json")
 
     return _verify
 
+
+def authenticate(email, password):
+    users = get_user()
+
+    hashed_password = generate_password_hash(
+        password, 
+        method="sha256"
+    )
+
+    if not email or not password:
+        return None
+    
+    user = users.find_one({ "owner_mail": email })
+
+    # user not existent yet or password hash not matching
+    if not user or not check_password_hash(user["password"], password):
+        return None
+
+    return user
+
+
+@app.route("/api/register", methods=["PUT"])
+def register():
+    data = request.get_json()
+    status = 201
+
+    try:
+        users = get_user()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    if users.find_one({ "owner_mail": data["owner_mail"] }):
+        res = "User already exists!"
+        status = 409
+    else:
+        users.insert_one({
+            "owner_mail": data["owner_mail"],
+            "owner_name": data["owner_name"],
+            "password": generate_password_hash(
+                data["password"], 
+                method="sha256"
+            )
+        })
+        res = "success"
+        status = 200
+
+    return Response(response=json.dumps("abc"), status=status, mimetype="application/json")
+
+
+@app.route("/api/login", methods=["PUT"])
+def login():
+    status = 200
+    data = request.get_json()
+    user = authenticate(data["owner_mail"], data["password"])
+
+    if not user:
+        response = {"msg": f"Error: Invalid credentials"}
+        status = 400
+    else:
+        token = jwt.encode(
+            {
+                'sub': user["owner_mail"],
+                'iat': datetime.utcnow(),
+                'exp': datetime.utcnow() + timedelta(minutes=30)
+            },
+            SECRET_KEY,
+            algorithm="HS256"
+        )
+
+        # response = { "token": token.decode("UTF-8") }
+        response = { "token": token }
+
+    return Response(response=json.dumps(response), status=status, mimetype="application/json")
+    
 
 @app.route("/GET/<id>", methods=["GET"])
 @token_required
@@ -146,68 +220,6 @@ def post(id):
         status = 409
 
     return Response(response=response, status=status, mimetype="application/json")
-
-
-def authenticate(email, password):
-    users = get_user()
-
-    hashed_password = generate_password_hash(
-        password, 
-        method="sha256"
-    )
-
-    if not email or not password:
-        return None
-    
-    user = users.find_one({"owner_mail": email})
-
-    # user not existent yet or password hash not matching
-    if not user or not check_password_hash(user["password"], password):
-        return None
-
-    return user
-
-
-@app.route("/api/register", methods=["POST"])
-def register():
-    try:
-        users = get_user()
-    except Exception as e:
-        return Response(response=repr(e), status=503, mimetype="application/json")
-
-    users.insert_one({
-        "owner_mail": request.args.get("owner_mail"),
-        "owner_name": request.args.get("owner_name"),
-        "password": generate_password_hash(
-            request.args.get("password"), 
-            method="sha256"
-        )
-    })
-    
-    return Response(status=201, mimetype="application/json")
-
-
-@app.route("/api/login", methods=["POST"])
-def login():
-    status = 200
-    data = request.get_json()
-    user = authenticate(data["owner_mail"], data["password"])
-
-    if not user:
-        response = {"msg": f"Error: Invalid credentials"}
-        status = 400
-    else:
-        response = jwt.encode(
-            {
-                'sub': user["owner_mail"],
-                'iat': datetime.utcnow(),
-                'exp': datetime.utcnow() + timedelta(minutes=30)
-            },
-            SECRET_KEY
-        ).decode("UTF-8")
-
-    return Response(response=json.dumps(response), status=status, mimetype="application/json")
-    
 
 
 @app.route("/api/questionnaire", methods=["GET", "PUT"])
@@ -398,6 +410,9 @@ def RSAkeys():
 
     if request.method == "GET":
         owner_mail = request.args.get("owner_mail")
+
+        # Warum gehen hier die args verloren?????
+        # dieses wrapping macht mir irgendwie meine request kaputt :(())
         
         if owner_mail == "":
             # get all keys
@@ -415,11 +430,8 @@ def RSAkeys():
         else:
             status = 200
 
-        print(key)
-
         return Response(response=json.dumps(key), status=status, mimetype="application/json")
         
-
     elif request.method == "PUT":
         # TODO: CS: Was wenn es die owner_mail bzw. den hinterlegten Fragebogen schon gibt???
         # z.b. bei wiederholtem Ausfuellen? dann .replace_one()?

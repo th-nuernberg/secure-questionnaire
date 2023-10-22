@@ -1,28 +1,32 @@
 <template>
-    <div v-if="!saved"> 
-        <!-- Can be beautified with CSS -->
-        <!-- https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/ -->
-        <input id="mail" v-model="owner_mail" placeholder="Bitte Email eingeben" />
-        <br>
-        <input id="name" v-model="owner_name" placeholder="Bei erstem Registrieren angeben" />
-        <br>
-        <input id="passphrase" v-model="passphrase" placeholder="Bitte Kennwort eingeben" :type="passwordFieldType" />
-        <button @click="switchVisibility()" type="password">show / hide</button>
-        <br>
-        <button @click="login()">Log in</button>
-        <button @click="register()">Register</button>
+    <!-- Can be beautified with CSS -->
+    <!-- https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/ -->
+    <input id="mail" v-model="owner_mail" placeholder="Bitte Email eingeben" />
+    <br>
+    <input id="name" v-model="owner_name" placeholder="Bei erstem Registrieren angeben" />
+    <br>
+    <input id="passphrase" v-model="passphrase" placeholder="Bitte Kennwort eingeben" :type="passwordFieldType" />
+    <button @click="switchVisibility()" type="password">show / hide</button>
+    <br>
+    <button @click="login()">Log in</button>
+    <button @click="register()">Register</button>
 
-        <div id="upload-error" style="display: none">
-          <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
-          <p class="m-1 d-inline">
-            Kein Nutzer unter angegebener Email. Bitte Registrieren Sie sich!
-          </p>
-        </div>
+    <div id="login-error" class="error" style="display: none">
+        <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
+        <p class="m-1 d-inline">
+        Kein Nutzer unter angegebener Email. Bitte Registrieren Sie sich!
+        </p>
     </div>
-    <div v-else class="saved">
-        <div class="boxStyling mb-5">
-            <h3 class="text-center mb-3">Logged in!</h3>
-        </div>
+    <div id="register-error" class="error" style="display: none">
+        <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
+        <p class="m-1 d-inline">
+        Nutzer unter angegebener Email existiert schon. Bitte verwenden Sie den login oder eine andere Email!
+        </p>
+    </div>
+    <div id="register-success" class="success" style="display: none">
+        <p class="m-1 d-inline">
+        Nutzer erfolgreich registriert!
+        </p>
     </div>
 </template>
 
@@ -39,7 +43,6 @@
                 owner_name: "", 
                 privateKey: "",
                 keyParams: null,
-                saved: false,
                 passwordFieldType: "password",
             }
         },
@@ -48,28 +51,17 @@
                 this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
             },
             login() { 
-                // window.localStorage.setItem(
-                //     "user_details", 
-                //     JSON.stringify({
-                //         user_mail: this.owner_mail,
-                //         user_name: this.owner_name,
-                //         user_password: this.passphrase
-                //     })
-                // )
-
-                // TODO: CS: Allow login only when registered !
-
                 if (this.checkFields(false)) {
                     return
                 }
 
                 this.$store.dispatch('login', { owner_mail: this.owner_mail, password: this.passphrase, owner_name: this.owner_name })
                     .then(() => {
-                        window.scrollTo(0, 0);
-                        this.saved = true;
+                        // Move to questionnaire creation on successful login
+                        this.$router.push({ path: `/doctorView/create` });
                     })
                     .catch(() => {
-                        document.getElementById("upload-error").style.display = "block";
+                        document.getElementById("login-error").style.display = "block";
                     })
             },
             register() {
@@ -79,6 +71,13 @@
                 }
                 
                 this.$store.dispatch('register', { owner_mail: this.owner_mail, password: this.passphrase, owner_name: this.owner_name })
+                    .then(() => {
+                        document.getElementById("register-success").style.display = "block";
+                    })
+                    .catch(() => {
+                        document.getElementById("register-error").style.display = "block";
+                    })
+
                 this.createRSAKeyPair()
             },
             async createRSAKeyPair(passphrase) { 
@@ -127,9 +126,13 @@
 </script>
 
 <style scoped>
-    #upload-error {
-    color: red;
-    margin-top: 5px;
+    .error {
+        color: red;
+        margin-top: 5px;
+    }
+    .success {
+        color: green;
+        margin-top: 5px;
     }
     .empty {
         border: 1px solid red;
