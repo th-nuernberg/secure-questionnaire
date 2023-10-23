@@ -16,30 +16,42 @@ import PatientQuestionnaire from "./components/patientView/PatientQuestionnaire.
 import AnalyseQuestionnaires from "./components/doctorView/AnalyseQuestionnaires.vue";
 import CreateQuestionnaire from "./components/doctorView/CreateQuestionnaire.vue";
 import ViewQuestionnaires from "./components/doctorView/ViewQuestionnaires.vue";
-import KeyGen from "./components/KeyGen.vue";
-import LogIn from "./components/LogIn.vue";
+import Login from "./components/Login.vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons";
+
+function validateJWTtoken(next) {
+  function isAuthenticated() {
+    if (!store.getters.isAuthenticated) {
+      next('/login')
+    } else {
+      next()
+    }
+  }
+
+  isAuthenticated()
+
+  // TODO: CS: to be implemented; needs something to remove the interval on leaving.. beforeLeave() { clearInterval() }
+  // setInterval(function () {
+  //   isAuthenticated()
+  // }.bind(this), 10000); 
+}
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/", name: "Home", component: Home },
     {
-      path: "/LogIn",
-      name: "LogIn",
-      component: LogIn
-    },
-    {
-      path: "/keyGen",
-      name: "KeyGen",
-      component: KeyGen
+      path: "/login",
+      name: "Login",
+      component: Login
     },
     {
       path: "/doctorView",
       name: "DoctorView",
       component: DoctorView,
+      beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
       path: "/patient",
@@ -50,16 +62,19 @@ const router = createRouter({
       path: "/doctorView/create",
       name: "CreateQuestionnaire",
       component: CreateQuestionnaire,
+      beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
       path: "/doctorView/ViewQuestionnaires",
       name: "ViewQuestionnaires",
       component: ViewQuestionnaires,
+      beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
       path: "/doctorView/analyse",
       name: "AnalyseQuestionnaires",
       component: AnalyseQuestionnaires,
+      beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
       path: "/patient/questionnaire/:id",

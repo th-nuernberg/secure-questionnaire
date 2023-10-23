@@ -2,6 +2,7 @@
 import Vuex from "vuex";
 import axios from "../axios-auth";
 import { encryptAES, decryptAES, encryptRSA, decryptRSA } from "./encryption.js";
+import { isValidJwt } from "./utils";
 
 
 export default new Vuex.Store({
@@ -31,7 +32,9 @@ export default new Vuex.Store({
       { text: "Skala", type: "scale" },
     ],
     analyseObj: [],
+    userData: {},
     privateKeyParams: [],
+    jwt: { "token": localStorage.getItem("token") }
   },
   getters: {
     getQuestionnaire: (state) => state.questionnaire,
@@ -69,6 +72,9 @@ export default new Vuex.Store({
     getQuestionText: (state) => (type) => {
       return state.questionTypes.find((element) => element.type == type).text;
     },
+    isAuthenticated(state) {
+      return isValidJwt(state.jwt.token)
+    }
   },
   mutations: {
     setQuestionnaire(state, questionnaire) {
@@ -106,13 +112,20 @@ export default new Vuex.Store({
     setPrivateKeyParams(state, privateKeyParams) {
       state.privateKeyParams = privateKeyParams
     },
+    setUserData (state, payload) {
+      state.userData = payload.userData
+    },
+    setJwtToken(state, payload) {
+      localStorage.token = payload.jwt.token
+      state.jwt = payload.jwt
+    }
   },
   actions: {
-    uploadQuestionnaire(_, questionnaire) {
+    uploadQuestionnaire({ state }, questionnaire) {
       //send Questionnaire to backend
       return new Promise((resolve, reject) => {
         axios
-          .put("/questionnaire", questionnaire)
+          .put("/questionnaire", questionnaire, { headers: { Authorization: `Bearer: ${state.jwt.token}` } })
           .then(() => {
             resolve();
           })
@@ -122,7 +135,7 @@ export default new Vuex.Store({
       });
     },
 
-    encryptAndUpload({ dispatch }, info) {
+    encryptAndUpload({ dispatch, state }, info) {
       let data = {
         answers: info.answers,
         id: info.answers.UUID,
@@ -150,7 +163,8 @@ export default new Vuex.Store({
                         encryptedAESKey: Buffer.from(encryptedAESKey).toString("base64"),
                         owner_mail: owner,
                         queID: data.id
-                      } 
+                      }, 
+                      { headers: { Authorization: `Bearer: ${state.jwt.token}` } }
                     ) 
                     .then(() => {
                       resolve();
@@ -177,11 +191,11 @@ export default new Vuex.Store({
         })
     },
 
-    uploadAnswers(_, data) {
+    uploadAnswers({ state }, data) {
       //send Answers to backend
       return new Promise((resolve, reject) => {
         axios
-          .put("/answers", data)
+          .put("/answers", data, { headers: { Authorization: `Bearer: ${state.jwt.token}` } })
           .then(() => {
             resolve();
           })
@@ -191,10 +205,10 @@ export default new Vuex.Store({
       });
     },
 
-    getPatientQuestionnaire(_, id) {
+    getPatientQuestionnaire({ state }, id) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/questionnaire", { params: { queID: id } })
+          .get("/questionnaire", { params: { queID: id }, headers: { Authorization: `Bearer: ${state.jwt.token}` } })
           .then((res) => {
             resolve(res.data);
           })
@@ -207,7 +221,7 @@ export default new Vuex.Store({
     getAnswers({ commit, state }, info) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/answers", { params: { queID: info.id } })
+          .get("/answers", { params: { queID: info.id }, headers: { Authorization: `Bearer: ${state.jwt.token}` } })
           .then((res) => {
             // TODO: CS: temporaer als proof of concept email und password aus local storage...
             // natuerlich null sicher...
@@ -215,7 +229,7 @@ export default new Vuex.Store({
 
             let user_details = JSON.parse(window.localStorage.getItem("user_details"))
             
-            axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.user_mail } }) 
+            axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.user_mail }, headers: { Authorization: `Bearer: ${state.jwt.token}` } }) 
               .then((encryptedAESKeyObject) => {
                 // let keyParams = JSON.parse(window.localStorage.getItem(user_details.user_mail))
                 let keyParams = state.privateKeyParams
@@ -252,10 +266,10 @@ export default new Vuex.Store({
       });
     },
 
-    checkID(_, id) {
+    checkID({ state }, id) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/questionnaire/idcheck", { params: { queID: id } })
+          .get("/questionnaire/idcheck", { params: { queID: id }, headers: { Authorization: `Bearer: ${state.jwt.token}`} })
           .then((res) => {
             resolve(res.data);
           })
@@ -265,10 +279,10 @@ export default new Vuex.Store({
       });
     },
 
-    uploadPublicKey(_, data) {
+    uploadPublicKey({ state }, data) {
       return new Promise((resolve, reject) => {
         axios
-          .put("/RSAkeys", data) 
+          .put("/RSAkeys", data, { headers: { Authorization: `Bearer: ${state.jwt.token}` } }) 
           .then(() => {
             resolve();
           })
@@ -278,11 +292,43 @@ export default new Vuex.Store({
       });
     },
 
-    getPublicKey(_, owner_mail) {
+    getPublicKey({ state }, owner) {
       return new Promise((resolve, reject) => {
         axios
-          .get("/RSAkeys", { params: { owner_mail: owner_mail } })
+          .get("/RSAkeys", { params: { owner_mail: owner}, headers: { Authorization: `Bearer: ${state.jwt.token}`} })
           .then((res) => {
+            resolve(res);
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    },
+
+    login({ commit }, userData) {
+      commit("setUserData", { userData })
+
+      return new Promise((resolve, reject) => {
+        axios
+          .put("/login", userData)
+          .then((res) => {
+            commit('setJwtToken', { jwt: res.data })
+            resolve(res);
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    },
+    
+    register({ commit, dispatch }, userData) {
+      commit("setUserData", { userData })
+
+      return new Promise((resolve, reject) => {
+        axios
+          .put("/register", userData)
+          .then((res) => {
+            dispatch("login", userData)
             resolve(res);
           })
           .catch(() => {
