@@ -95,13 +95,13 @@
                     JSON.stringify(this.keyParams)
                 )
 
-                window.localStorage.setItem(
-                    "user_details", 
-                    JSON.stringify({
-                        user_mail: this.owner_mail,
-                        user_password: this.passphrase
-                    })
-                )
+                // window.localStorage.setItem(
+                //     "user_details", 
+                //     JSON.stringify({
+                //         user_mail: this.owner_mail,
+                //         user_password: this.passphrase
+                //     })
+                // )
 
                 // TODO: CS: key creation must only be legal if email field set!
                 this.$store
