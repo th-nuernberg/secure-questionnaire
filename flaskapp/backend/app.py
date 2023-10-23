@@ -411,9 +411,6 @@ def RSAkeys():
     if request.method == "GET":
         owner_mail = request.args.get("owner_mail")
 
-        # Warum gehen hier die args verloren?????
-        # dieses wrapping macht mir irgendwie meine request kaputt :(())
-        
         if owner_mail == "":
             # get all keys
             key = []

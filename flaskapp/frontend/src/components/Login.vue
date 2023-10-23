@@ -78,7 +78,7 @@
                         document.getElementById("register-error").style.display = "block";
                     })
 
-                this.createRSAKeyPair()
+                this.createRSAKeyPair(this.passphrase)
             },
             async createRSAKeyPair(passphrase) { 
                 // returns a public key, wrapped private key and salt+iv it has been wrapped with
@@ -93,6 +93,14 @@
                 window.localStorage.setItem(
                     this.owner_mail, 
                     JSON.stringify(this.keyParams)
+                )
+
+                window.localStorage.setItem(
+                    "user_details", 
+                    JSON.stringify({
+                        user_mail: this.owner_mail,
+                        user_password: this.passphrase
+                    })
                 )
 
                 // TODO: CS: key creation must only be legal if email field set!
