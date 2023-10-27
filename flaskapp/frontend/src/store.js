@@ -32,7 +32,8 @@ export default new Vuex.Store({
       { text: "Skala", type: "scale" },
     ],
     analyseObj: [],
-    userData: {},
+    // ToDo: CS: temporary ! will get moved to DB
+    userData: localStorage.getItem("userData"),
     privateKeyParams: [],
     jwt: { "token": localStorage.getItem("token") }
   },
@@ -113,7 +114,9 @@ export default new Vuex.Store({
       state.privateKeyParams = privateKeyParams
     },
     setUserData (state, payload) {
-      state.userData = payload.userData
+      // ToDo: CS: temporary ! will get moved to DB
+      localStorage.userData = JSON.stringify(payload)
+      state.userData = JSON.stringify(payload)
     },
     setJwtToken(state, payload) {
       localStorage.token = payload.jwt.token
@@ -223,15 +226,11 @@ export default new Vuex.Store({
         axios
           .get("/answers", { params: { queID: info.id }, headers: { Authorization: `Bearer: ${state.jwt.token}` } })
           .then((res) => {
-            // TODO: CS: temporaer als proof of concept email und password aus local storage...
-            // natuerlich null sicher...
-            // -> eigl dann per Session erkennen welcher Nutzer und passenden Key aus DB holen
+            // ToDo: CS: temporary ! will get moved to DB
+            let user_details = JSON.parse(state.userData)
 
-            let user_details = JSON.parse(window.localStorage.getItem("user_details"))
-            
-            axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.user_mail }, headers: { Authorization: `Bearer: ${state.jwt.token}` } }) 
+            axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.owner_mail }, headers: { Authorization: `Bearer: ${state.jwt.token}` } }) 
               .then((encryptedAESKeyObject) => {
-                // let keyParams = JSON.parse(window.localStorage.getItem(user_details.user_mail))
                 let keyParams = state.privateKeyParams
 
                 // convert to Uint8Array, for handling in decryption methods
@@ -240,7 +239,7 @@ export default new Vuex.Store({
                 keyParams.wrappingIv = Buffer.from(keyParams.wrappingIv, "base64")
                 keyParams.wrappedPrivateKey = Buffer.from(keyParams.wrappedPrivateKey, "base64").buffer
                 
-                return decryptRSA(encryptedAESKey, keyParams, user_details.user_password)
+                return decryptRSA(encryptedAESKey, keyParams, user_details.password)
                 .then((decryptedAESKey) => {
                   // let decryptedAESKey = new TextEncoder().encode(result)
                   
@@ -306,7 +305,7 @@ export default new Vuex.Store({
     },
 
     login({ commit }, userData) {
-      commit("setUserData", { userData })
+      commit("setUserData", userData)
 
       return new Promise((resolve, reject) => {
         axios
@@ -322,7 +321,7 @@ export default new Vuex.Store({
     },
     
     register({ commit, dispatch }, userData) {
-      commit("setUserData", { userData })
+      commit("setUserData", userData)
 
       return new Promise((resolve, reject) => {
         axios
