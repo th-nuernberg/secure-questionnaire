@@ -352,17 +352,12 @@ def AESkeys():
     
 
     if request.method == "GET":
-        for i in request.args:
-            print(i)
         owner_mail = request.args.get("owner_mail")
         queID = request.args.get("queID")
         
         # match for nested document
         doc = keys.find_one({ "keyID": (queID + owner_mail) })
         del doc["_id"]  # remove non JSON serializable ObjectID value, not needed
-
-        print(owner_mail)
-        print(queID)
         
         if not doc:
             key = {"msg": f"Error: No key for {owner_mail} found"}
@@ -371,17 +366,11 @@ def AESkeys():
             key = doc["encryptedAESKey"]
             status = 200
 
-        for i in keys.find({}):
-            print(i)
-
         return Response(response=json.dumps(key), status=status, mimetype="application/json")
         
 
     elif request.method == "PUT":
         key_info = request.get_json()
-
-        print(key_info["queID"])
-        print(key_info["owner_mail"])
 
         if not isinstance(key_info, dict):
             return Response(status=400)
@@ -395,9 +384,6 @@ def AESkeys():
                 "encryptedAESKey": key_info["encryptedAESKey"]
             }
         )
-
-        for i in keys.find({}):
-            print(i)
         
         # Alternative structure with nested documents; prettiert but queries get much more complicated...
         # keys.insert_one({
