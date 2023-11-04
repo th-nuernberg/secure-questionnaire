@@ -181,7 +181,7 @@
             aria-expanded="false"
           >
             <BootstrapIcon icon="question-circle-fill" size="1x" /><br />
-            Fragenmenue
+            Fragenmenü
           </button>
           <div v-if="active">
             <button
@@ -195,17 +195,8 @@
             </button>
           </div>
         </div>
-        
-        <!-- TODO: CS: won't get rendered if wrapped in tooltip:/ -->
-        <!-- <div class="tooltip">
-          <label>Mich als Owner des Fragebogens setzen.</label>
-          <span class="tooltiptext">
-            So kann nur ich den Bogen lesen. Auch nicht wenn der Patient mit seinem QR-Code zu einem anderen Arzt geht
-          </span>
-        </div> -->
-
         <p id="owner-selection" class="dropdown-owner" tabindex="100">
-          <span>Behandelnde Aerzte auswaehlen</span>
+          <span>Behandelnde Aerzte auswählen</span>
           <div id="owner-list" class="dropdown-owner-content">
           </div>
         </p> 
@@ -419,13 +410,6 @@ export default {
         option.id = currentOptions.indexOf(option) + 1;
       });
     },
-    setOwner() {
-      let checked = document.getElementById("owner").checked
-      // TODO: CS: Login management in order to retreive the email of the currently logged in physician
-      // as first entry of check box
-      // mock mail
-      this.questionnaire.owner = checked ? "foo@bar.com" : ""
-    },
     save() {
       document.getElementById("upload-error").style.display = "none";
 
@@ -460,7 +444,7 @@ export default {
 
       let checkedBoxes = getCheckedBoxes();
 
-      // collect emails of selected owners in dropdown list in this.owner field
+      // Collect emails of selected owners in dropdown list in this.owner field
       for (var i=0; i<checkedBoxes.length; i++) {
         this.questionnaire.owners.push(
           checkedBoxes[i].parentElement.getElementsByClassName("owner_mail")[0].textContent

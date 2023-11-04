@@ -157,7 +157,6 @@ export default new Vuex.Store({
             info.owners.forEach((owner) => {
               dispatch("getPublicKey", owner)
               .then((publicKey) => {
-                // TODO: CS: string encoding eigl unnoetig, encryption umbauen, funktioniert im moment nur auf strings... 
                 encryptRSA(Buffer.from(result.Key).toString("base64"), Buffer.from(publicKey.data, "base64"))
                 .then((encryptedAESKey) => {
                   return new Promise((resolve, reject) => {
@@ -241,9 +240,6 @@ export default new Vuex.Store({
                 
                 return decryptRSA(encryptedAESKey, keyParams, user_details.password)
                 .then((decryptedAESKey) => {
-                  // let decryptedAESKey = new TextEncoder().encode(result)
-                  
-                  // TODO: CS: string encoding eigl unnoetig, decryption umbauen, gitb im moment strings aus...
                   let keyArray = Buffer.from(decryptedAESKey, 'base64')
                   let IVArray = Buffer.from(res.data.IV, 'base64')
                   let answersArray = Buffer.from(res.data.answers, 'base64')

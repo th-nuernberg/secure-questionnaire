@@ -1,13 +1,6 @@
 <template>
   <div class="container" :key="componentKey">
     <h2 class="mt-5">Ergebnisse</h2>
-    <!-- // OUTCOMMENT
-     <div v-if="loggedIn">
-      TODO: CS should not be queried if doctor already logged in with session
-      <input id="password" placeholder="Bitte Passwort eingeben">
-    </div>
-
-    <div v-else="loading" class="d-flex justify-content-center mb-3"> -->
     <div v-if="loading" class="d-flex justify-content-center mb-3">
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>

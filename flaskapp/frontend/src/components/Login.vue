@@ -105,7 +105,7 @@
                     wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
                 }
 
-                this.saveKeyParamsAsFile("Schluessel.json", keyParams)
+                this.saveKeyParamsAsFile("Schlüssel.json", keyParams)
 
                 this.$store
                     .dispatch("uploadPublicKey", { 

@@ -23,7 +23,6 @@ mongo.drop_database("SecureQuestionnaire") # clear collection after server resta
 DB = mongo["SecureQuestionnaire"]
 
 
-# TODO: CS: get_collection obsolete if working with global constant DB??
 # All collections created on first access
 def get_questionnaires():
     return DB["questionnaires"]   
@@ -430,9 +429,6 @@ def RSAkeys():
         return Response(response=json.dumps(key), status=status, mimetype="application/json")
         
     elif request.method == "PUT":
-        # TODO: CS: Was wenn es die owner_mail bzw. den hinterlegten Fragebogen schon gibt???
-        # z.b. bei wiederholtem Ausfuellen? dann .replace_one()?
-
         key_info = request.get_json()
 
         if not isinstance(key_info, dict):

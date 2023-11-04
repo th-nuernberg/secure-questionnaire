@@ -8,7 +8,7 @@
       <div id="upload-error" style="display: none">
         <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
         <p class="m-1 d-inline">
-            Bitte Schluessel Datei hochladen!
+            Bitte Schlüssel Datei hochladen!
         </p>
       </div>
   </div>
