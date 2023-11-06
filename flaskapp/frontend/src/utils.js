@@ -7,3 +7,22 @@ export function isValidJwt (jwt) {
   const now = new Date()
   return now < exp
 }
+
+export function checkFields(register, owner_mail, owner_name, passphrase) {
+  let empty = false
+
+  if (register && owner_name == "") {
+      document.getElementById("name").className = "empty"
+      empty = true
+  }
+  if (owner_mail == "") {
+      document.getElementById("mail").className = "empty"
+      empty = true
+  }
+  if (passphrase == "") {
+      document.getElementById("passphrase").className = "empty"
+      empty = true
+  }
+
+  return empty
+}

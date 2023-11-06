@@ -14,13 +14,24 @@ app = Flask(__name__)
 cors = CORS(app)
 
 with open('config.json') as config_file:
-    SECRET_KEY = json.load(config_file)['SECRET_KEY']
+    config = json.load(config_file)
+    SECRET_KEY = config['SECRET_KEY']
+    ADMIN_PASSWORD = config['ADMIN_PASSWORD']
 
 # serverSelectionTimeoutMS defaults to 30 seconds
 mongo = pymongo.MongoClient("mongodb://mongo:27017")
 #mongo.server_info()
 mongo.drop_database("SecureQuestionnaire") # clear collection after server restart 
 DB = mongo["SecureQuestionnaire"]
+
+DB["user"].insert_one({
+    "owner_mail": "admin",
+    "owner_name": "admin",
+    "password": generate_password_hash(
+        ADMIN_PASSWORD, 
+        method="sha256"
+    )
+})
 
 
 # All collections created on first access
@@ -105,7 +116,7 @@ def authenticate(email, password):
 
     if not email or not password:
         return None
-    
+
     user = users.find_one({ "owner_mail": email })
 
     # user not existent yet or password hash not matching
@@ -115,7 +126,43 @@ def authenticate(email, password):
     return user
 
 
+@app.route("/api/userDetails", methods=["GET"])
+def get_user_details():
+    auth_headers = request.headers.get('Authorization', '').split()
+
+    invalid_msg = {
+        'message': 'Invalid token. Registration and / or authentication required',
+        'authenticated': False
+    }
+    expired_msg = {
+        'message': 'Expired token. Reauthentication required.',
+        'authenticated': False
+    }
+
+    if len(auth_headers) != 2:
+        return Response(response=json.dumps(invalid_msg), status=401, mimetype="application/json")
+
+    try:
+        token = auth_headers[1]
+        data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        user = get_user().find_one({ "owner_mail": data["sub"] })
+
+        if not user:
+            raise RuntimeError('User not found')
+
+        del user["_id"]  # remove non JSON serializable ObjectID value, not needed
+
+        return Response(response=json.dumps(user), status=200, mimetype="application/json")
+
+    except jwt.ExpiredSignatureError:
+        return Response(response=json.dumps(invalid_msg), status=401, mimetype="application/json")
+
+    except (jwt.InvalidTokenError, Exception) as e:
+        return Response(response=json.dumps(invalid_msg), status=401, mimetype="application/json")
+
+
 @app.route("/api/register", methods=["PUT"])
+@token_required
 def register():
     data = request.get_json()
     status = 201
@@ -129,18 +176,20 @@ def register():
         res = "User already exists!"
         status = 409
     else:
+        hashed_password = generate_password_hash(
+            data["password"], 
+            method="sha256"
+        )
+
         users.insert_one({
             "owner_mail": data["owner_mail"],
             "owner_name": data["owner_name"],
-            "password": generate_password_hash(
-                data["password"], 
-                method="sha256"
-            )
+            "password": hashed_password
         })
         res = "success"
         status = 200
-
-    return Response(response=json.dumps("abc"), status=status, mimetype="application/json")
+    
+    return Response(response=json.dumps(hashed_password), status=status, mimetype="application/json")
 
 
 @app.route("/api/login", methods=["PUT"])

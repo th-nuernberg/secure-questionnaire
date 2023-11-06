@@ -1,3 +1,4 @@
 {
-    "SECRET_KEY": ""
+    "SECRET_KEY": "",
+    "ADMIN_PASSWORD": ""
 } 

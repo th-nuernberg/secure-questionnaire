@@ -32,8 +32,6 @@ export default new Vuex.Store({
       { text: "Skala", type: "scale" },
     ],
     analyseObj: [],
-    // ToDo: CS: temporary ! will get moved to DB
-    userData: localStorage.getItem("userData"),
     privateKeyParams: [],
     jwt: { "token": localStorage.getItem("token") }
   },
@@ -112,11 +110,6 @@ export default new Vuex.Store({
     },
     setPrivateKeyParams(state, privateKeyParams) {
       state.privateKeyParams = privateKeyParams
-    },
-    setUserData (state, payload) {
-      // ToDo: CS: temporary ! will get moved to DB
-      localStorage.userData = JSON.stringify(payload)
-      state.userData = JSON.stringify(payload)
     },
     setJwtToken(state, payload) {
       localStorage.token = payload.jwt.token
@@ -225,35 +218,37 @@ export default new Vuex.Store({
         axios
           .get("/answers", { params: { queID: info.id }, headers: { Authorization: `Bearer: ${state.jwt.token}` } })
           .then((res) => {
-            // ToDo: CS: temporary ! will get moved to DB
-            let user_details = JSON.parse(state.userData)
+            axios.get("/userDetails", { headers: { Authorization: `Bearer: ${state.jwt.token}` } })
+            .then((details) => {
+              let user_details = details.data
 
-            axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.owner_mail }, headers: { Authorization: `Bearer: ${state.jwt.token}` } }) 
-              .then((encryptedAESKeyObject) => {
-                let keyParams = state.privateKeyParams
-
-                // convert to Uint8Array, for handling in decryption methods
-                let encryptedAESKey = Buffer.from(encryptedAESKeyObject.data, 'base64');
-                keyParams.salt = Buffer.from(keyParams.salt, "base64")
-                keyParams.wrappingIv = Buffer.from(keyParams.wrappingIv, "base64")
-                keyParams.wrappedPrivateKey = Buffer.from(keyParams.wrappedPrivateKey, "base64").buffer
-                
-                return decryptRSA(encryptedAESKey, keyParams, user_details.password)
-                .then((decryptedAESKey) => {
-                  let keyArray = Buffer.from(decryptedAESKey, 'base64')
-                  let IVArray = Buffer.from(res.data.IV, 'base64')
-                  let answersArray = Buffer.from(res.data.answers, 'base64')
+              axios.get("/AESkeys", { params: { queID: info.id, owner_mail: user_details.owner_mail }, headers: { Authorization: `Bearer: ${state.jwt.token}` } }) 
+                .then((encryptedAESKeyObject) => {
+                  let keyParams = state.privateKeyParams
+  
+                  // Convert to Uint8Array, for handling in decryption methods
+                  let encryptedAESKey = Buffer.from(encryptedAESKeyObject.data, 'base64');
+                  keyParams.salt = Buffer.from(keyParams.salt, "base64")
+                  keyParams.wrappingIv = Buffer.from(keyParams.wrappingIv, "base64")
+                  keyParams.wrappedPrivateKey = Buffer.from(keyParams.wrappedPrivateKey, "base64").buffer
                   
-                  return decryptAES(keyArray, answersArray, IVArray)
-                  .then((result) => {
-                    return JSON.parse(result)
+                  return decryptRSA(encryptedAESKey, keyParams, user_details.password)
+                  .then((decryptedAESKey) => {
+                    let keyArray = Buffer.from(decryptedAESKey, 'base64')
+                    let IVArray = Buffer.from(res.data.IV, 'base64')
+                    let answersArray = Buffer.from(res.data.answers, 'base64')
+                    
+                    return decryptAES(keyArray, answersArray, IVArray)
+                    .then((result) => {
+                      return JSON.parse(result)
+                    })
                   })
                 })
-              })
-              .then((parsed) => {
-                commit("setAnswers", parsed)
-                resolve(state.answers)
-              })
+                .then((parsed) => {
+                  commit("setAnswers", parsed)
+                  resolve(state.answers)
+                })
+            })
           })
           .catch(() => {
             reject();
@@ -300,9 +295,20 @@ export default new Vuex.Store({
       });
     },
 
-    login({ commit }, userData) {
-      commit("setUserData", userData)
+    getUserDetails({ state }) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get("/userDetails", { headers: { Authorization: `Bearer: ${state.jwt.token}` } })
+          .then((res) => {
+            resolve(res.data);
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    },
 
+    login({ commit }, userData) {
       return new Promise((resolve, reject) => {
         axios
           .put("/login", userData)
@@ -316,14 +322,11 @@ export default new Vuex.Store({
       });
     },
     
-    register({ commit, dispatch }, userData) {
-      commit("setUserData", userData)
-
+    register({ state }, userData) {
       return new Promise((resolve, reject) => {
         axios
-          .put("/register", userData)
+          .put("/register", userData, { headers: { Authorization: `Bearer: ${state.jwt.token}`} })
           .then((res) => {
-            dispatch("login", userData)
             resolve(res);
           })
           .catch(() => {

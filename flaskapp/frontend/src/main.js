@@ -17,6 +17,7 @@ import AnalyseQuestionnaires from "./components/doctorView/AnalyseQuestionnaires
 import CreateQuestionnaire from "./components/doctorView/CreateQuestionnaire.vue";
 import ViewQuestionnaires from "./components/doctorView/ViewQuestionnaires.vue";
 import Login from "./components/Login.vue";
+import Register from "./components/Register.vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons";
@@ -46,6 +47,12 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: Login
+    },
+    {
+      path: "/register",
+      name: "Register",
+      component: Register,
+      beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
       path: "/doctorView",

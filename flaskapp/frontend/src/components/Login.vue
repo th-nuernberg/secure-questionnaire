@@ -9,29 +9,17 @@
     <button @click="switchVisibility()" type="password">show / hide</button>
     <br>
     <button @click="login()">Log in</button>
-    <button @click="register()">Register</button>
 
     <div id="login-error" class="error" style="display: none">
         <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
         <p class="m-1 d-inline">
-        Kein Nutzer unter angegebener Email. Bitte Registrieren Sie sich!
-        </p>
-    </div>
-    <div id="register-error" class="error" style="display: none">
-        <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
-        <p class="m-1 d-inline">
-        Nutzer unter angegebener Email existiert schon. Bitte verwenden Sie den login oder eine andere Email!
-        </p>
-    </div>
-    <div id="register-success" class="success" style="display: none">
-        <p class="m-1 d-inline">
-        Nutzer erfolgreich registriert!
+        Kein Nutzer unter angegebener Email. Ihr Admin muss Sie erst registrieren!
         </p>
     </div>
 </template>
 
 <script>
-    import { createRSAKeyPair } from "../encryption.js"
+    import { checkFields } from "../utils.js"
 
     export default {
         components: {
@@ -48,90 +36,25 @@
             switchVisibility() {
                 this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
             },
-            saveKeyParamsAsFile(filename, dataObjToWrite) {
-                const blob = new Blob([JSON.stringify(dataObjToWrite)], { type: "text/json" });
-                const link = document.createElement("a");
-
-                link.download = filename;
-                link.href = window.URL.createObjectURL(blob);
-                link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
-
-                const evt = new MouseEvent("click", {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                });
-
-                link.dispatchEvent(evt);
-                link.remove()
-            },
             login() { 
-                if (this.checkFields(false)) {
+                if (checkFields(false, this.owner_mail, this.owner_name, this.passphrase)) {
                     return
                 }
 
                 this.$store.dispatch('login', { owner_mail: this.owner_mail, password: this.passphrase, owner_name: this.owner_name })
                     .then(() => {
                         // Move to questionnaire creation on successful login
-                        this.$router.push({ path: `/doctorView/create` });
+
+                        if (this.owner_mail != "admin") {
+                            this.$router.push({ path: `/doctorView/create` });
+                        } else {
+                            this.$router.push({ path: `/register` })
+                        }
                     })
                     .catch(() => {
                         document.getElementById("login-error").style.display = "block";
                     })
             },
-            register() {
-                // All necessary fields must be set
-                if (this.checkFields(true) && owner_name == "") {
-                    return
-                }
-                
-                this.$store.dispatch('register', { owner_mail: this.owner_mail, password: this.passphrase, owner_name: this.owner_name })
-                    .then(() => {
-                        document.getElementById("register-success").style.display = "block";
-                    })
-                    .catch(() => {
-                        document.getElementById("register-error").style.display = "block";
-                    })
-
-                this.createRSAKeyPair(this.passphrase)
-            },
-            async createRSAKeyPair(passphrase) { 
-                // returns a public key, wrapped private key and salt+iv it has been wrapped with
-                let keyPairPlusParams = await createRSAKeyPair(passphrase)
-
-                let keyParams = { 
-                    wrappedPrivateKey: Buffer.from(keyPairPlusParams.wrappedPrivateKey).toString("base64"),
-                    salt: Buffer.from(keyPairPlusParams.salt).toString("base64"),
-                    wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
-                }
-
-                this.saveKeyParamsAsFile("Schlüssel.json", keyParams)
-
-                this.$store
-                    .dispatch("uploadPublicKey", { 
-                        owner_mail: this.owner_mail, 
-                        owner_name: this.owner_name, 
-                        publicKey: Buffer.from(keyPairPlusParams.publicKey).toString("base64")
-                    })
-            },
-            checkFields(register) {
-                let empty = false
-
-                if (register && this.owner_name == "") {
-                    document.getElementById("name").className = "empty"
-                    empty = true
-                }
-                if (this.owner_mail == "") {
-                    document.getElementById("mail").className = "empty"
-                    empty = true
-                }
-                if (this.passphrase == "") {
-                    document.getElementById("passphrase").className = "empty"
-                    empty = true
-                }
-
-                return empty
-            }
         }
     }
 </script>
