@@ -9,7 +9,6 @@ import uuid from "vue-uuid";
 import { createRouter, createWebHistory } from "vue-router";
 import VueQrcodeReader from "vue3-qrcode-reader";
 import html2pdf from "html2pdf";
-import Home from "./components/Home.vue";
 import PatientView from "./components/PatientView.vue";
 import DoctorView from "./components/DoctorView.vue";
 import PatientQuestionnaire from "./components/patientView/PatientQuestionnaire.vue";
@@ -42,12 +41,10 @@ function validateJWTtoken(next) {
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", name: "Home", component: Home },
-    {
-      path: "/login",
-      name: "Login",
-      component: Login
-    },
+    { 
+      path: "/", 
+      name: "Home", 
+      component: Login },
     {
       path: "/register",
       name: "Register",

@@ -7,7 +7,8 @@ For self deployment please do the following
 in ./flaskapp/nginx/auth. <br>
 Or place pair created by CA into the directory to make the connection trusted.
 
-- Create login credentials for basic auth: <br>
- run ```docker run --rm --entrypoint htpasswd httpd:2 -Bbn testuser testpassword > ./nginx.htpasswd``` <br> in ./flaskapp/nginx/auth.
+- Set JWT secret in ./flaskapp/backend/config.json
 
-- Set JWT secret for signing in ./flaskapp/backend/config.json
+- Set admin password in ./flaskapp/backend/config.json
+    - username: admin
+    - name: admin
