@@ -66,6 +66,7 @@
                   placeholder="Beschreibung/Anmerkungen/..."
                   id="floatingTextarea2"
                   style="height: 100px"
+                  v-model="question.text"
                 ></textarea>
                 <input
                   type="text"
