@@ -1,5 +1,5 @@
 <template>
-  <p class="heading">{{ question.id }}. {{ question.text }}</p>
+  <p>{{ question.id }}. {{ question.text }}</p>
 </template>
 
 <script>
@@ -11,8 +11,4 @@ export default {
 </script>
 
 <style scoped>
-.heading {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
 </style>
