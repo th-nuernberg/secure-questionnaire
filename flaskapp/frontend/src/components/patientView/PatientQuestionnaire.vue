@@ -11,7 +11,7 @@
     <div class="text-center mt-5">
       <p>Fehler beim Laden</p>
       <button
-        class="btn btn-secondary mt-5"
+        class="btn btn-outline-dark mt-5"
         variant="outline-primary"
         @click="this.$router.push('/patient')"
       >
@@ -22,15 +22,14 @@
 
   <div class="container" v-else-if="pageState === 'saved'">
     <div class="saved">
-      <button
+      <!-- <button
         variant="outline"
         @click="pageState = 'ready'"
         class="btn btn-secondary mt-5"
       >
-        <!-- <b-icon-arrow-left></b-icon-arrow-left> -->
         <BootstrapIcon icon="arrow-left" size="2x" />
         Zurück zum Fragebogen
-      </button>
+      </button> -->
 
       <div class="boxStyling mb-5">
         <h3 class="text-center mb-3">Erfolgreich gespeichert!</h3>
@@ -39,7 +38,7 @@
           zu bearbeiten oder dem Arzt zeigen zu können.
         </p>
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col ext-center">
             <button
               class="btn btn-secondary mt-5"
@@ -50,11 +49,43 @@
               QR-Code
             </button>
           </div>
+        </div> -->
+
+        <div class="d-grid gap-3 col-3 mx-auto mt-4">
+          <button
+          type="button"
+          class="btn btn-outline-dark"
+          @click="pageState = 'ready'"
+          variant="outline"
+          >
+          <div class="d-flex">
+            <div>
+              <BootstrapIcon icon="arrow-left" size="2x" />
+            </div>
+            <div class="mx-auto align-self-center">
+              Zurück zum Fragebogen
+            </div>
+          </div>             
+        </button>
+        <button
+          @click="downloadPdf()"
+          type="button"
+          class="btn btn-outline-dark"
+          variant="primary"
+        >
+          <div class="d-flex">
+            <div>
+              <BootstrapIcon icon="qr-code" size="2x" />
+            </div>
+            <div class="mx-auto align-self-center">
+              QR-Code
+            </div>
+          </div>
+        </button>
         </div>
       </div>
 
-      <div class="boxStyling">
-        <section class="user-details p-5" ref="document">
+      
           <div class="text-center">
             <h1>Ihr ausgefüllter Fragebogen</h1>
             <qr-code class="qr" :content="content"></qr-code>
@@ -82,8 +113,10 @@
             werden und somit sensible Daten eingesehen werden.<br />Geben Sie
             Ihn nicht an Dritte weiter.
           </p>
-        </section>
-      </div>
+
+
+      <hr class="my-3">
+       
 
       <h4>Infos:</h4>
       <h6>Was passiert mit meinen Daten?</h6>
@@ -103,7 +136,7 @@
       </p>
 
       <button
-        class="btn btn-secondary mt-5"
+        class="btn btn-outline-dark mt-5"
         variant="outline-primary"
         @click="this.$router.push('/patient')"
       >
@@ -130,19 +163,26 @@
   </div>
 
   <div class="container" v-else>
-    <form>
-      <h1 class="mt-5">{{ questionnaire.title }}</h1>
 
+    <h3>Fragebogen: {{ questionnaire.title }}</h3>
+    <form>
       <div class="row">
-        <div class="col">
-          <input
+        <div class="col-sm-6">
+          <div class="py-3">
+            <label for="name" class="form-label">Name</label>
+            <input
+            id="name"
             type="text"
+            class="form-control ml-0"
             v-model="patientName"
             @input="setName"
             placeholder="Bitte geben Sie Ihren Namen ein."
           />
+          </div>
         </div>
       </div>
+
+      <hr class="my-3">
 
       <tab-navigation
         v-if="questionnaire.repeatingType !== 'single'"
@@ -159,17 +199,21 @@
         time=""
       ></Questions-Container>
 
-      <div class="text-center">
+      <div class="d-grid col-5 mt-5">
         <button
           @click="save()"
           variant="success"
           type="button"
-          class="btn btn-outline-primary"
+          class="btn btn-outline-dark"
         >
-          Fragebogen abschließen und herunterladen<BootstrapIcon
-            icon="download"
-            size="2x"
-          />
+        <div class="d-flex">
+          <div>
+            <BootstrapIcon icon="download" size="2x" />
+          </div>
+          <div class="mx-auto align-self-center">
+            Fragebogen abschließen und herunterladen
+          </div>
+        </div>
         </button>
         <div id="upload-error" style="display: none">
           <BootstrapIcon icon="exclamation-circle-fill" size="2x" />

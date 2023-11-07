@@ -2,10 +2,11 @@
   <div>
     <div class="container">
       <div class="row navigationMenu text-center" align-h="center">
+        <p class="h4">{{ currentDate }}</p>        
         <div class="col">
           <button
             type="button"
-            class="btn btn-outline-primary"
+            class="btn btn-outline-dark"
             @click="back"
             :disabled="index == 1"
           >
@@ -17,22 +18,22 @@
           <!-- <button v-modal.calendar class="date btn-accent">
                         {{currentDate}}
                     </button> -->
-          <button
+          <!-- <button
             type="button"
-            class="date btn-primary"
+            class="date btn-outline-dark"
             v-modal.calendar
             data-bs-toggle="modal"
             data-bs-target="#firstEntry"
           >
-            <!-- Datum hinzufügen! -->
+            Datum hinzufügen!
             {{ currentDate }}
-          </button>
+          </button> -->
 
           <div class="btn-toolbar">
             <div class="btn-group me-2" align-h="center">
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-outline-dark"
                 v-modal.calendar
                 data-bs-toggle="modal"
                 data-bs-target="#editEntry"
@@ -43,7 +44,7 @@
 
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-outline-dark"
                 v-modal.calendar
                 data-bs-toggle="modal"
                 data-bs-target="#deleteEntry"
@@ -54,7 +55,7 @@
 
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-outline-dark"
                 v-modal.calendar
                 data-bs-toggle="modal"
                 data-bs-target="#addEntry"
@@ -70,13 +71,16 @@
             @click="forward"
             :disabled="index === entries.length - 1"
             type="button"
-            class="btn btn-outline-primary"
-            variant="outline-primary"
+            class="btn btn-outline-dark"
+            variant="outline-dark"
           >
             <!-- <i class="bi bi-chevron-right"></i> -->
             <BootstrapIcon icon="arrow-right" size="2x" />
           </button>
         </div>
+
+        <hr class="my-3">
+
       </div>
 
       <div class="questionsContainer">
@@ -134,14 +138,14 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-dark"
               data-bs-dismiss="modal"
             >
               Close
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-dark"
               @click="setDate"
               data-bs-dismiss="modal"
             >
@@ -177,14 +181,14 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-dark"
               data-bs-dismiss="modal"
             >
               Close
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-dark"
               @click="setDate"
               data-bs-dismiss="modal"
             >
@@ -226,14 +230,14 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-dark"
               data-bs-dismiss="modal"
             >
               Close
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-dark"
               @click="addDateEntry"
               data-bs-dismiss="modal"
             >
@@ -270,14 +274,14 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-dark"
               data-bs-dismiss="modal"
             >
               Close
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-dark"
               @click="deleteEntry"
               data-bs-dismiss="modal"
             >
@@ -472,11 +476,11 @@ export default {
 <style scoped lang="scss">
 @import "../../custom.scss";
 
-.navigationMenu {
-  border-bottom: 1px solid $accent;
-  padding: 15px 0;
-  margin-bottom: 30px;
-}
+// .navigationMenu {
+//   border-bottom: 1px solid $accent;
+//   padding: 15px 0;
+//   margin-bottom: 30px;
+// }
 
 .date {
   display: block;
@@ -488,9 +492,9 @@ export default {
   border-bottom-right-radius: 0;
 }
 
-.questionsContainer {
-  margin: 30px;
-}
+// .questionsContainer {
+//   margin: 30px;
+// }
 
 .editBtnsGroup {
   justify-content: center;

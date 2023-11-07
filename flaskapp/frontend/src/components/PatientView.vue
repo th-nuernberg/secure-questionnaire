@@ -1,5 +1,5 @@
 <template>
-  <div class=".container">
+  <div class="container">
     <h3 class="mt-5">QR-Code scannen:</h3>
     <code-scanner></code-scanner>
     <button class="small-button mt-3" @click="manually()">

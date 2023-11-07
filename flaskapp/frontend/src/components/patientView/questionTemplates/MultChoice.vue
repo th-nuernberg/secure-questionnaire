@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <heading :question="question"></heading>
     <p class="mb-1">(Mehrere Antworten möglich)</p>
 
@@ -13,8 +13,28 @@
         @change="input()"
       />
     </div>
-    <!-- <div>Selected: {{answer}}</div> -->
+  </div> -->
+
+  <div class="container">
+    <heading :question="question"></heading>
+    <p class="text-muted mb-1">Mehrere Antworten möglich</p>
+
+    <div class="form-group form-check" v-for="option in question.options">
+      <input
+        type="checkbox"
+        v-model="answer"
+        :key="option.id"
+        :value="option.text"
+        @change="input()">
+      <label class="check-label" :for="option.text">{{ option.text }}</label>
+      
+    
+    </div>
   </div>
+
+  <hr class="my-3">
+
+
 </template>
 
 <script>

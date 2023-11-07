@@ -1,16 +1,16 @@
 <template>
-  <div v-if="!uploaded"> 
-      <!-- Can be beautified with CSS -->
-      <!-- https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/ -->
-      <input type="file" id="selectFiles"/><br/>
-      <button @click="upload()">Hochladen</button>
-      
-      <div id="upload-error" style="display: none">
-        <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
-        <p class="m-1 d-inline">
-            Bitte Schlüssel Datei hochladen!
-        </p>
-      </div>
+  <div v-if="!uploaded">
+    <!-- Can be beautified with CSS -->
+    <!-- https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/ -->
+    <input type="file" id="selectFiles" /><br />
+    <button @click="upload()">Hochladen</button>
+
+    <div id="upload-error" style="display: none">
+      <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
+      <p class="m-1 d-inline">
+        Bitte Schlüssel Datei hochladen!
+      </p>
+    </div>
   </div>
   <div v-else class="uploaded">
     <div class="container">
@@ -19,41 +19,31 @@
           <div class="wrapper">
             <code-scanner @addAnalyseID="addAnalyseID"></code-scanner>
             <!-- <div class="info">
-                          <div :show="existsCountDown" class="alert alert-primary" role="alert"
-                                  variant="warning"
-                                  @dismissed="existsCountDown=0"
-                                  @dismiss-count-down="existsCountDownChanged">
-                              <p class="m-0">Dieser Code wurde bereits erfasst.</p>
-                          </div>
-                          <div :show="addedCountDown" class="alert alert-primary" role="alert"
-                              variant="success"
-                              @dismissed="addedCountDown=0"
-                              @dismiss-count-down="addedCountDownChanged">
-                              <h1 class="m-0">+</h1>
-                          </div>
-                      </div> -->
+                                              <div :show="existsCountDown" class="alert alert-primary" role="alert"
+                                                      variant="warning"
+                                                      @dismissed="existsCountDown=0"
+                                                      @dismiss-count-down="existsCountDownChanged">
+                                                  <p class="m-0">Dieser Code wurde bereits erfasst.</p>
+                                              </div>
+                                              <div :show="addedCountDown" class="alert alert-primary" role="alert"
+                                                  variant="success"
+                                                  @dismissed="addedCountDown=0"
+                                                  @dismiss-count-down="addedCountDownChanged">
+                                                  <h1 class="m-0">+</h1>
+                                              </div>
+                                          </div> -->
           </div>
         </div>
-        <div class="col">
+        <div class="mt-5 col">
           <h4>Folgende Bögen wurden erfasst:</h4>
           <div v-if="idsKeys.length > 0">
             <div class="ids">
-              <div
-                class="row"
-                v-for="(obj, index) in idsKeys"
-                :key="obj.id"
-                align-v="center"
-              >
+              <div class="row" v-for="(obj, index) in idsKeys" :key="obj.id" align-v="center">
                 <div class="col">
                   {{ obj.id }}
                 </div>
                 <div class="col">
-                  <button
-                    class="btn btn-primary"
-                    @click="deleteID(index)"
-                    variant="danger"
-                    size="sm"
-                  >
+                  <button class="btn btn-primary" @click="deleteID(index)" variant="danger" size="sm">
                     <!-- <i class="fas fa-trash"></i> -->
                     delete
                   </button>
@@ -116,28 +106,28 @@ export default {
     },
     upload() {
       // No file selected
-      if(document.getElementById('selectFiles').files.item(0) == null) {
-          document.getElementById("upload-error").style.display = "block";
-          return
+      if (document.getElementById('selectFiles').files.item(0) == null) {
+        document.getElementById("upload-error").style.display = "block";
+        return
       }
 
       var files = document.getElementById('selectFiles').files;
 
       if (files.length <= 0) {
-          return false;
+        return false;
       }
 
       var fr = new FileReader();
 
-      fr.onload = (e) => { 
+      fr.onload = (e) => {
         this.$store.commit(
-          "setPrivateKeyParams", 
+          "setPrivateKeyParams",
           JSON.parse(e.target.result)
         )
       }
-      
+
       fr.readAsText(files.item(0));
-      
+
       window.scrollTo(0, 0);
       this.uploaded = true;
     },
@@ -145,7 +135,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<!-- <style scoped> -->
+<style>
 .wrapper {
   position: relative;
 }
