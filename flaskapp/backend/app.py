@@ -6,7 +6,8 @@ from flask import request, Flask, Response
 app = Flask(__name__)
 cors = CORS(app)
 
-mongo = pymongo.MongoClient("mongodb://mongo:27017", serverSelectionTimeoutMS=600)
+# serverSelectionTimeoutMS defaults to 30 seconds
+mongo = pymongo.MongoClient("mongodb://mongo:27017")
 #mongo.server_info()
 mongo.drop_database("SecureQuestionnaire") # clear collection after server restart 
 DB = mongo["SecureQuestionnaire"]

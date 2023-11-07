@@ -3,3 +3,5 @@
 **/__pycache__
 # Ignore mounted database container directory
 ./flaskapp/database
+
+./flaskapp/nginx/auth/*
