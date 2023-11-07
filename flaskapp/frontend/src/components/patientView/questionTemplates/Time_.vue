@@ -1,8 +1,19 @@
 <template>
-  <div>
+  <!-- <div>
     <heading :question="question"></heading>
     <input type="time" v-model="answer" @input="input()" />
+  </div> -->
+
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="py-3">
+        <label for="time" class="form-label"><heading :question="question"></heading></label>
+        <input type="time" v-model="answer" id="time" class="form-control ml-0" required @input="input()" />
+      </div>
+    </div>
   </div>
+
+  <hr class="my-3">
 </template>
 
 <script>
