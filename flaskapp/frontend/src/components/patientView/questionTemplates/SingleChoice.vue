@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <heading :question="question"></heading>
 
     <div class="form-group form-check" v-for="option in question.options">
@@ -14,8 +14,26 @@
         :true-value="option.text"
       />
     </div>
-    <!-- <div>Selected: {{answer}}</div> -->
+  </div> -->
+
+
+  <div class="container">
+    <heading :question="question"></heading>
+
+    <div class="form-group form-check" v-for="option in question.options">
+      <input
+        type="radio"
+        v-model="answer"
+        :key="option.id"
+        :value="option.text"
+        @change="input()"
+        :name="name"
+        :true-value="option.text">
+      <label class="check-label" :for="option.text">{{ option.text }}</label>     
+    </div>
   </div>
+  <hr class="my-3">
+
 </template>
 
 <script>
