@@ -1,22 +1,4 @@
 <template>
-    <!-- Can be beautified with CSS -->
-    <!-- https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/ -->
-    <!-- <input id="mail" v-model="owner_mail" placeholder="Bitte Email eingeben" />
-    <br>
-    <input id="name" v-model="owner_name" placeholder="Bei erstem Registrieren angeben" />
-    <br>
-    <input id="passphrase" v-model="passphrase" placeholder="Bitte Kennwort eingeben" :type="passwordFieldType" />
-    <button @click="switchVisibility()" type="password">show / hide</button>
-    <br>
-    <button @click="login()">Log in</button>
-
-    <div id="login-error" class="error" style="display: none">
-        <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
-        <p class="m-1 d-inline">
-        Kein Nutzer unter angegebener Email. Ihr Admin muss Sie erst registrieren!
-        </p>
-    </div> -->
-
     <div class="container">
         <legend>Login</legend>
         <hr class="my-3">
@@ -54,19 +36,19 @@
                         <BootstrapIcon icon="lock" size="1x" />
                     </span>
                     <input class="form-control" id="passphrase" v-model="passphrase" placeholder="Bitte Kennwort eingeben"
-                        :type="passwordFieldType" />  
+                        :type="passwordFieldType" />
                     <div class="input-group-append">
                         <button id="passBtn" class="btn btn-outline-dark" type="button" @click="switchVisibility()">
                             <BootstrapIcon icon="eye" size="1x" />
                         </button>
-                    </div>     
+                    </div>
                 </div>
             </div>
             <div class="d-grip col-4">
                 <button type="button" class="btn btn-outline-dark btn-lg mt-2" @click="login()">
                     Login
                 </button>
-            </div>          
+            </div>
 
             <div id="login-error" class="error mt-4" style="display: none">
                 <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
@@ -134,7 +116,7 @@ export default {
     border: 1px solid red;
 }
 
-#passBtn{
+#passBtn {
     border-color: #dee2e6
 }
 </style>
