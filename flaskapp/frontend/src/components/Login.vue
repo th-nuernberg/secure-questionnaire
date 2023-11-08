@@ -39,7 +39,8 @@
                         :type="passwordFieldType" />
                     <div class="input-group-append">
                         <button id="passBtn" class="btn btn-outline-dark" type="button" @click="switchVisibility()">
-                            <BootstrapIcon icon="eye" size="1x" />
+                            <BootstrapIcon v-if="this.clicked === true" icon="eye" size="1x" />
+                            <BootstrapIcon v-else icon="eye-slash" size="1x" />
                         </button>
                     </div>
                 </div>
@@ -72,11 +73,13 @@ export default {
             owner_mail: "",
             owner_name: "",
             passwordFieldType: "password",
+            clicked: false,
         }
     },
     methods: {
         switchVisibility() {
             this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
+            this.clicked = this.clicked === true ? false : true;
         },
         login() {
             if (checkFields(false, this.owner_mail, this.owner_name, this.passphrase)) {
