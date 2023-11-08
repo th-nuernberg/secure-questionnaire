@@ -1,36 +1,22 @@
 <template>
   <div class="container">
-    <!-- <div v-if="!uploaded"> -->
-      <!-- Can be beautified with CSS -->
-      <!-- https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/ -->
-      <!-- <input type="file" id="selectFiles" /><br />
-      <button @click="upload()">Hochladen</button>
-
-      <div id="upload-error" style="display: none">
-        <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
-        <p class="m-1 d-inline">
-          Bitte Schlüssel Datei hochladen!
-        </p>
-      </div>
-    </div> -->
-
     <div v-if="!uploaded">
       <legend>Schlüssel Datei hochladen</legend>
       <hr class="my-3">
       <div class="custom-file mt-3">
-        <input type="file" class="custom-file-input mt-3" id="selectFiles">        
+        <input type="file" class="custom-file-input mt-3" id="selectFiles">
       </div>
       <div class="col-3 mt-3">
         <button type="button" class="btn btn-outline-dark" @click="upload()">
-          Hochladen        
-       </button>
-    </div>
-    <div class="error mt-4" id="upload-error" style="display: none">
+          Hochladen
+        </button>
+      </div>
+      <div class="error mt-4" id="upload-error" style="display: none">
         <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
         <p class="m-1 d-inline">
           Bitte Schlüssel Datei hochladen!
         </p>
-      </div> 
+      </div>
     </div>
 
     <div v-else class="uploaded">
