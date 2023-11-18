@@ -16,18 +16,6 @@
                 </div>
             </div>
             <div class="col-6 pb-3">
-                <label class="control-label" for="name">
-                    Name
-                </label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <BootstrapIcon icon="person" size="1x" />
-                    </span>
-                    <input class="form-control" id="name" v-model="owner_name"
-                        placeholder="Bei erstem Registrieren angeben" />
-                </div>
-            </div>
-            <div class="col-6 pb-3">
                 <label class="control-label" for="passphrase">
                     Passwort
                 </label>
@@ -71,7 +59,6 @@ export default {
         return {
             passphrase: "",
             owner_mail: "",
-            owner_name: "",
             passwordFieldType: "password",
             clicked: false,
         }
@@ -82,11 +69,11 @@ export default {
             this.clicked = this.clicked === true ? false : true;
         },
         login() {
-            if (checkFields(false, this.owner_mail, this.owner_name, this.passphrase)) {
+            if (checkFields(false, this.owner_mail, this.passphrase)) {
                 return
             }
 
-            this.$store.dispatch('login', { owner_mail: this.owner_mail, password: this.passphrase, owner_name: this.owner_name })
+            this.$store.dispatch('login', { owner_mail: this.owner_mail, password: this.passphrase })
                 .then(() => {
                     // Move to questionnaire creation on successful login
 
