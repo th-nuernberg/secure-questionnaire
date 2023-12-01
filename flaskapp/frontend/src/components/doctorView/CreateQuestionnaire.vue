@@ -112,7 +112,7 @@
       <div class="dropdown">
         <button class="btn btn-outline-dark dropdown-toggle" type="button" @click="toggle" id="dropdownMenu2"
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <BootstrapIcon icon="question-circle-fill" size="1x" /><br />
+          <BootstrapIcon icon="plus-circle" size="1x" /><br />
           Fragenmenü
         </button>
         <div v-if="active">
