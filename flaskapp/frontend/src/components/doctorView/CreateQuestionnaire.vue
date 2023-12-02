@@ -122,12 +122,17 @@
           </button>
         </div>
       </div>
+
       <hr class="my-3">
-      <p id="owner-selection" class="dropdown-owner" tabindex="100">
-        <span>Behandelnde Aerzte auswählen</span>
-      <div id="owner-list" class="dropdown-owner-content">
-      </div>
-      </p>
+     
+        <button class="btn btn-outline-dark dropdown-toggle" type="button" @click="toggleAerzte">
+          Behandelnde Aerzte
+        </button>
+        <div v-if="aerzte">
+          <div id="dropdownOwner"></div>
+        </div>
+
+      <hr class="my-3">
 
       <button @click="save()" class="btn btn-outline-dark btn-lg mt-3" variant="success">
         <div class="d-flex">
@@ -253,6 +258,7 @@ export default {
       saved: false,
       qrlink: "localhost:8080/patient/questionnaire/",
       active: false,
+      aerzte: false,
     };
   },
   computed: {
@@ -273,6 +279,10 @@ export default {
   methods: {
     toggle() {
       this.active = !this.active;
+    },
+    toggleAerzte() {
+      this.aerzte = !this.aerzte;
+      this.getOwners();
     },
     addQuestion(type) {
       if (this.choiceQuestion(type) || type == "scale") {
@@ -409,7 +419,6 @@ export default {
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { dpi: 500, letterRendering: true },
         jsPDF: {
-          unit: "mm",
           format: "a4",
           orientation: "portrait",
           putOnlyUsedFonts: "true",
@@ -428,31 +437,46 @@ export default {
             let owner_name = document.createElement("p")
             let owner_mail = document.createElement("p")
 
+            let container = document.createElement("div")
+            container.className = "dropdownlist"
+
+            let item1 = document.createElement("div")
+            let item2 = document.createElement("div")
+            
+
             input.type = "checkbox"
+            input.className ="aerzte"
 
-            owner_name.innerHTML = element.owner_name
+            owner_name.innerHTML = "Name: " + element.owner_name
 
-            owner_mail.innerHTML = element.owner_mail
+            owner_mail.innerHTML = "E-Mail: " + element.owner_mail
             owner_mail.classList.add("owner_mail")
 
             label.appendChild(owner_name)
             label.appendChild(owner_mail)
 
-            owner.appendChild(input)
-            owner.appendChild(label)
+            item1.appendChild(input)
+            item2.appendChild(label)
 
-            document.getElementById("owner-list").appendChild(owner)
+            container.appendChild(item1)
+            container.appendChild(item2)
+
+            owner.appendChild(container)
+
+            document.getElementById("dropdownOwner").appendChild(owner)
+
           });
         })
     }
   },
-  beforeMount() {
-    this.getOwners()
-  }
+  // beforeMount() {
+  //   this.getOwners()
+  // }
 };
 </script>
 
 <style>
+
 .ml-0 {
   margin-left: 0 !important;
 }
@@ -470,10 +494,6 @@ export default {
 form[class="px-2"] {
   text-align: left;
 }
-
-/* .background-color {
-  background: #11111111;
-} */
 
 .skala {
   display: flex;
@@ -521,29 +541,20 @@ h4 {
   margin-top: 40px;
 }
 
-.dropdown-owner {
-  position: relative;
+.dropdownlist{
+  display: flex;
 }
 
-.dropdown-owner-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
+.dropdownlist{
+  margin-top: 15px;
+}
+
+.aerzte{
+  margin-right: 8px;
 }
 
 .dropdown-owner-content label {
   display: block;
-  padding: 8px;
-}
-
-.dropdown-owner-content label:hover {
-  background-color: #e0e0e0;
-}
-
-.dropdown-owner:hover .dropdown-owner-content {
-  display: block;
+  padding: 0px 8px 8px 8px;
 }
 </style>
