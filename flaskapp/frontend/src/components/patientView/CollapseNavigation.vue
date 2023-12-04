@@ -3,13 +3,15 @@
     <div v-if="noEntries">
       <p>Fügen Sie eine Uhrzeit hinzu, um mit der Bearbeitung zu starten:</p>
       <div class="row">
-        <div class="col" style="max-width: 150px">
-          <input type="time" v-model="newTime" />
+        <div class="col">
+          <div class="form-outline timepicker">
+            <input type="time" class="form-control" v-model="newTime">
+          </div>         
         </div>
+
         <div class="col" cols="auto">
-          <button @click="setTime" variant="primary" class="addBtn">
-            Add
-            <!-- <b-icon-plus></b-icon-plus> -->
+          <button class="btn btn-outline-dark" type="button" @click="setTime">
+            <BootstrapIcon icon="clock-history" size="1x" />
           </button>
         </div>
       </div>
@@ -29,8 +31,10 @@
       class="accordion"
       role="tablist"
     >
-      <div class="card mb-3">
-        <div class="card-header" header-tag="header" role="tab">
+      <!-- <div class="card mb-3"> -->
+      <div class="mb-3">
+
+        <!-- <div class="card-header" header-tag="header" role="tab">
           <button
             v-b-toggle="'accordion-' + index"
             class="timeBtn"
@@ -46,7 +50,6 @@
               class="editBtns"
               variant="outlined"
             >
-              <!-- <b-icon-pencil-fill></b-icon-pencil-fill> -->
               <BootstrapIcon icon="pencil-fill" size="2x" />
             </button>
             <button
@@ -56,12 +59,45 @@
               v-b-modal.deleteTimeEntry
               size="sm"
             >
-              <!-- <b-icon-trash></b-icon-trash> -->
               <BootstrapIcon icon="trash" size="2x" />
             </button>
           </button-group>
+        </div> -->
+
+        <div class="row text-center">
+        <div class="col align-self-center">
+          Ausgewählte Uhrzeit:
         </div>
-        <button
+        <div class="col-1 border border-dark rounded align-self-center">
+          {{ entry.time }}
+        </div>
+        <div class="col">
+          <button-group>
+            <button
+              @click="setIndex(index)"
+              v-b-modal.editTimeEntry
+              size="sm"
+              class="btn btn-outline-dark mx-1"
+              variant="outlined"
+            >
+              <BootstrapIcon icon="pencil" size="1x" />
+            </button>
+            <button
+              @click="setIndex(index)"
+              class="btn btn-outline-dark"
+              variant="outlined"
+              v-b-modal.deleteTimeEntry
+              size="sm"
+            >
+              <BootstrapIcon icon="trash3" size="1x" />
+            </button>
+          </button-group>
+        </div>
+      </div>
+
+      <hr class="my-3">
+        
+        <!-- <button
           class="btn btn-primary"
           type="button"
           data-toggle="collapse"
@@ -70,7 +106,7 @@
           role="tabpanel"
           @shown="open(index)"
           :visible="isOpen(index)"
-        >
+        > -->
           <div class="card-body">
             <Questions-Container
               :date="entries.date"
@@ -78,21 +114,27 @@
               :key="entry.time && entries.date"
             ></Questions-Container>
           </div>
-        </button>
+        <!-- </button> -->
       </div>
     </div>
 
-    <div class="row text-center mt-3">
-      <div class="col">
-        <button
+    <div class="d-grid col-3 mt-4">
+      <button
           v-if="!noEntries"
-          class="addBtn btn-accent"
+          class="btn btn-outline-dark"
           v-b-modal.addTimeEntry
         >
-          <!-- <b-icon-plus></b-icon-plus> -->
+          <div class="d-flex">
+            <div>
+              <BootstrapIcon icon="plus-circle" size="1x" />
+            </div>
+            <div class="mx-auto align-self-center">
+              Fragen für Uhrzeit hinzufügen
+            </div>
+          </div>
         </button>
-      </div>
     </div>
+    
 
     <div
       class="modal"
