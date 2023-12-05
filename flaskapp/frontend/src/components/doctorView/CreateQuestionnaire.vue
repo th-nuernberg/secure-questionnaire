@@ -124,13 +124,13 @@
       </div>
 
       <hr class="my-3">
-     
-        <button class="btn btn-outline-dark dropdown-toggle" type="button" @click="toggleAerzte">
-          Behandelnde Aerzte
+      
+      <p id="owner-selection" class="dropdown-owner" tabindex="100">
+        <button class="btn btn-outline-dark dropdown-toggle" type="button" @click="toggleDoctors">
+          Behandelnde Ärzte
         </button>
-        <div v-if="aerzte">
-          <div id="dropdownOwner"></div>
-        </div>
+        <div id="owner-list" class="dropdown-owner-content"></div>
+      </p>   
 
       <hr class="my-3">
 
@@ -258,7 +258,7 @@ export default {
       saved: false,
       qrlink: "localhost:8080/patient/questionnaire/",
       active: false,
-      aerzte: false,
+      isOpen: false,
     };
   },
   computed: {
@@ -280,9 +280,14 @@ export default {
     toggle() {
       this.active = !this.active;
     },
-    toggleAerzte() {
-      this.aerzte = !this.aerzte;
-      this.getOwners();
+    toggleDoctors() {
+      if(!this.isOpen){
+        document.getElementById("owner-list").style.display = "block";
+        this.isOpen = true;
+      } else{
+        document.getElementById("owner-list").style.display = "none";
+        this.isOpen = false;
+      }      
     },
     addQuestion(type) {
       if (this.choiceQuestion(type) || type == "scale") {
@@ -432,46 +437,35 @@ export default {
             let owner = document.createElement('p')
 
             let input = document.createElement('input')
-            let label = document.createElement('label')
-
-            let owner_name = document.createElement("p")
-            let owner_mail = document.createElement("p")
-
-            let container = document.createElement("div")
-            container.className = "dropdownlist"
-
-            let item1 = document.createElement("div")
-            let item2 = document.createElement("div")
-            
-
             input.type = "checkbox"
-            input.className ="aerzte"
 
+            let label = document.createElement('label')
+            label.className = "doctors"
+
+            let owner_name = document.createElement("div")
             owner_name.innerHTML = "Name: " + element.owner_name
 
+            let owner_mail = document.createElement("div")
             owner_mail.innerHTML = "E-Mail: " + element.owner_mail
             owner_mail.classList.add("owner_mail")
 
+            let entry = document.createElement("div")
+            entry.className = "entry"
+
             label.appendChild(owner_name)
             label.appendChild(owner_mail)
-
-            item1.appendChild(input)
-            item2.appendChild(label)
-
-            container.appendChild(item1)
-            container.appendChild(item2)
-
-            owner.appendChild(container)
-
-            document.getElementById("dropdownOwner").appendChild(owner)
-
+            entry.appendChild(input)
+            entry.appendChild(label)
+            owner.appendChild(entry)
+            document.getElementById("owner-list").appendChild(owner)
           });
         })
     }
+    
   },
-  // beforeMount() {
-  //   this.getOwners()
-  // }
+  beforeMount() {
+    this.getOwners()
+  }
 };
 </script>
 
@@ -541,20 +535,16 @@ h4 {
   margin-top: 40px;
 }
 
-.dropdownlist{
+#owner-list{
+  display: none;
+}
+
+.entry{
   display: flex;
+  margin: 8px;
 }
 
-.dropdownlist{
-  margin-top: 15px;
-}
-
-.aerzte{
-  margin-right: 8px;
-}
-
-.dropdown-owner-content label {
-  display: block;
-  padding: 0px 8px 8px 8px;
+.doctors{
+  padding-left: 20px;
 }
 </style>
