@@ -9,6 +9,7 @@ import uuid from "vue-uuid";
 import { createRouter, createWebHistory } from "vue-router";
 import VueQrcodeReader from "vue3-qrcode-reader";
 import html2pdf from "html2pdf";
+import Selection from "./components/Selection.vue";
 import PatientView from "./components/PatientView.vue";
 import DoctorView from "./components/DoctorView.vue";
 import PatientQuestionnaire from "./components/patientView/PatientQuestionnaire.vue";
@@ -24,7 +25,7 @@ import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons";
 function validateJWTtoken(next) {
   function isAuthenticated() {
     if (!store.getters.isAuthenticated) {
-      next('/login')
+      next('/')
     } else {
       next()
     }
@@ -49,6 +50,12 @@ const router = createRouter({
       path: "/register",
       name: "Register",
       component: Register,
+      beforeEnter(to, from, next) { validateJWTtoken(next) },
+    },
+    {
+      path: "/select",
+      name: "Selection",
+      component: Selection,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {

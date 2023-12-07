@@ -2,7 +2,6 @@
     <div class="container">
         <legend>Login</legend>
         <hr class="my-3">
-
         <form class="mt-3">
             <div class="col-6 pb-3">
                 <label class="control-label" for="mail">
@@ -33,16 +32,26 @@
                     </div>
                 </div>
             </div>
+            <div class="custom-file mt-3">
+                <input type="file" class="custom-file-input mt-3" id="selectFile">
+            </div>
+            <div class="error mt-4" id="upload-error" style="display: none">
+                <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
+                <p class="m-1 d-inline">
+                Bitte Schlüssel Datei hochladen!
+                </p>
+            </div>
             <div class="d-grip col-4">
                 <button type="button" class="btn btn-outline-dark btn-lg mt-2" @click="login()">
                     Login
                 </button>
             </div>
-
+            
+            <!-- TODO: Fehler differenzieren... Password falsch ODER kein Nutzer bei angegebener Mail -->
             <div id="login-error" class="error mt-4" style="display: none">
                 <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
                 <p class="m-1 d-inline">
-                    Kein Nutzer unter angegebener Email. Ihr Admin muss Sie erst registrieren!
+                   Unbekannte Email oder falsches Passwort!
                 </p>
             </div>
         </form>
@@ -59,6 +68,7 @@ export default {
         return {
             passphrase: "",
             owner_mail: "",
+            owner_name: "",
             passwordFieldType: "password",
             clicked: false,
         }
@@ -69,23 +79,28 @@ export default {
             this.clicked = this.clicked === true ? false : true;
         },
         login() {
-            if (checkFields(false, this.owner_mail, this.passphrase)) {
+            // TODO: Users should be able to change passwords at will
+
+            let admin = this.owner_mail == "admin"
+
+            if (checkFields(admin, false, this.owner_mail, this.passphrase)) {
                 return
             }
 
-            this.$store.dispatch('login', { owner_mail: this.owner_mail, password: this.passphrase })
-                .then(() => {
-                    // Move to questionnaire creation on successful login
+            let toDispatch = admin ? "login_admin" : "login"
+            // Move to questionnaire creation on successful login if regular user; for admin register page
+            let path = admin ? "/register" : "/select"
 
-                    if (this.owner_mail != "admin") {
-                        this.$router.push({ path: `/doctorView/create` });
-                    } else {
-                        this.$router.push({ path: `/register` })
-                    }
-                })
-                .catch(() => {
-                    document.getElementById("login-error").style.display = "block";
-                })
+            this.$store.dispatch(toDispatch, { 
+                owner_mail: this.owner_mail, 
+                password: this.passphrase, 
+            })
+            .then(() => {
+                this.$router.push({ path: path })
+            })
+            .catch(() => {
+                document.getElementById("login-error").style.display = "block";
+            })
         },
     }
 }
