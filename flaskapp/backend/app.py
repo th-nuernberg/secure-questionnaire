@@ -222,7 +222,7 @@ def verify_public_key():
     challenge = cipher.encrypt(
         SHA256.new(
             (data["owner_mail"] + datetime.today().strftime("%m/%d/%Y")).encode() # Hash only takes byte strings
-        ).hexdigest()[:10].encode()# Take first 10 bytes, whole byte string too large (ValueError: Plaintext is too long.)
+        ).hexdigest()[:10].encode()# Take first 10 characters, whole string too large (ValueError: Plaintext is too long.)
     ) 
     
     challenge = b64encode(challenge)
