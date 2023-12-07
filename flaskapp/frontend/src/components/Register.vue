@@ -56,8 +56,12 @@
             <div id="register-error" class="error mt-4" style="display: none">
                 <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
                 <p class="m-1 d-inline">
-                    Nutzer unter angegebener Email existiert schon. Bitte verwenden Sie den login oder eine andere Email!
+                    Nutzer unter angegebener Email existiert schon. Wurde am {{ createdOn }} registriert. <br>
+                    Falls Sie die Daten ersetzen, wird der aktuelle Schlüssel beim Arzt ungültig und muss neu übetragen werden.
                 </p>
+                <button type="button" class="btn btn-outline-dark btn-lg mt-2" @click="replace()">
+                    Ersetzen
+                </button>
             </div>
 
             <div id="non-admin-error" class="error mt-4" style="display: none">
@@ -69,6 +73,11 @@
             <div id="register-success" class="success mt-4" style="display: none">
                 <p class="m-1 d-inline">
                     Nutzer erfolgreich registriert!
+                </p>
+            </div>
+            <div id="replace-success" class="success mt-4" style="display: none">
+                <p class="m-1 d-inline">
+                    Privater Schlüssel und Passwort wurde ersetzt!
                 </p>
             </div>
         </form>
@@ -89,12 +98,13 @@ export default {
             owner_name: "",
             passwordFieldType: "password",
             clicked: false,
+            createdOn: ""
         }
     },
     methods: {
         switchVisibility() {
             this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
-            this.clicked = this.clicked === true ? false : true;
+            this.clicked = !this.clicked;
 
         },
         saveKeyParamsAsFile(filename, dataObjToWrite) {
@@ -114,7 +124,11 @@ export default {
             link.dispatchEvent(evt);
             link.remove()
         },
-        register() {
+        replace() {
+            this.register(true)
+            document.getElementById("register-error").style.display = "none";
+        },
+        register(replace) {
             this.$store.dispatch('getUserDetails')
                 .then((res) => {
 
@@ -124,35 +138,44 @@ export default {
                     }
 
                     // All necessary fields must be set
-                    if (checkFields(true, this.owner_mail, this.owner_name, this.passphrase) && owner_name == "") {
+                    if (checkFields(true, true, this.owner_mail, this.owner_name, this.passphrase)) {
                         return
                     }
 
-                    this.$store.dispatch('register', { owner_mail: this.owner_mail, password: this.passphrase, owner_name: this.owner_name })
-                        .then((hashedPassword) => {
-                            document.getElementById("register-success").style.display = "block";
-                            this.createRSAKeyPair(hashedPassword.data)
-                        })
-                        .catch(() => {
+                    this.$store.dispatch('register', { 
+                        owner_mail: this.owner_mail, 
+                        password: this.passphrase, 
+                        owner_name: this.owner_name, 
+                        replace: replace ? true : false  // If undefined set false rather than "undefined"
+                    })
+                    .then((res) => {
+                        if (res.data["exists"] && !replace){
+                            this.createdOn = res.data["created_on"]
                             document.getElementById("register-error").style.display = "block";
-                        })
 
+                        } else {
+                            document.getElementById("register-success").style.display = "block";
+                            this.createRSAKeyPair(res.data["hashed_password"])
+                        }
+                    })
+                    .catch()
                 }).catch(() => {
                     document.getElementById("non-admin-error").style.display = "block";
-
                 })
         },
         async createRSAKeyPair(passphrase) {
             // returns a public key, wrapped private key and salt+iv it has been wrapped with
             let keyPairPlusParams = await createRSAKeyPair(passphrase)
 
-            let keyParams = {
-                wrappedPrivateKey: Buffer.from(keyPairPlusParams.wrappedPrivateKey).toString("base64"),
-                salt: Buffer.from(keyPairPlusParams.salt).toString("base64"),
-                wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
-            }
-
-            this.saveKeyParamsAsFile("Schlüssel.json", keyParams)
+            this.saveKeyParamsAsFile("Schlüssel.json", {
+                publicKey: Buffer.from(keyPairPlusParams.publicKey).toString("base64"),
+                publicExponent: keyPairPlusParams.publicExponent.toString(),
+                privateKeyParams: {
+                    wrappedPrivateKey: Buffer.from(keyPairPlusParams.wrappedPrivateKey).toString("base64"),
+                    salt: Buffer.from(keyPairPlusParams.salt).toString("base64"),
+                    wrappingIv: Buffer.from(keyPairPlusParams.wrappingIv).toString("base64"),
+                }
+            })
 
             this.$store
                 .dispatch("uploadPublicKey", {

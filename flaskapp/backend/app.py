@@ -165,31 +165,42 @@ def get_user_details():
 @token_required
 def register():
     data = request.get_json()
-    status = 201
+    res = {}
 
     try:
         users = get_user()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
-    if users.find_one({ "owner_mail": data["owner_mail"] }):
-        res = "User already exists!"
-        status = 409
+    if users.find_one({ "owner_mail": data["owner_mail"] }) and not data["replace"]:
+        res["exists"] = True
+        res["created_on"] = users.find_one({ "owner_mail": data["owner_mail"] })["created_on"]
+        status = 200
     else:
-        hashed_password = generate_password_hash(
+        res["exists"] = False
+        res["hashed_password"] = generate_password_hash(
             data["password"], 
             method="sha256"
         )
 
-        users.insert_one({
+        user_details = {
             "owner_mail": data["owner_mail"],
             "owner_name": data["owner_name"],
-            "password": hashed_password
-        })
-        res = "success"
-        status = 200
+            "password": res["hashed_password"],
+            "created_on": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        if data["replace"]:
+            users.replace_one(
+                { "owner_mail": data["owner_mail"] },
+                user_details
+            )
+        else:
+            users.insert_one(user_details)
+
+        status = 201
     
-    return Response(response=json.dumps(hashed_password), status=status, mimetype="application/json")
+    return Response(response=json.dumps(res), status=status, mimetype="application/json")
 
 
 @app.route("/api/login", methods=["PUT"])
