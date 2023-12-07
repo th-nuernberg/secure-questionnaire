@@ -78,13 +78,20 @@ export default {
             this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
             this.clicked = this.clicked === true ? false : true;
         },
-        login() {
+        async login() {
             // TODO: Users should be able to change passwords at will
 
             let admin = this.owner_mail == "admin"
 
             if (checkFields(admin, false, this.owner_mail, this.passphrase)) {
                 return
+            }
+
+            this.upload()
+
+            // Wait for file reader
+            if (!admin && this.publicKey == undefined) {
+                await new Promise(r => setTimeout(r, 1000))
             }
 
             let toDispatch = admin ? "login_admin" : "login"
@@ -94,6 +101,7 @@ export default {
             this.$store.dispatch(toDispatch, { 
                 owner_mail: this.owner_mail, 
                 password: this.passphrase, 
+                publicKey: this.publicKey,
             })
             .then(() => {
                 this.$router.push({ path: path })
@@ -101,6 +109,27 @@ export default {
             .catch(() => {
                 document.getElementById("login-error").style.display = "block";
             })
+        },
+        upload() {
+            var files = document.getElementById('selectFile').files;
+
+            // TODO: Verify content fits schema; repeat user query if not
+            if (files.length <= 0) {
+                return false;
+            }
+
+            var fr = new FileReader();
+
+            fr.onload = (e) => {
+                this.$store.commit(
+                    "setPrivateKeyParams",
+                    JSON.parse(e.target.result)["privateKeyParams"]
+                )
+                this.publicKey = JSON.parse(e.target.result)["publicKey"]
+                this.publicExponent = JSON.parse(e.target.result)["publicExponent"]
+            }
+
+            fr.readAsText(files.item(0));
         },
     }
 }

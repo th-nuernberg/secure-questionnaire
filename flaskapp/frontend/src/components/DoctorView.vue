@@ -1,72 +1,50 @@
 <template>
   <div class="container">
-    <div v-if="!uploaded">
-      <legend>Schlüssel Datei hochladen</legend>
-      <hr class="my-3">
-      <div class="custom-file mt-3">
-        <input type="file" class="custom-file-input mt-3" id="selectFiles">
-      </div>
-      <div class="col-3 mt-3">
-        <button type="button" class="btn btn-outline-dark" @click="upload()">
-          Hochladen
-        </button>
-      </div>
-      <div class="error mt-4" id="upload-error" style="display: none">
-        <BootstrapIcon icon="exclamation-circle-fill" size="2x" />
-        <p class="m-1 d-inline">
-          Bitte Schlüssel Datei hochladen!
-        </p>
-      </div>
-    </div>
-
-    <div v-else class="uploaded">
-
-      <div class="row">
-        <div class="col-12">
-          <div class="wrapper">
-            <code-scanner @addAnalyseID="addAnalyseID"></code-scanner>
-            <!-- <div class="info">
-                                              <div :show="existsCountDown" class="alert alert-primary" role="alert"
-                                                      variant="warning"
-                                                      @dismissed="existsCountDown=0"
-                                                      @dismiss-count-down="existsCountDownChanged">
-                                                  <p class="m-0">Dieser Code wurde bereits erfasst.</p>
-                                              </div>
-                                              <div :show="addedCountDown" class="alert alert-primary" role="alert"
-                                                  variant="success"
-                                                  @dismissed="addedCountDown=0"
-                                                  @dismiss-count-down="addedCountDownChanged">
-                                                  <h1 class="m-0">+</h1>
-                                              </div>
-                                          </div> -->
-          </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="wrapper">
+          <code-scanner @addAnalyseID="addAnalyseID"></code-scanner>
+          <!-- <div class="info">
+              <div :show="existsCountDown" class="alert alert-primary" role="alert"
+                      variant="warning"
+                      @dismissed="existsCountDown=0"
+                      @dismiss-count-down="existsCountDownChanged">
+                  <p class="m-0">Dieser Code wurde bereits erfasst.</p>
+              </div>
+              <div :show="addedCountDown" class="alert alert-primary" role="alert"
+                  variant="success"
+                  @dismissed="addedCountDown=0"
+                  @dismiss-count-down="addedCountDownChanged">
+                  <h1 class="m-0">+</h1>
+              </div>
+          </div> -->
         </div>
-        <div class="mt-5 col">
-          <h4>Folgende Bögen wurden erfasst:</h4>
-          <div v-if="idsKeys.length > 0">
-            <div class="ids">
-              <div class="row" v-for="(obj, index) in idsKeys" :key="obj.id" align-v="center">
-                <div class="col">
-                  {{ obj.id }}
-                </div>
-                <div class="col">
-                  <button class="btn btn-primary" @click="deleteID(index)" variant="danger" size="sm">
-                    <!-- <i class="fas fa-trash"></i> -->
-                    delete
-                  </button>
-                </div>
+      </div>
+      <div class="mt-5 col">
+        <h4>Folgende Bögen wurden erfasst:</h4>
+        <div v-if="idsKeys.length > 0">
+          <div class="ids">
+            <div class="row" v-for="(obj, index) in idsKeys" :key="obj.id" align-v="center">
+              <div class="col">
+                {{ obj.id }}
+              </div>
+              <div class="col">
+                <button class="btn btn-primary" @click="deleteID(index)" variant="danger" size="sm">
+                  <!-- <i class="fas fa-trash"></i> -->
+                  delete
+                </button>
               </div>
             </div>
-            <div class="text-center">
-              <button class="btn btn-primary" @click="start">
-                Auswertung starten
-              </button>
-            </div>
           </div>
-          <div v-else>
-            Scannen Sie einen QR-Code, um mit der Auswertung zu starten. <br />
-            Sie können beliebig viele QR-Codes auf einmal auswerten.
+          <div class="text-center">
+            <button class="btn btn-primary" @click="start">
+              Auswertung starten
+            </button>
           </div>
+        </div>
+        <div v-else>
+          Scannen Sie einen QR-Code, um mit der Auswertung zu starten. <br />
+          Sie können beliebig viele QR-Codes auf einmal auswerten.
         </div>
       </div>
     </div>
@@ -84,7 +62,6 @@ export default {
       idsKeys: [],
       existsCountDown: 0,
       addedCountDown: 0,
-      uploaded: false
     };
   },
   methods: {
@@ -110,33 +87,6 @@ export default {
       this.$router.push({
         name: "AnalyseQuestionnaires",
       });
-    },
-    upload() {
-      // No file selected
-      if (document.getElementById('selectFiles').files.item(0) == null) {
-        document.getElementById("upload-error").style.display = "block";
-        return
-      }
-
-      var files = document.getElementById('selectFiles').files;
-
-      if (files.length <= 0) {
-        return false;
-      }
-
-      var fr = new FileReader();
-
-      fr.onload = (e) => {
-        this.$store.commit(
-          "setPrivateKeyParams",
-          JSON.parse(e.target.result)
-        )
-      }
-
-      fr.readAsText(files.item(0));
-
-      window.scrollTo(0, 0);
-      this.uploaded = true;
     },
   },
 };
