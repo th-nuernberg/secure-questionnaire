@@ -1,13 +1,16 @@
 import json
 from datetime import datetime, timedelta
 from functools import wraps
-
+from base64 import b64encode, b64decode
 
 import jwt
 import pymongo
 from flask_cors import CORS
 from flask import request, Flask, Response
 from werkzeug.security import generate_password_hash, check_password_hash
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey.RSA import construct
+from Crypto.Hash import SHA256
 
 
 app = Flask(__name__)
@@ -106,24 +109,22 @@ def token_required(f):
     return _verify
 
 
-def authenticate(email, password):
-    users = get_user()
+@app.route("/api/verifyPassword", methods=["PUT"])
+def verify_password():
+    data = request.get_json()
+    password_hash = get_user().find_one({ "owner_mail": data["owner_mail"] })["password"]
 
-    hashed_password = generate_password_hash(
-        password, 
-        method="sha256"
-    )
+    if check_password_hash(
+        password_hash, 
+        data["password"]
+    ):
+        res = password_hash
+        status = 200
+    else:
+        res = "Invalid password"
+        status = 400
 
-    if not email or not password:
-        return None
-
-    user = users.find_one({ "owner_mail": email })
-
-    # user not existent yet or password hash not matching
-    if not user or not check_password_hash(user["password"], password):
-        return None
-
-    return user
+    return Response(response=json.dumps(res), status=status, mimetype="application/json")
 
 
 @app.route("/api/userDetails", methods=["GET"])
@@ -203,30 +204,68 @@ def register():
     return Response(response=json.dumps(res), status=status, mimetype="application/json")
 
 
+@app.route("/api/verify", methods=["PUT"])
+def verify_public_key():
+    data = request.get_json()
+    key = get_RSA_public_keys().find_one({"owner_mail": data["owner_mail"]})["publicKey"]
+
+    # Verify client public key against DB
+    # (compare spki representation TODO: directely write jwk to DB to avoid redundant transmission of spki in PUT)
+    if key != data["spki_public_key"]:
+        return Response(response=json.dumps({"msg": f"Error: Invalid credentials"}), status=400, mimetype="application/json")
+    
+    e = 65537  # AQAB
+    n = int(data["jwk_public_key_exponent"])
+
+    rsakey = construct((n, e), consistency_check=True)
+    cipher = PKCS1_OAEP.new(rsakey, SHA256)
+    challenge = cipher.encrypt(
+        SHA256.new(
+            (data["owner_mail"] + datetime.today().strftime("%m/%d/%Y")).encode() # Hash only takes byte strings
+        ).hexdigest()[:10].encode()# Take first 10 bytes, whole byte string too large (ValueError: Plaintext is too long.)
+    ) 
+    
+    challenge = b64encode(challenge)
+
+    # Alternativ 10 digit random nonce -> Muesste man sich aber merken oder plain mitschicken...
+    # nonce = ''.join([str(random.randint(0, 9)) for i in range(10)])
+    # Oder (ohne merken) aktuelle zeit auf minute gerundet: anmelde versuch zwischen 0 und 60 sekunden gueltig
+    # IP oder sessionID schwierig...
+
+    response = {
+        # Encrypt secret to challenge client with
+        "challenge": challenge.decode()
+    }
+    return Response(response=json.dumps(response), status=200, mimetype="application/json")
+
+
 @app.route("/api/login", methods=["PUT"])
 def login():
-    status = 200
     data = request.get_json()
-    user = authenticate(data["owner_mail"], data["password"])
 
-    if not user:
-        response = {"msg": f"Error: Invalid credentials"}
-        status = 400
-    else:
-        token = jwt.encode(
-            {
-                'sub': user["owner_mail"],
-                'iat': datetime.utcnow(),
-                'exp': datetime.utcnow() + timedelta(minutes=30)
-            },
-            SECRET_KEY,
-            algorithm="HS256"
-        )
+    # Non admin users have to provide a successful challenge (verify_public_key)
+    if not data["owner_mail"] == "admin":
+        secret = SHA256.new(
+            (data["owner_mail"] + datetime.today().strftime("%m/%d/%Y")).encode() # Hash only takes byte strings
+        ).hexdigest()[:10]
 
-        # response = { "token": token.decode("UTF-8") }
-        response = { "token": token }
 
-    return Response(response=json.dumps(response), status=status, mimetype="application/json")
+        if secret != data["secret"]:
+            return Response(response=json.dumps({"msg": f"Error: Invalid credentials"}), status=400, mimetype="application/json")
+
+    token = jwt.encode(
+        {
+            'sub': data["owner_mail"],
+            'iat': datetime.utcnow(),
+            'exp': datetime.utcnow() + timedelta(minutes=30)
+        },
+        SECRET_KEY,
+        algorithm="HS256"
+    )
+
+    response = { "token": token }
+
+    return Response(response=json.dumps(response), status=200, mimetype="application/json")
     
 
 @app.route("/GET/<id>", methods=["GET"])

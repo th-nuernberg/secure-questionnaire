@@ -86,6 +86,35 @@ async function getWrappingKey(passphrase, salt) {
   })
 }
 
+// TODO: move to utils
+
+function b64ToBn(b64) {
+  const bin = atob(b64);
+  const hex = [];
+
+  bin.split('').forEach(function (ch) {
+      let h = ch.charCodeAt(0).toString(16);
+      if (h.length % 2) { h = '0' + h; }
+      hex.push(h);
+   });
+
+   return BigInt('0x' + hex.join(''));
+}
+
+function urlBase64ToBase64(str) {
+  const r = str % 4;
+  if (2 === r) {
+      str += '==';
+  } else if (3 === r) {
+      str += '=';
+  }
+  return str.replace(/-/g, '+').replace(/_/g, '/');
+}
+
+function base64urlDecode(base64url) {
+  return b64ToBn(urlBase64ToBase64(base64url));
+}
+
 async function createRSAKeyPair(passphrase) {
   const wrappingIv = crypto.getRandomValues(new Uint8Array(12))
   let salt = window.crypto.getRandomValues(new Uint8Array(16))
@@ -113,11 +142,36 @@ async function createRSAKeyPair(passphrase) {
     }
   )
 
+  console.log(Buffer.from("").toString("base64"))
+
+
+  let publicKeyJWK = await crypto.subtle.importKey(
+    "spki",
+    await crypto.subtle.exportKey('spki', keyPair.publicKey),
+    {
+      name: "RSA-OAEP",
+      hash: "SHA-256",
+    },
+    true,
+    ["encrypt"]
+  ).then((key) => {
+    return crypto.subtle.exportKey("jwk", key)
+    // new Uint8Array(
+    //   crypto.subtle.exportKey("jwk", key)
+    // )
+  })
+
+  // base64urluint encoded exponent to bigint
+  let publicExponent = base64urlDecode(publicKeyJWK.n)
+
+  // TODO: public exponent in DB rather than key bytes; then reconstruct public key in frontend after retreiving exponent from backend
+
   return {
     wrappedPrivateKey: new Uint8Array(wrappedPrivateKey),
     publicKey: new Uint8Array(
       await crypto.subtle.exportKey('spki', keyPair.publicKey)
     ),
+    publicExponent: publicExponent,
     salt: salt,
     wrappingIv: wrappingIv,
   }

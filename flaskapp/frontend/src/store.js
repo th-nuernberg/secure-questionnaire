@@ -308,7 +308,7 @@ export default new Vuex.Store({
       });
     },
 
-    login({ commit }, userData) {
+    login_admin({ commit }, userData) {
       return new Promise((resolve, reject) => {
         axios
           .put("/login", userData)
@@ -321,6 +321,68 @@ export default new Vuex.Store({
           });
       });
     },
+
+    async verifyPassword(_, userData) {
+      return new Promise((resolve, reject) => {
+        axios
+          .put("/verifyPassword", {
+            owner_mail: userData.owner_mail,
+            password: userData.password,
+          })
+          .then((res) => {
+            resolve(res.data) 
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    },
+
+    async login({ state, commit }, userData) {
+      return axios.put("/verify", {
+        owner_mail: userData.owner_mail,
+        spki_public_key: userData.publicKey,
+        jwk_public_key_exponent: userData.publicExponent
+      }).then((res) => {
+        // let challenge = base64ToArrayBuffer(res.data.challenge)
+        let challenge = Buffer.from(res.data.challenge, "base64")
+        
+        let keyParams = {}
+        keyParams.salt = Buffer.from(state.privateKeyParams.salt, "base64")
+        keyParams.wrappingIv = Buffer.from(state.privateKeyParams.wrappingIv, "base64")
+        keyParams.wrappedPrivateKey = Buffer.from(state.privateKeyParams.wrappedPrivateKey, "base64").buffer
+        
+        return {
+          keyParams: keyParams,
+          challenge: challenge  
+        }
+      }).then((decryptionParams) => {
+        // Decrypt secret
+        decryptRSA(
+          decryptionParams.challenge,
+          decryptionParams.keyParams, 
+          userData.password
+        ).then((secret) => {
+          return new Promise((resolve, reject) => {
+            let payload = {
+              owner_mail: userData.owner_mail,
+              password: userData.password,
+              secret: secret.toString("base64")
+            }
+    
+            axios
+              .put("/login", payload)
+              .then((loginResult) => {
+                commit('setJwtToken', { jwt: loginResult.data })
+                resolve(loginResult);
+              })
+              .catch(() => {
+                reject();
+              });
+          });
+        })
+      })
+    },
     
     register({ state }, userData) {
       return new Promise((resolve, reject) => {
@@ -329,8 +391,8 @@ export default new Vuex.Store({
           .then((res) => {
             resolve(res);
           })
-          .catch(() => {
-            reject();
+          .catch((res) => {
+            reject(res);
           });
       });
     }

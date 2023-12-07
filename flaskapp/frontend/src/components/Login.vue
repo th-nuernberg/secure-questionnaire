@@ -68,15 +68,16 @@ export default {
         return {
             passphrase: "",
             owner_mail: "",
-            owner_name: "",
             passwordFieldType: "password",
             clicked: false,
+            publicKey: undefined,
+            publicExponent: undefined
         }
     },
     methods: {
         switchVisibility() {
             this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
-            this.clicked = this.clicked === true ? false : true;
+            this.clicked = !this.clicked;
         },
         async login() {
             // TODO: Users should be able to change passwords at will
@@ -90,21 +91,31 @@ export default {
             this.upload()
 
             // Wait for file reader
-            if (!admin && this.publicKey == undefined) {
+            if (!admin && this.publicKey == undefined && this.publicExponent == undefined) {
                 await new Promise(r => setTimeout(r, 1000))
             }
-
+            
             let toDispatch = admin ? "login_admin" : "login"
             // Move to questionnaire creation on successful login if regular user; for admin register page
             let path = admin ? "/register" : "/select"
 
-            this.$store.dispatch(toDispatch, { 
+            this.$store.dispatch("verifyPassword", { 
                 owner_mail: this.owner_mail, 
                 password: this.passphrase, 
-                publicKey: this.publicKey,
             })
-            .then(() => {
-                this.$router.push({ path: path })
+            .then((res) => {  
+                this.$store.dispatch(toDispatch, { 
+                    owner_mail: this.owner_mail, 
+                    password: res,  // replace plain password with server hash (used for wrapping key)
+                    publicKey: this.publicKey,
+                    publicExponent: this.publicExponent
+                })
+                .then(() => {
+                    this.$router.push({ path: path })
+                })
+                .catch(() => {
+                    document.getElementById("login-error").style.display = "block";
+                })
             })
             .catch(() => {
                 document.getElementById("login-error").style.display = "block";

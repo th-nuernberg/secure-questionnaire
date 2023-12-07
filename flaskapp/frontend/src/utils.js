@@ -8,9 +8,14 @@ export function isValidJwt (jwt) {
   return now < exp
 }
 
-export function checkFields(register, owner_mail, owner_name, passphrase) {
+export function checkFields(admin, register, owner_mail, owner_name, passphrase) {
   let empty = false
 
+  // No file selected (as non admin)
+  if (!admin && document.getElementById('selectFile').files.item(0) == null) {
+    document.getElementById("upload-error").style.display = "block";
+    empty = true
+  }
   if (register && owner_name == "") {
       document.getElementById("name").className = "empty"
       empty = true

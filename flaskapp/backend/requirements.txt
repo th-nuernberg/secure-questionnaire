@@ -13,3 +13,4 @@ uwsgi==2.0.21
 werkzeug==2.2.2
 zipp==3.11.0
 PyJWT==2.8.0
+PyCryptodome==3.19.0
