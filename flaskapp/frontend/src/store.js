@@ -33,7 +33,7 @@ export default new Vuex.Store({
     ],
     analyseObj: [],
     privateKeyParams: [],
-    jwt: { "token": localStorage.getItem("token") }
+    jwt: { "token": sessionStorage.getItem("token") }
   },
   getters: {
     getQuestionnaire: (state) => state.questionnaire,
@@ -112,7 +112,7 @@ export default new Vuex.Store({
       state.privateKeyParams = privateKeyParams
     },
     setJwtToken(state, payload) {
-      localStorage.token = payload.jwt.token
+      sessionStorage.token = payload.jwt.token
       state.jwt = payload.jwt
     }
   },
@@ -227,7 +227,7 @@ export default new Vuex.Store({
                   let keyParams = state.privateKeyParams
   
                   // Convert to Uint8Array, for handling in decryption methods
-                  let encryptedAESKey = Buffer.from(encryptedAESKeyObject.data, 'base64');
+                  let encryptedAESKey = Buffer.from(encryptedAESKeyObject.data, 'base64')
                   keyParams.salt = Buffer.from(keyParams.salt, "base64")
                   keyParams.wrappingIv = Buffer.from(keyParams.wrappingIv, "base64")
                   keyParams.wrappedPrivateKey = Buffer.from(keyParams.wrappedPrivateKey, "base64").buffer
