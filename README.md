@@ -11,4 +11,4 @@ Or place pair created by CA into the directory to make the connection trusted.
 
 - Set admin password in ./flaskapp/backend/config.json
     - username: admin
-    - name: admin
+    - name: $ADMIN_PASSWORD
