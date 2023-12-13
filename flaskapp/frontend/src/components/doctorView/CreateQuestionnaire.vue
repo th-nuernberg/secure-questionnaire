@@ -380,7 +380,7 @@ export default {
       // Collect emails of selected owners in dropdown list in this.owner field
       for (var i = 0; i < checkedBoxes.length; i++) {
         this.questionnaire.owners.push(
-          checkedBoxes[i].parentElement.getElementsByClassName("owner_mail")[0].textContent
+          checkedBoxes[i].parentElement.getElementsByClassName("owner_mail")[0].textContent.split(" ")[1]
         );
       }
 
