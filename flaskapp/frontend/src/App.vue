@@ -122,7 +122,7 @@ export default {
         },
         {
           target: '#v-step-5',
-          content: 'Hier koennen Sie auswählen ob Sie sich bereits ausgefüllte Fragebögen ansehen möchten oder neue erstellen.\nFalls Sie zum ersten mal hier sind erstellen Sie mit dem oberen Button Ihren aller ersten Fragebogen!',
+          content: 'Hier können Sie auswählen ob Sie sich bereits ausgefüllte Fragebögen ansehen möchten oder neue erstellen.\nFalls Sie zum ersten mal hier sind erstellen Sie mit dem oberen Button Ihren aller ersten Fragebogen!',
           params: {
             placement: 'bottom'
           },
