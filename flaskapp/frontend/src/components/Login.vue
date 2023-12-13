@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <legend>Login</legend>
+        <legend id="v-step-0">Login</legend>
+        <span id="v-step-11"></span>
         <hr class="my-3">
         <form class="mt-3">
             <div class="col-6 pb-3">
