@@ -57,15 +57,10 @@ export default {
   mounted: function () {
     // Only run the tour only when visiting site for the first time 
     // (no record in localStorage)
-    
-    
-    // TODO:CS
-    this.$tours['myTour'].start()
-    
-    // if(!localStorage.getItem('tourDone')){
-    //     this.$tours['myTour'].start()
-    //     localStorage.setItem('tourDone', true)
-    // }
+    if(!localStorage.getItem('tourDone')){
+        this.$tours['myTour'].start()
+        localStorage.setItem('tourDone', true)
+    }
   },
   data() {
     return {
