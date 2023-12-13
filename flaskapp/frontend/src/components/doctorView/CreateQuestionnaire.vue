@@ -112,7 +112,7 @@
       <div class="dropdown">
         <button class="btn btn-outline-dark dropdown-toggle" type="button" @click="toggle" id="dropdownMenu2"
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <BootstrapIcon icon="question-circle-fill" size="1x" /><br />
+          <BootstrapIcon icon="plus-circle" size="1x" /><br />
           Fragenmenü
         </button>
         <div v-if="active">
@@ -122,12 +122,17 @@
           </button>
         </div>
       </div>
+
       <hr class="my-3">
+      
       <p id="owner-selection" class="dropdown-owner" tabindex="100">
-        <span>Behandelnde Aerzte auswählen</span>
-      <div id="owner-list" class="dropdown-owner-content">
-      </div>
-      </p>
+        <button class="btn btn-outline-dark dropdown-toggle" type="button" @click="toggleDoctors">
+          Behandelnde Ärzte
+        </button>
+        <div id="owner-list" class="dropdown-owner-content"></div>
+      </p>   
+
+      <hr class="my-3">
 
       <button @click="save()" class="btn btn-outline-dark btn-lg mt-3" variant="success">
         <div class="d-flex">
@@ -253,6 +258,7 @@ export default {
       saved: false,
       qrlink: "localhost:8080/patient/questionnaire/",
       active: false,
+      isOpen: false,
     };
   },
   computed: {
@@ -273,6 +279,15 @@ export default {
   methods: {
     toggle() {
       this.active = !this.active;
+    },
+    toggleDoctors() {
+      if(!this.isOpen){
+        document.getElementById("owner-list").style.display = "block";
+        this.isOpen = true;
+      } else{
+        document.getElementById("owner-list").style.display = "none";
+        this.isOpen = false;
+      }      
     },
     addQuestion(type) {
       if (this.choiceQuestion(type) || type == "scale") {
@@ -409,7 +424,6 @@ export default {
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { dpi: 500, letterRendering: true },
         jsPDF: {
-          unit: "mm",
           format: "a4",
           orientation: "portrait",
           putOnlyUsedFonts: "true",
@@ -423,28 +437,31 @@ export default {
             let owner = document.createElement('p')
 
             let input = document.createElement('input')
-            let label = document.createElement('label')
-
-            let owner_name = document.createElement("p")
-            let owner_mail = document.createElement("p")
-
             input.type = "checkbox"
 
-            owner_name.innerHTML = element.owner_name
+            let label = document.createElement('label')
+            label.className = "doctors"
 
-            owner_mail.innerHTML = element.owner_mail
+            let owner_name = document.createElement("div")
+            owner_name.innerHTML = "Name: " + element.owner_name
+
+            let owner_mail = document.createElement("div")
+            owner_mail.innerHTML = "E-Mail: " + element.owner_mail
             owner_mail.classList.add("owner_mail")
+
+            let entry = document.createElement("div")
+            entry.className = "entry"
 
             label.appendChild(owner_name)
             label.appendChild(owner_mail)
-
-            owner.appendChild(input)
-            owner.appendChild(label)
-
+            entry.appendChild(input)
+            entry.appendChild(label)
+            owner.appendChild(entry)
             document.getElementById("owner-list").appendChild(owner)
           });
         })
     }
+    
   },
   beforeMount() {
     this.getOwners()
@@ -453,6 +470,7 @@ export default {
 </script>
 
 <style>
+
 .ml-0 {
   margin-left: 0 !important;
 }
@@ -470,10 +488,6 @@ export default {
 form[class="px-2"] {
   text-align: left;
 }
-
-/* .background-color {
-  background: #11111111;
-} */
 
 .skala {
   display: flex;
@@ -521,29 +535,16 @@ h4 {
   margin-top: 40px;
 }
 
-.dropdown-owner {
-  position: relative;
-}
-
-.dropdown-owner-content {
+#owner-list{
   display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
 }
 
-.dropdown-owner-content label {
-  display: block;
-  padding: 8px;
+.entry{
+  display: flex;
+  margin: 8px;
 }
 
-.dropdown-owner-content label:hover {
-  background-color: #e0e0e0;
-}
-
-.dropdown-owner:hover .dropdown-owner-content {
-  display: block;
+.doctors{
+  padding-left: 20px;
 }
 </style>
