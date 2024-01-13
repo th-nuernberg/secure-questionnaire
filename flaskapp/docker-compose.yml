@@ -6,8 +6,10 @@ services:
     volumes:
       - ./database:/data/db
     restart: always
-    ports:
-      - "27017:27017"
+    networks:
+      - shared
+    #ports:
+      #- "27017:27017"
 
   backend:
     build: ./backend
@@ -15,8 +17,10 @@ services:
     restart: always
     environment:
       - APP_NAME=MyFlaskApp
-    expose:
-      - 8080
+    networks:
+      - shared
+    # expose:
+    #   - 8080
     depends_on:
       - mongo
 
@@ -32,9 +36,11 @@ services:
 
     #  port allows the host machine to link to container
     #  8000 for vue ui, 5000 for our vue app
-    ports:
-      - "8000:8000"
-      - "5000:5000"
+   # ports:
+      #- "8000:8000"
+      #- "5000:5000"
+    networks:
+      - shared
 
   nginx:
     image: "nginx"
@@ -48,4 +54,8 @@ services:
     volumes:
       - ./nginx/auth/:/etc/nginx/conf.d
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      
+    networks:
+      - shared
+  
+networks:
+  shared:
