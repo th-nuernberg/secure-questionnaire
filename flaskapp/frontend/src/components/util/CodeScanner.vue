@@ -1,7 +1,7 @@
 <template>
   <div class="col">
     <div class="scanner">
-      <qrcode-stream @decode="onDecode" @init="onInit" class="camera" />
+      <qrcode-stream @detect="onDetect" @init="onInit" class="camera" />
       <div class="statusMsg" :class="alert" role="alert">
         {{ status }}
       </div>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { QrcodeStream } from "vue3-qrcode-reader";
+import { QrcodeStream } from "vue-qrcode-reader";
 
 export default {
   components: { QrcodeStream },
@@ -21,7 +21,9 @@ export default {
     };
   },
   methods: {
-    async onDecode(result) {
+    async onDetect(result) {
+      result = result[0].rawValue
+
       if (result.includes("patient/questionnaire")) {
         //QR-Code vom Arzt mit kompletter URL
         this.alert = "alert-success";

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { QrcodeStream } from "vue3-qrcode-reader";
+import { QrcodeStream } from "vue-qrcode-reader";
 
 export default {
   components: { QrcodeStream },
