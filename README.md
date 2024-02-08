@@ -7,8 +7,8 @@ For self deployment please do the following
 in ./flaskapp/nginx/auth. <br>
 Or place pair created by CA into the directory to make the connection trusted.
 
-- Set JWT secret in ./flaskapp/backend/config.json
+- Set JWT secret in ./flaskapp/.env
 
-- Set admin password in ./flaskapp/backend/config.json
+- Set admin password in ./flaskapp/.env
     - username: admin
     - name: $ADMIN_PASSWORD
