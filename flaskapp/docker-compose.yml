@@ -17,6 +17,9 @@ services:
     restart: always
     environment:
       - APP_NAME=MyFlaskApp
+      - PYTHONPATH=./src/
+      - SECRET_KEY=${SECRET_KEY}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     networks:
       - shared
     # expose:
