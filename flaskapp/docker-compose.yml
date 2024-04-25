@@ -50,7 +50,7 @@ services:
     container_name: nginx
     restart: always
     ports:
-      - "8080:443"
+      - "443:443"
     depends_on:
       - backend
       - frontend

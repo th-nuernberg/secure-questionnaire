@@ -162,7 +162,7 @@ def login():
         {
             'sub': data["owner_mail"],
             'iat': datetime.utcnow(),
-            'exp': datetime.utcnow() + timedelta(minutes=30)
+            'exp': datetime.utcnow() + timedelta(days=30)
         },
         environ.get('SECRET_KEY'),
         algorithm="HS256"
