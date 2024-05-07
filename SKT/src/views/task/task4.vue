@@ -12,7 +12,7 @@
         Dann suchen Sie die nächstgrößere Zahl und stellen sie daneben und so weiter.</h5><br>
 
     
-      <div class="container" style="width: 900px">
+      <div class="container" style="width: 800px">
         <div class="row justify-content-md-center">
           <draggable :array="array" id="draggable">
             <div class="circle" v-for="element in array" :key="element.name"
@@ -25,7 +25,7 @@
       </div>
 
       
-      <router-link class="btn-router" to="/task5" @click="finishedTask">Fertig</router-link><br><br>
+      <!-- <router-link class="btn-router" to="/task5" @click="finishedTask">Fertig</router-link><br><br> -->
     </div>
     <div class="popup" v-if="this.hide">
       <h4>Die Zeit ist um!<br>Hier geht es weiter zur nächsten Aufgabe</h4><br>

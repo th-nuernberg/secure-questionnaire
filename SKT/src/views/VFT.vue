@@ -15,15 +15,14 @@
 <p>
 Hierbei wird die Testperson gebeten, innerhalb einer begrenzten Zeit so 
 viele Wörter wie möglich zu einem bestimmten Thema oder einer Kategorie zu nennen. 
-Zum Beispiel könnte die Person aufgefordert werden, so viele Tiere wie möglich oder 
-so viele Wörter, die mit dem Buchstaben "S" beginnen, zu nennen.
+Zum Beispiel könnte die Person aufgefordert werden, so viele Tiere wie möglich zu nennen.
 </p>    
 
 <h4> 2. Buchstabenbasierte Wortflüssigkeit: </h4>
 <p>
 Bei diesem Test muss die Person so viele Wörter wie möglich nennen, 
 die mit einem bestimmten Buchstaben beginnen. Zum Beispiel könnte die Person gebeten werden, 
-so viele Wörter zu sagen, die mit "F" beginnen.
+so viele Wörter zu sagen, die mit "S" beginnen.
 </p>
 <p>
 Die Testergebnisse werden in der Regel durch die Anzahl der korrekten Wörter gemessen, 

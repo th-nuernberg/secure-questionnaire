@@ -3,7 +3,7 @@ body{
     text-align:center;
     display:flex;
     flex-direction:column;
-    min-height:100vh;
+    min-height: calc(100vh - 170px);
   }
 /* style top navigation bar */
 .navbar-default {
@@ -121,8 +121,8 @@ footer{
     width: 50%;
 }
 .simplecircle {
-    height: 150px;
-    width: 150px;
+    height: 140px;
+    width: 140px;
     border: 0.15rem solid #333953;
     border-radius: 0.25rem;
     border-radius: 50%;
@@ -135,8 +135,8 @@ footer{
     justify-content:end;
 }
 .circle {
-    height: 150px;
-    width: 150px;
+    height: 140px;
+    width: 140px;
     border: 0.15rem solid #333953;
     border-radius: 0.25rem;
     border-radius: 50%;
@@ -168,7 +168,7 @@ table {
   }
   
   .symbol{
-    font-size: 50px;
+    font-size: 40px;
   }
 
   .error{

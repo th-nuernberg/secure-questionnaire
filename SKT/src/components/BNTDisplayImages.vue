@@ -1,17 +1,16 @@
 <template>
     <div>
         <div class="image-carousel">
-            <div class="image-container">
-                <div class="image-wrapper">
-                    <div class="image-overlay" :ref="imageOverlay">
-                        <img v-if="recognized" :src="checker" alt="Checker" :style="overlayImageStyle" class="overlay-image"
-                            :ref="checker" />
-                        <img :src="currentImage" alt="Image" class="background-image" :ref="bgimage" />
-                        <button v-if="currentIndex < images.length - 1" @click="nextImage"
-                            :disabled="currentIndex === images.length - 1">Nächstes Bild... </button>
-                        <button v-else @click="calculateResult">Test abschließen</button>
-                    </div>
+            <div class="image-wrapper">
+                <div class="image-overlay" :ref="imageOverlay">
+                    <img v-if="recognized" :src="checker" alt="Checker" :style="overlayImageStyle" class="overlay-image"
+                        :ref="checker" />
+                    <img :src="currentImage" alt="Image" class="background-image" :ref="bgimage" />
+                    
                 </div>
+                <button v-if="currentIndex < images.length - 1" @click="nextImage"
+                        :disabled="currentIndex === images.length - 1">Nächstes Bild... </button>
+                <button v-else @click="calculateResult">Test abschließen</button>
             </div>
         </div>
 
@@ -93,38 +92,31 @@ export default {
 </script>
 
 <style>
+
+
 .image-carousel {
+    margin-top: 5vh;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px;
-    /* Add some spacing between the image and the button */
-}
-
 .image-wrapper {
-    max-width: 80%;
-    max-height: 300px;
-    /* Adjust the height as per your preference */
-    display: flow-root;
-    justify-content: center;
-    align-items: bottom;
-    margin-bottom: 10px;
-    /* Add some spacing between the image and the button */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
 }
 
 .image-wrapper img {
-    max-width: 80%;
-    max-height: 80%;
+    max-width: 60vh;
+    max-height: 60vh;
 }
 
 /* Style the "Next" button */
 .image-carousel button {
+    margin-top: 50px;
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -141,6 +133,9 @@ export default {
 }
 
 .image-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
 }
 

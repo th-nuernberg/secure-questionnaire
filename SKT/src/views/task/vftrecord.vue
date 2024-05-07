@@ -1,6 +1,15 @@
 <template>
     <body>
-        <div class="countdown">
+        <RecordAudio v-if="false" :taskNr="8"></RecordAudio>
+        <!-- <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" :grammar="animals.sort().join(' | ')" /> -->
+        <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" :grammar="''" /> 
+        <div class="popup" v-if="this.done">
+            <h4>Die Zeit ist abgelaufen!<br>Sie haben {{ unique_animals.length }} Tiere genannt!</h4><br>
+            <h4>Diese waren: {{ unique_animals.map((x) => x.toLocaleUpperCase()).join(" ") }}</h4><br>
+            <router-link class="btn-router" to="/">Zurück zu den Tests</router-link>
+        </div>
+        
+        <div class="countdown" v-if="!this.done">
             <h1 v-if="countdown > 0">{{ countdown }}</h1>
             <h1 v-else-if="countdown <= 0 && !done">Testzeit abgelaufen, Auswertung läuft...</h1>
 
@@ -9,17 +18,6 @@
             <h1 v-else-if="countdown > 0">Nennen Sie so viele Tiere wie Ihnen möglich!</h1>
             <h4 v-if="countdown > 0" >Erkannte Tiere: {{ unique_animals.join(" ") }}</h4>
 
-        </div>
-        <div>
-        </div>
-
-        <RecordAudio v-if="false" :taskNr="8"></RecordAudio>
-        <!-- <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" :grammar="animals.sort().join(' | ')" /> -->
-        <GenericSpeechRecognition ref="speechRecogn" @speeched="emitedWord" :grammar="''" /> 
-        <div class="popup" v-if="this.done">
-            <h4>Die Zeit ist abgelaufen!<br>Sie haben {{ unique_animals.length }} Tiere genannt!</h4><br>
-            <h4>Diese waren: {{ unique_animals.map((x) => x.toLocaleUpperCase()).join(" ") }}</h4><br>
-            <router-link class="btn-router" to="/">Zurück zu den Tests</router-link>
         </div>
 
     </body>
@@ -101,6 +99,6 @@ export default {
 .countdown {
     text-align: center;
     font-size: 5rem;
-    margin-top: 200px;
+    margin-top: 25vh;
 }
 </style>

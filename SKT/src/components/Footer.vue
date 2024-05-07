@@ -1,5 +1,5 @@
 <template>
-  <footer>2023 | Gedächtnissprechstunde Demo</footer>
+  <footer>2024 | Gedächtnissprechstunde Demo</footer>
 </template>
 
 <script>

@@ -9,7 +9,7 @@
       Einsatz.
       Durchgeführt wird der SKT ganz klassisch mit Papier- und Bleistift – im Zeitalter von Tablets und Smartphones
       nicht mehr zeitgemäß.
-      In einem interdisziplinären Forschungsprojekt wollen Wissenschaftler der FAU nun eine digitale Version des Tests
+      In einem interdisziplinären Forschungsprojekt wollen Wissenschaftler der TH Nünberg nun eine digitale Version des Tests
       entwickeln.</p>
     <p>
       Der SKT wurde an der Psychiatrischen und Psychotherapeutischen Klinik des Universitätsklinikums Erlangen von

@@ -10,7 +10,7 @@
 
     <div v-if="!this.hide">
       <TimeBar :duration="60" @timeout="this.finishedTask" ref="timeBar"/><br/>
-      <h5>Sagen Sie jetzt bitte ganz schnell, wie die Gegenstände heißen und merken Sie sie sich.</h5>
+      <h5>Sagen Sie jetzt bitte so schnell wir möglich, wie die Gegenstände heißen und merken Sie sie sich.</h5>
       <DisplayImages :listed_images="selectedImage" />
 
       <!--Nur für Testzwecke:
