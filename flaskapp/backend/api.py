@@ -9,7 +9,6 @@ from functools import wraps
 from base64 import b64encode, b64decode
 
 import jwt
-import pymongo
 from flask import request, Response, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
 from Crypto.Cipher import PKCS1_OAEP
@@ -171,58 +170,6 @@ def login():
     response = { "token": token }
 
     return Response(response=json.dumps(response), status=200, mimetype="application/json")
-    
-
-# @api.route("/GET/<id>", methods=["GET"])
-# @token_required
-# def get(id):
-#     status = 200
-#     response = None
-# 
-#     try:
-#         fs = get_questionnaires()
-#     except Exception as e:
-#         return Response(response=repr(e), status=503, mimetype="application/json")
-# 
-#     try:
-#         data = json.loads(fs.get(id).read().decode("utf-8"))
-#         response = json.dumps(data)
-#     except Exception as e:
-#         response = repr(e)
-#         status = 404
-# 
-#     if not data:
-#         resp = {"msg": f"Error: key {id} not found"}
-#         status = 404
-# 
-#     return Response(response=response, status=status, mimetype="application/json")
-# 
-# 
-# @api.route("/POST/<id>", methods=["POST"])
-# @token_required
-# def post(id):
-#     status = 200
-#     response = None
-#     
-#     try:
-#         fs = get_questionnaires()
-#     except Exception as e:
-#         return Response(response=repr(e), status=503, mimetype="application/json")
-# 
-#     data = request.get_json()
-#     if not isinstance(data, dict):
-#         return Response(status=400)
-# 
-#     data["_id"] = id
-# 
-#     try:
-#         fs.put(json.dumps(data), _id=id, encoding="ascii")
-#         response = json.dumps(data)
-#     except Exception as e:
-#         response = repr(e)
-#         status = 409
-# 
-#     return Response(response=response, status=status, mimetype="application/json")
 
 
 @api.route("/api/questionnaire", methods=["GET"])
