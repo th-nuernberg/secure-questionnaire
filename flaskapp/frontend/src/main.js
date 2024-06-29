@@ -8,7 +8,6 @@ import store from "./store";
 import uuid from "vue-uuid";
 import { createRouter, createWebHistory } from "vue-router";
 import html2pdf from "html2pdf";
-import Vue3Tour from "vue3-tour";
 import Selection from "./components/Selection.vue";
 import PatientView from "./components/PatientView.vue";
 import DoctorView from "./components/DoctorView.vue";
@@ -21,7 +20,6 @@ import Register from "./components/Register.vue";
 import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
-import 'vue3-tour/dist/vue3-tour.css';
 
 import MockLogin from "./MockComponents/MockLogin.vue";
 import MockSelection from "./MockComponents/MockSelection.vue"
@@ -51,73 +49,53 @@ const router = createRouter({
     { 
       path: "/", 
       name: "Home", 
-      component: Login },
-    {
-      path: "/register",
-      name: "Register",
-      component: Register,
-      beforeEnter(to, from, next) { validateJWTtoken(next) },
+      component: Login
     },
     {
-      path: "/select",
+      path: "/participate",
+      name: "PatientView",
+      component: PatientView,
+    },
+    {
+      path: "/participate/:id",
+      name: "PatientQuestionnaire",
+      component: PatientQuestionnaire,
+    },
+    {
+      path: "/admin/",
       name: "Selection",
-      component: Selection,
+      component: "Selection",
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
-      path: "/doctorView",
+      path: "/admin/retrieve",
       name: "DoctorView",
       component: DoctorView,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
-      path: "/patient",
-      name: "PatientView",
-      component: PatientView,
+      path: "/admin/register",
+      name: "Register",
+      component: Register,
+      beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
-      path: "/doctorView/create",
+      path: "/admin/create",
       name: "CreateQuestionnaire",
       component: CreateQuestionnaire,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
-      path: "/doctorView/ViewQuestionnaires",
+      path: "/admin/list",
       name: "ViewQuestionnaires",
       component: ViewQuestionnaires,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
-      path: "/doctorView/analyse",
+      path: "/admin/analyse",
       name: "AnalyseQuestionnaires",
       component: AnalyseQuestionnaires,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
-    },
-    {
-      path: "/patient/questionnaire/:id",
-      name: "PatientQuestionnaire",
-      component: PatientQuestionnaire,
-    },
-    // Mock routes for guided tour
-    {
-      path: "/mockLogin",
-      name: "MockLogin",
-      component: MockLogin,
-    },
-    {
-      path: "/mockSelection",
-      name: "MockSelection",
-      component: MockSelection,
-    },
-    {
-      path: "/mockCreateQuestionnaire",
-      name: "MockCreateQuestionnaire",
-      component: MockCreateQuestionnaire,
-    },
-    {
-      path: "/mockDoctorView",
-      name: "MockDoctorView",
-      component: MockDoctorView,
     },
   ],
 });
@@ -131,10 +109,8 @@ const app = createApp({
 app.use(router);
 app.use(uuid);
 app.use(html2pdf);
-app.use(Vue3Tour);
 app.use(store);
 app.use(Vuex);
 app.component("BootstrapIcon", BootstrapIcon);
 app.mount("#app");
-
 import "bootstrap/dist/js/bootstrap.js";

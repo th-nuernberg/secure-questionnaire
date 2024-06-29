@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash
 # serverSelectionTimeoutMS defaults to 30 seconds
 mongo = pymongo.MongoClient("mongodb://mongo:27017")
 #mongo.server_info()
-mongo.drop_database("SecureQuestionnaire") # clear collection after server restart 
+#mongo.drop_database("SecureQuestionnaire") # clear collection after server restart 
 DB = mongo["SecureQuestionnaire"]
 
 DB["user"].insert_one({

@@ -256,7 +256,7 @@ export default {
         owners: [],
       },
       saved: false,
-      qrlink: "localhost:8080/patient/questionnaire/",
+      qrlink: "https://kiz1.in.ohmportal.de/sq/patient/questionnaire/",
       active: false,
       isOpen: false,
     };
@@ -420,9 +420,9 @@ export default {
       //this.$refs.html2Pdf.generatePdf();
       html2pdf(this.$refs.document, {
         margin: 1,
-        filename: "document.pdf",
+        filename: this.questionnaire.queID + '.pdf', //"document.pdf",
         image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { dpi: 500, letterRendering: true },
+        html2canvas: { dpi: 300, letterRendering: true },
         jsPDF: {
           format: "a4",
           orientation: "portrait",

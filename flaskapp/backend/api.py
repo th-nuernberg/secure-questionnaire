@@ -297,7 +297,7 @@ def all_questionnaires():
 
 
 @api.route("/api/answers", methods=["GET"])
-@token_required
+#@token_required
 def answers():
     status = 200
 

@@ -56,7 +56,7 @@ export default {
         elements: [],
       },
       saved: false,
-      qrlink: "localhost:8080/patient/questionnaire/",
+      qrlink: "https://kiz1.in.ohmportal.de/sq/patient/questionnaire/",
       active: false,
     };
   },
