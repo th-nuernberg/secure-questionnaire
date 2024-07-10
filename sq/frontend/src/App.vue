@@ -1,18 +1,16 @@
 <template>
   <!-- <div class="content text-center"> -->
   <div class="content">
-
-  <!-- <div id="app"> -->
-    <div>
+   <div>
       <!-- navbar -->
       <NavBar />
     </div>
     <router-view></router-view>
+    <!--
     <div>
-      <!-- footer -->
-      <Foot />
-    </div>
-  <!-- </div> -->
+      <Foot /> 
+    </div> 
+    -->
   </div>
 </template>
 

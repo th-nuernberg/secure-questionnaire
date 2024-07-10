@@ -1,30 +1,35 @@
-import { Buffer } from "buffer";
-globalThis.Buffer = Buffer;
-import { createApp, h } from "vue";
-import "./style.css";
-import App from "./App.vue";
-import Vuex from "vuex";
-import store from "./store";
-import uuid from "vue-uuid";
-import { createRouter, createWebHistory } from "vue-router";
-import html2pdf from "html2pdf";
-import Selection from "./components/Selection.vue";
-import PatientView from "./components/PatientView.vue";
-import DoctorView from "./components/DoctorView.vue";
-import PatientQuestionnaire from "./components/patientView/PatientQuestionnaire.vue";
-import AnalyseQuestionnaires from "./components/doctorView/AnalyseQuestionnaires.vue";
-import CreateQuestionnaire from "./components/doctorView/CreateQuestionnaire.vue";
-import ViewQuestionnaires from "./components/doctorView/ViewQuestionnaires.vue";
-import Login from "./components/Login.vue";
-import Register from "./components/Register.vue";
-import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+import {createApp, h} from 'vue'
+import Vuex from "vuex"
 
-import MockLogin from "./MockComponents/MockLogin.vue";
-import MockSelection from "./MockComponents/MockSelection.vue"
-import MockCreateQuestionnaire from "./MockComponents/MockDoctorView/MockCreateQuestionnaire.vue";
-import MockDoctorView from "./MockComponents/MockDoctorView.vue";
+import { Buffer } from "buffer"
+globalThis.Buffer = Buffer;
+
+
+import App from "./App.vue"
+
+import store from "./store"
+import uuid from "vue-uuid"
+import { createRouter, createWebHistory } from "vue-router"
+
+import html2pdf from "html2pdf"
+
+import "./style.css"
+import "bootstrap/dist/css/bootstrap.css"
+import "bootstrap-vue/dist/bootstrap-vue.css"
+
+import "bootstrap/dist/js/bootstrap.js"
+
+import Selection from "./components/Selection.vue"
+import RespondView from "./components/RespondView.vue"
+import AggregateView from "./components/AggregateView.vue"
+import Questionnaire from "./components/respond/Questionnaire.vue"
+import Analyze from "./components/admin/Analyze.vue"
+import Create from "./components/admin/Create.vue"
+import List from "./components/admin/List.vue"
+import Login from "./components/Login.vue"
+import Register from "./components/Register.vue"
+import BootstrapIcon from "@dvuckovic/vue3-bootstrap-icons"
+
 
 function validateJWTtoken(next) {
   function isAuthenticated() {
@@ -44,7 +49,8 @@ function validateJWTtoken(next) {
 }
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/sq'),
+  base: '/sq',
   routes: [
     { 
       path: "/", 
@@ -52,25 +58,19 @@ const router = createRouter({
       component: Login
     },
     {
-      path: "/participate",
-      name: "PatientView",
-      component: PatientView,
+      path: "/respond",
+      name: "RespondView",
+      component: RespondView,
     },
     {
-      path: "/participate/:id",
-      name: "PatientQuestionnaire",
-      component: PatientQuestionnaire,
+      path: "/respond/:id",
+      name: "Questionnaire",
+      component: Questionnaire,
     },
     {
-      path: "/admin/",
+      path: "/admin",
       name: "Selection",
-      component: "Selection",
-      beforeEnter(to, from, next) { validateJWTtoken(next) },
-    },
-    {
-      path: "/admin/retrieve",
-      name: "DoctorView",
-      component: DoctorView,
+      component: Selection,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
@@ -81,20 +81,26 @@ const router = createRouter({
     },
     {
       path: "/admin/create",
-      name: "CreateQuestionnaire",
-      component: CreateQuestionnaire,
+      name: "Create",
+      component: Create,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
       path: "/admin/list",
-      name: "ViewQuestionnaires",
-      component: ViewQuestionnaires,
+      name: "List",
+      component: List,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
     {
-      path: "/admin/analyse",
-      name: "AnalyseQuestionnaires",
-      component: AnalyseQuestionnaires,
+      path: "/admin/aggregate",
+      name: "AggregateView",
+      component: AggregateView,
+      beforeEnter(to, from, next) { validateJWTtoken(next) },
+    },
+    {
+      path: "/admin/analyze",
+      name: "Analyze",
+      component: Analyze,
       beforeEnter(to, from, next) { validateJWTtoken(next) },
     },
   ],
@@ -113,4 +119,5 @@ app.use(store);
 app.use(Vuex);
 app.component("BootstrapIcon", BootstrapIcon);
 app.mount("#app");
-import "bootstrap/dist/js/bootstrap.js";
+
+

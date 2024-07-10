@@ -22,6 +22,8 @@ DB["user"].insert_one({
 def get_questionnaires():
     return DB["questionnaires"]   
 
+def get_responses():
+    return DB["responses"]
 
 def get_user():
     return DB["user"]   

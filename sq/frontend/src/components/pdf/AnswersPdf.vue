@@ -7,7 +7,7 @@
     <h4>1. Fragebogen öffnen</h4>
     <p>
       Um den Fragebogen zu bearbeiten, scannen Sie den QR-Code auf
-      <a href="https://kiz1.in.ohmportal.de">kiz1.in.ohmportal.de</a> ein.
+      <a href="https://kiz1.in.ohmportal.de/sq/">kiz1.in.ohmportal.de/sq/</a> ein.
       <br />Sie werden automatisch zu Ihrem ausgefüllten Fragebogen
       weitergeleitet.
     </p>

@@ -1,8 +1,8 @@
 FROM node:lts
 
-ADD . /app
+ADD . /frontend
 
-WORKDIR /app
+WORKDIR /frontend
 
 RUN npm install
 

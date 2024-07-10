@@ -1,14 +1,14 @@
+# from flask_cors import CORS
+from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 from api import api
 
-from flask_cors import CORS
-from flask import Flask
-
-# TODO: Create Documentation
-# https://www.sphinx-doc.org/en/master/usage/quickstart.html
-
 app = Flask(__name__)
-cors = CORS(app)
 
+app.config['PREFERRED_URL_SCHEME'] = 'https'
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1 ,x_proto=1)
 app.register_blueprint(api)
 
 if __name__ == "__main__":

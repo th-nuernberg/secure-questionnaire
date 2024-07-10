@@ -1,9 +1,10 @@
 from os import environ
 
 from utils import token_required
-from db import get_user, get_questionnaires, get_RSA_public_keys, get_encrypted_AES_keys
+from db import get_user, get_questionnaires, get_responses, get_RSA_public_keys, get_encrypted_AES_keys
 
 import json
+import logging
 from datetime import datetime, timedelta
 from functools import wraps
 from base64 import b64encode, b64decode
@@ -18,7 +19,7 @@ from Crypto.Hash import SHA256
 api = Blueprint('api', __name__)
 
 
-@api.route("/api/verifyPassword", methods=["PUT"])
+@api.route("/verifyPassword", methods=["PUT"])
 def verify_password():
     data = request.get_json()
     password_hash = get_user().find_one({ "owner_mail": data["owner_mail"] })["password"]
@@ -36,7 +37,7 @@ def verify_password():
     return Response(response=json.dumps(res), status=status, mimetype="application/json")
 
 
-@api.route("/api/userDetails", methods=["GET"])
+@api.route("/userDetails", methods=["GET"])
 def get_user_details():
     auth_headers = request.headers.get('Authorization', '').split()
 
@@ -71,7 +72,7 @@ def get_user_details():
         return Response(response=json.dumps(invalid_msg), status=401, mimetype="application/json")
 
 
-@api.route("/api/register", methods=["PUT"])
+@api.route("/register", methods=["PUT"])
 @token_required
 def register():
     data = request.get_json()
@@ -113,7 +114,7 @@ def register():
     return Response(response=json.dumps(res), status=status, mimetype="application/json")
 
 
-@api.route("/api/verify", methods=["PUT"])
+@api.route("/verify", methods=["PUT"])
 def verify_public_key():
     data = request.get_json()
     key = get_RSA_public_keys().find_one({"owner_mail": data["owner_mail"]})["publicKey"]
@@ -143,7 +144,7 @@ def verify_public_key():
     return Response(response=json.dumps(response), status=200, mimetype="application/json")
 
 
-@api.route("/api/login", methods=["PUT"])
+@api.route("/login", methods=["PUT"])
 def login():
     data = request.get_json()
 
@@ -172,9 +173,9 @@ def login():
     return Response(response=json.dumps(response), status=200, mimetype="application/json")
 
 
-@api.route("/api/questionnaire", methods=["GET"])
+@api.route("/questionnaire/<queID>", methods=["GET"])
 #@token_required
-def questionnaire():
+def questionnaire(queID):
     status = 200
 
     try:
@@ -182,7 +183,6 @@ def questionnaire():
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
-    queID = request.args.get("queID")
     data = db.find_one({"_id": queID})
 
     if not data:
@@ -192,9 +192,9 @@ def questionnaire():
     return Response(response=json.dumps(data), status=status, mimetype="application/json")
 
 
-@api.route("/api/questionnaire", methods=["PUT"])
+@api.route("/questionnaire/<queID>", methods=["PUT"])
 @token_required
-def questionnaire2():
+def questionnaire2(queID):
     status = 200
 
     try:
@@ -207,9 +207,8 @@ def questionnaire2():
     if not isinstance(data, dict):
         return Response(status=400)
 
-    id = data["queID"]
-    data["_id"] = id
-    result = db.replace_one({"_id": id}, data)
+    data["_id"] = queID
+    result = db.replace_one({"_id": queID}, data)
 
     if result.matched_count == 0:
         db.insert_one(data)
@@ -217,8 +216,27 @@ def questionnaire2():
     
     return Response(response=json.dumps(data), status=status, mimetype="application/json")
 
+@api.route("/questionnaire/<queID>", methods=["DELETE"])
+@token_required
+def questionnaire3(queID):
+    status = 200
 
-@api.route("/api/questionnaire/all", methods=["GET"])
+    try:
+        db = get_questionnaires()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    data = db.delete_one({'_id': queID})
+
+    if not data:
+        data = {"msg": f"Error: nothing found"}
+        status = 404
+    
+
+    return Response(response=json.dumps({'message': 'successfully deleted'}), status=status, mimetype="application/json")
+
+
+@api.route("/questionnaire/", methods=["GET"])
 @token_required
 def all_questionnaires():
     status = 200
@@ -228,48 +246,65 @@ def all_questionnaires():
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
-    data = "["
-    for dokument in dokumente:
-        if "answers" not in dokument:
-            data += str(dokument)
-            data += ","
-
-    data += "]"
+    data = db.find({})
 
     if not data:
         data = {"msg": f"Error: nothing found"}
         status = 404
+    
+    qs = []
+    for d in data:
+        qs.append(d)
 
-    return Response(response=json.dumps(data), status=status, mimetype="application/json")
+    return Response(response=json.dumps({'questionnaires': qs}), status=status, mimetype="application/json")
 
-
-@api.route("/api/answers", methods=["GET"])
+@api.route("/response/", methods=["GET"])
 #@token_required
-def answers():
+def answers0():
     status = 200
 
     try:
-        db = get_questionnaires()
+        db = get_responses()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
-    queID = request.args.get("queID")
-    data = db.find_one({"_id": queID})
-
+    data = db.find({})
+    
     if not data:
-        data = {"msg": f"Error: key {queID} not found"}
+        data = {"msg": f"Error: key {id} not found"}
         status = 404
 
-    
-    return Response(response=json.dumps(data), status=status, mimetype="application/json")
+    rs = []
+    for r in data:
+        rs.append(r)
 
+    return Response(response=json.dumps({'responses': rs}), status=status, mimetype="application/json")
 
-@api.route("/api/answers", methods=["PUT"])
-def answers2():
+@api.route("/response/<id>", methods=["GET"])
+#@token_required
+def answers(id):
     status = 200
 
     try:
-        db = get_questionnaires()
+        db = get_responses()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    data = db.find_one({"_id": id})
+
+    if not data:
+        data = {"msg": f"Error: key {id} not found"}
+        status = 404
+
+    return Response(response=json.dumps(data), status=status, mimetype="application/json")
+
+
+@api.route("/response/<id>", methods=["PUT"])
+def answers2(id):
+    status = 200
+
+    try:
+        db = get_responses()
     except Exception as e:
         return Response(response=repr(e), status=503, mimetype="application/json")
 
@@ -278,7 +313,6 @@ def answers2():
     if not isinstance(data, dict):
         return Response(status=400)
 
-    id = data["id"]
     data["_id"] = id
     result = db.replace_one({"_id": id}, data)
 
@@ -289,7 +323,34 @@ def answers2():
     return Response(response=json.dumps(data), status=status, mimetype="application/json")
 
 
-@api.route("/api/questionnaire/idcheck", methods=["GET"])
+@api.route("/response/", methods=["POST"])
+def answers3():
+    status = 201
+
+    try:
+        db = get_responses()
+    except Exception as e:
+        return Response(response=repr(e), status=503, mimetype="application/json")
+
+    data = request.get_json()
+
+    logging.info(str(data))
+    if not isinstance(data, dict):
+        return Response(status=400)
+
+    if '_id' in data:
+        result = db.replace_one({"_id": data['_id']}, data)
+        status = 200
+        if result.matched_count == 0:
+            db.insert_one(data)
+            status = 201
+    else:
+        result = db.insert_one(data)
+
+    return Response(response=json.dumps(data), status=status, mimetype="application/json")
+
+
+@api.route("/questionnaire/idcheck", methods=["GET"])
 #@token_required
 def check_id():
     status = 200
@@ -306,7 +367,7 @@ def check_id():
     return Response(response=json.dumps(resp), status=status, mimetype="application/json")
 
 
-@api.route("/api/AESkeys", methods=["GET", "PUT"])
+@api.route("/AESkeys", methods=["GET", "PUT"])
 @token_required
 def AESkeys():
     status = 200
@@ -354,7 +415,7 @@ def AESkeys():
     return Response(status=status, mimetype="application/json")
 
 
-@api.route("/api/RSAkeys", methods=["GET", "PUT"])
+@api.route("/RSAkeys", methods=["GET", "PUT"])
 @token_required
 def RSAkeys():
     status = 200

@@ -1,39 +1,32 @@
 <template>
   <div class="container">
     <h1>Fragebogenliste</h1>
-
-    <div class="col">
-      <h4>Folgende Bögen wurden erstellt</h4>
-
-      <div class="ids">
-        <div
-          class="row"
-          v-for="(obj, index) in allquestionnaire"
-          :key="obj.id"
-          align-v="center"
-        >
-          <div class="col">
-            {{ obj.title }}
-          </div>
-          <div class="col">
-            <button
-              class="btn btn-primary"
-              @click="deleteID(index)"
-              variant="danger"
-              size="sm"
-            >
-              <!-- <i class="fas fa-trash"></i> -->
-              delete
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(obj, index) in allqs" :key="obj.id" align-v="center">
+        <td>{{ obj.queID }}</td>
+        <td>{{ obj.title || 'unknown' }}</td>
+        <td>
+          <button class="btn btn-primary" @click="deleteID(index)" variant="danger" size="sm">
+            <!-- <i class="fas fa-trash"></i> -->
+            delete
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script>
-import CreateQuestionControl from "./CreateQuestionControl.vue";
+import OrderQuestionControl from "./OrderQuestionControl.vue";
 import InfoTooltip from "../util/InfoTooltip.vue";
 import html2pdf from "html2pdf.js";
 import QuestionnairePdf from "../pdf/QuestionnairePdf.vue";
@@ -41,7 +34,7 @@ import QrCode from "../QrCode.vue";
 
 export default {
   components: {
-    CreateQuestionControl,
+    OrderQuestionControl,
     InfoTooltip,
     html2pdf,
     QuestionnairePdf,
@@ -50,20 +43,23 @@ export default {
   data() {
     return {
       idsKeys: [],
+      allqs: [],
       questionnaire: {
         queID: "",
         title: "",
         elements: [],
       },
       saved: false,
-      qrlink: "https://kiz1.in.ohmportal.de/sq/patient/questionnaire/",
+      qrlink: "https://kiz1.in.ohmportal.de/sq/respond",
       active: false,
     };
   },
+  mounted() {
+    this.$store.dispatch("getAllQuestionnaires").then(r => {
+      this.allqs = r.questionnaires
+    })
+  },
   computed: {
-    allquestionnaire() {
-      return this.$store.getters.getAllQuestionnaire;
-    },
     questionTypes() {
       return this.$store.getters.getQuestionTypes;
     },
@@ -134,6 +130,10 @@ export default {
       };
       this.saved = false;
     },
+
+    deleteID(id) {
+      this.$store.dispatch('deleteID', this.allqs[id]._id).then(() => this.allqs.splice(id, 1))
+    }
   },
 };
 </script>

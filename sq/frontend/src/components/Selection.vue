@@ -7,7 +7,7 @@
             <button type="button" class="btn btn-outline-dark btn-lg mt-2" @click="this.$router.push({ path: `/admin/create` })">
                 Fragebogen erstellen
             </button>
-            <button type="button" class="btn btn-outline-dark btn-lg mt-2" @click="this.$router.push({ path: `/admin/retrieve` })">
+            <button type="button" class="btn btn-outline-dark btn-lg mt-2" @click="this.$router.push({ path: `/admin/aggregate` })">
                 Fragebögen auslesen
             </button>
         </div>

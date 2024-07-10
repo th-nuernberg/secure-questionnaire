@@ -98,7 +98,7 @@ export default {
             
             let toDispatch = admin ? "login_admin" : "login"
             // Move to questionnaire creation on successful login if regular user; for admin register page
-            let path = admin ? "/register" : "/select"
+            let path = admin ? "/admin/register" : "/admin"
 
             this.$store.dispatch("verifyPassword", { 
                 owner_mail: this.owner_mail, 

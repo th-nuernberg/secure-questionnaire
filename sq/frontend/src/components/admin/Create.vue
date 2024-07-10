@@ -169,7 +169,6 @@
               Infoblatt
             </div>
           </div>
-
         </button>
         <button @click="restart()" type="button" class="btn btn-outline-dark" variant="outline-primary">
           <div class="d-flex">
@@ -194,16 +193,12 @@
         </div>
         <h4>1. Fragebogen öffnen</h4>
         <p>
-          Um den Fragebogen zu öffnen, scannen Sie den obigen QR-Code mit einem
-          QR-Code-Scanner Ihrer Wahl. Sie können dazu zum Beispiel Ihr
-          Smartphone benutzen.
+          Um den Fragebogen zu öffnen, scannen Sie den obigen QR-Code mit einem QR-Code-Scanner Ihrer Wahl. Sie können dazu zum Beispiel Ihr Smartphone benutzen.
           <br />
-          Alternativ können Sie den QR-Code auch direkt auf www.website.de
-          einscannen.
+          Alternativ können Sie den QR-Code auch direkt auf <a href="https://kiz1.in.ohmportal.de/sq/">kiz1.in.ohmportal.de/sq/</a> einscannen.
         </p>
         <p>
-          Falls Sie keine Kamera zur Verfügung haben, können Sie auch folgenden
-          Code unter www.website.de eingeben:
+          Falls Sie keine Kamera zur Verfügung haben, können Sie auch folgenden Code unter <a href="https://kiz1.in.ohmportal.de/sq/">kiz1.in.ohmportal.de/sq/</a> eingeben:
         </p>
         <div class="text-center">
           <p class="font-weight-bold p-2 d-inline code">
@@ -212,20 +207,15 @@
         </div>
         <h4>2. Fragebogen ausfüllen</h4>
         <p>
-          Füllen Sie den Fragebogen nach Anweisungen des Arztes aus und
-          speichern Sie ihn anschließend.
-          <br />Nach dem Speichern erhalten Sie eine weitere Datei mit einem
-          neuen QR-Code, der genutzt werden kann, um Ihre verschlüsselten
-          Antworten zu entschlüsseln. <br />Mit diesem können Sie Ihre Antworten
-          im Nachhinein bearbeiten und ergänzen. <br />
-          Beachten Sie, dass bei einer Änderung Ihrer Antworten aus
-          Sicherheitsgründen immer ein neuer QR-Code erstellt wird und somit der
-          alte QR-Code an Gültigkeit verliert.
+          Füllen Sie den Fragebogen nach Anweisungen des Arztes aus und speichern Sie ihn anschließend.
+          <br />
+          Nach dem Speichern erhalten Sie eine weitere Datei mit einem neuen QR-Code, der genutzt werden kann, um Ihre verschlüsselten Antworten zu entschlüsseln. <br />
+          Mit diesem können Sie Ihre Antworten im Nachhinein bearbeiten und ergänzen. <br />
+          Beachten Sie, dass bei einer Änderung Ihrer Antworten aus Sicherheitsgründen immer ein neuer QR-Code erstellt wird und somit der alte QR-Code an Gültigkeit verliert.
         </p>
         <h4>3. Fragebogen auswerten</h4>
         <p>
-          Bringen Sie den aktuellen QR-Code beim nächsten Termin mit, damit der
-          Arzt Ihre Antworten auswerten kann.
+          Bringen Sie den aktuellen QR-Code beim nächsten Termin mit, damit der Arzt Ihre Antworten auswerten kann.
         </p>
       </section>
     </div>
@@ -233,7 +223,7 @@
 </template>
 
 <script>
-import CreateQuestionControl from "./CreateQuestionControl.vue";
+import CreateQuestionControl from "./OrderQuestionControl.vue";
 import InfoTooltip from "./../util/InfoTooltip.vue";
 import html2pdf from "html2pdf.js";
 import QuestionnairePdf from "./../pdf/QuestionnairePdf.vue";
@@ -422,7 +412,7 @@ export default {
         margin: 1,
         filename: this.questionnaire.queID + '.pdf', //"document.pdf",
         image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { dpi: 300, letterRendering: true },
+        html2canvas: { dpi: 300, letterRendering: false },
         jsPDF: {
           format: "a4",
           orientation: "portrait",

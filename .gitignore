@@ -2,6 +2,5 @@
 **/*.pem
 **/__pycache__
 # Ignore mounted database container directory
-flaskapp/database
-
-flaskapp/nginx/auth/*
+sq/database
+sq/nginx/auth/*

@@ -11,6 +11,8 @@ services:
   # Dockerfile exposes 5000 (gunicorn/flask default)
   backend:
     build: backend
+    volumes:
+      - ./backend:/backend
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
@@ -20,15 +22,17 @@ services:
     depends_on:
       - mongo
 
-  # Dockerfile exposes 5173 (vite defaukt)
+  # Dockerfile exposes 5173 (vite default)
   frontend:
     build: frontend
     volumes:
-      - ./frontend:/frontend
+      - ./frontend/src:/frontend/src
     networks:
       - kiz1_internal
     depends_on:
       - backend
+    environment:
+      - NODE_ENV="dev"
 
 #  nginx:
 #    image: nginx

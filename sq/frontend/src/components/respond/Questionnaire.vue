@@ -20,80 +20,49 @@
     </div>
   </div>
 
-  <div class="container" v-else-if="pageState === 'saved'">
-    <div class="saved">
-      <!-- <button
-        variant="outline"
-        @click="pageState = 'ready'"
-        class="btn btn-secondary mt-5"
-      >
-        <BootstrapIcon icon="arrow-left" size="2x" />
-        Zurück zum Fragebogen
-      </button> -->
-
-      <div class="boxStyling mb-5">
+  <div class="container saved" v-else-if="pageState === 'saved'">
+      <div class="my-5">
         <h3 class="text-center mb-3">Erfolgreich gespeichert!</h3>
         <p class="text-center mb-3">
           Laden Sie Ihren QR-Code herunter, um Ihre Antworten später noch einmal
           zu bearbeiten oder dem Arzt zeigen zu können.
         </p>
 
-        <!-- <div class="row">
-          <div class="col ext-center">
-            <button
-              class="btn btn-secondary mt-5"
-              variant="primary"
-              @click="downloadPdf()"
-            >
-              <BootstrapIcon icon="qr-code" size="2x" />
-              QR-Code
-            </button>
-          </div>
-        </div> -->
-
         <div class="d-grid gap-3 col-3 mx-auto mt-4">
-          <button
-          type="button"
-          class="btn btn-outline-dark"
-          @click="pageState = 'ready'"
-          variant="outline"
-          >
-          <div class="d-flex">
-            <div>
-              <BootstrapIcon icon="arrow-left" size="2x" />
+          <button type="button" class="btn btn-outline-dark" @click="pageState = 'ready'" variant="outline">
+            <div class="d-flex">
+              <div>
+                <BootstrapIcon icon="arrow-left" size="2x" />
+              </div>
+              <div class="mx-auto align-self-center">
+                Zurück zum Fragebogen
+              </div>
+            </div>             
+          </button>
+          <button type="button" class="btn btn-outline-dark" variant="primary" @click="downloadPdf()">
+            <div class="d-flex">
+              <div>
+                <BootstrapIcon icon="qr-code" size="2x" />
+              </div>
+              <div class="mx-auto align-self-center">
+                QR-Code
+              </div>
             </div>
-            <div class="mx-auto align-self-center">
-              Zurück zum Fragebogen
-            </div>
-          </div>             
-        </button>
-        <button
-          @click="downloadPdf()"
-          type="button"
-          class="btn btn-outline-dark"
-          variant="primary"
-        >
-          <div class="d-flex">
-            <div>
-              <BootstrapIcon icon="qr-code" size="2x" />
-            </div>
-            <div class="mx-auto align-self-center">
-              QR-Code
-            </div>
-          </div>
-        </button>
+          </button>
         </div>
       </div>
 
-      
+      <div class="my-5">
+        <section class="user-details p-5" ref="document">
           <div class="text-center">
             <h1>Ihr ausgefüllter Fragebogen</h1>
             <qr-code class="qr" :content="content"></qr-code>
+            <p style="font-family: monospace;"><pre>{{ answers.UUID }}</pre></p>
           </div>
           <h4>1. Fragebogen öffnen</h4>
           <p>
             Um den Fragebogen zu bearbeiten, scannen Sie den QR-Code auf
-            www.website.de ein.
+            <a href="https://kiz1.in.ohmportal.de/sq/">kiz1.in.ohmportal.de/sq/</a> ein.
             <br />Sie werden automatisch zu Ihrem ausgefüllten Fragebogen
             weitergeleitet.
           </p>
@@ -113,11 +82,10 @@
             werden und somit sensible Daten eingesehen werden.<br />Geben Sie
             Ihn nicht an Dritte weiter.
           </p>
-
+        </section>
+      </div>
 
       <hr class="my-3">
-       
-
       <h4>Infos:</h4>
       <h6>Was passiert mit meinen Daten?</h6>
       <p>
@@ -135,11 +103,7 @@
         geschützt sind.
       </p>
 
-      <button
-        class="btn btn-outline-dark mt-5"
-        variant="outline-primary"
-        @click="this.$router.push('/patient')"
-      >
+      <button class="btn btn-outline-dark mt-5" variant="outline-primary" @click="this.$router.push('/respond')">
         Zur Startseite
       </button>
 
@@ -159,7 +123,6 @@
       <!--                          ref="html2Pdf">-->
       <!--                <answers-pdf slot="pdf-content" :answersID="answers.UUID" :repeating="questionnaire.repeatingType !== 'single'" :AESkey="AESkey"></answers-pdf>-->
       <!--            </vue3-html2pdf>-->
-    </div>
   </div>
 
   <div class="container" v-else>
@@ -418,7 +381,7 @@ export default {
       if (this.answers.UUID === undefined) {
         this.answers.UUID = uuid.v4();
       }
-      
+
       this.$store.dispatch("encryptAndUpload", {
           answers: this.answers,
           owners: this.questionnaire.owners  // ..............................................!!!!!!!!!!
@@ -436,12 +399,11 @@ export default {
 
     async downloadPdf() {
       // this.$refs.html2Pdf.generatePdf();
-
       html2pdf(this.$refs.document, {
         margin: 1,
-        filename: "document.pdf",
+        filename: this.answers.UUID + '.pdf',
         image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { dpi: 500, letterRendering: false },
+        html2canvas: { dpi: 300, letterRendering: false },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       });
     },

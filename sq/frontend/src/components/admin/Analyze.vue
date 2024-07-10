@@ -69,7 +69,7 @@ const sampleData2 = (offst, limit) => {
 };
 
 export default {
-  name: "AnalyseQuestionnaires",
+  name: "Analyze",
 
   components: { TableLite },
   setup() {

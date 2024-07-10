@@ -7,10 +7,10 @@
         <div>
           <ul class="list-unstyled list-inline">
             <li class="list-inline-item">
-              <a href="avascript:void(0)" class="text-light footer-link">Privacy Policy</a>
+              <a href="javascript:void(0)" class="text-light footer-link">Privacy Policy</a>
             </li>
             <li class="list-inline-item">
-              <a href="avascript:void(0)" class="text-light footer-link">Terms Condition</a>
+              <a href="javascript:void(0)" class="text-light footer-link">Terms Condition</a>
             </li>
           </ul>
         </div>

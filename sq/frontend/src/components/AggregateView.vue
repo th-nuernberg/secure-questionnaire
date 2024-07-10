@@ -55,7 +55,7 @@
 import CodeScanner from "./util/CodeScanner.vue";
 
 export default {
-  name: "DoctorView",
+  name: "AggregateView",
   components: { CodeScanner },
   data() {
     return {
@@ -85,7 +85,7 @@ export default {
     start() {
       this.$store.commit("setAnalyseObjects", this.idsKeys);
       this.$router.push({
-        name: "AnalyseQuestionnaires",
+        name: "Analyze",
       });
     },
   },

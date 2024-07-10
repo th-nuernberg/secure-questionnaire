@@ -15,7 +15,7 @@ import CodeManually from "./util/CodeManually.vue";
 import CodeScanner from "./util/CodeScanner.vue";
 
 export default {
-  name: "PatientView",
+  name: "RespondView",
   components: { CodeManually, CodeScanner },
   data() {
     return {

@@ -35,7 +35,7 @@ export default {
   methods: {
     submit() {
       if (this.codeNew !== "") {
-        this.$router.push({ path: `/patient/questionnaire/${this.codeNew}` });
+        this.$router.push({ path: `/respond/${this.codeNew}` });
       } else {
         this.codeValidation = false;
       }

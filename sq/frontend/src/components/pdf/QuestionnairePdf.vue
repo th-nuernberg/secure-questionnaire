@@ -17,7 +17,7 @@
     </p>
     <p>
       Falls Sie keine Kamera zur Verfügung haben, können Sie auch folgenden Code
-      unter <a href="https://kiz1.in.ohmportal.de">kiz1.in.ohmportal.de</a> eingeben:
+      unter <a href="https://kiz1.in.ohmportal.de/sq/">kiz1.in.ohmportal.de/sq/</a> eingeben:
     </p>
     <div class="text-center">
       <p class="font-weight-bold p-2 d-inline code">{{ queID }}</p>

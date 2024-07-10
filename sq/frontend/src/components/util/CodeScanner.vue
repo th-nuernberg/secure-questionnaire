@@ -24,19 +24,19 @@ export default {
     async onDetect(result) {
       result = result[0].rawValue
 
-      if (result.includes("patient/questionnaire")) {
+      if (result.includes("respond")) {
         //QR-Code vom Arzt mit kompletter URL
         this.alert = "alert-success";
         let path = result.split("/");
         let queID = path.pop();
         this.$router.push({
-          name: "PatientQuestionnaire",
+          name: "Questionnaire",
           params: { id: queID },
         });
       } else {
         let obj = JSON.parse(result);
         if (
-          this.$route.path.includes("patient") &&
+          this.$route.path.includes("respond") &&
           obj.ID !== undefined &&
           obj.key !== undefined
         ) {
@@ -46,7 +46,7 @@ export default {
             .dispatch("getAnswers", { id: obj.ID, key: obj.key })
             .then((answers) => {
               this.$router.push({
-                name: "PatientQuestionnaire",
+                name: "Questionnaire",
                 params: { id: answers.queID },
               });
             })
@@ -55,7 +55,7 @@ export default {
             });
         }
         if (
-          this.$route.path.includes("doctor") &&
+          this.$route.path.includes("admin") &&
           obj.ID !== undefined &&
           obj.key !== undefined
         ) {
